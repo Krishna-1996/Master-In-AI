@@ -2,7 +2,7 @@
 from pyamaze import maze, agent, COLOR, textLabel
 from collections import deque
 
-def bfs_search(maze_obj, start=None):
+def BFS_search(maze_obj, start=None):
     """
     Performs a Breadth-First Search (BFS) on the maze to find the shortest path.
     If no start point is given, it defaults to the bottom-right corner of the maze.
@@ -76,17 +76,17 @@ if __name__ == '__main__':
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/ICA Pyamaze Example/mazetest.csv')
 
     # Perform BFS search on the maze and get the exploration order and paths
-    exploration_order, visited_cells, path_to_goal = bfs_search(m)
+    exploration_order, visited_cells, path_to_goal = BFS_search(m)
 
     # Create agents to visualize the BFS search process
-    agent_bfs = agent(m, footprints=True, shape='square', color=COLOR.green)  # Visualize BFS search order
-    agent_trace = agent(m, footprints=True, shape='square', color=COLOR.yellow, filled=False)  # Full BFS path
-    agent_goal = agent(m, 1, 1, footprints=True, color=COLOR.cyan, shape='square', filled=True, goal=(m.rows, m.cols))  # Goal agent
+    agent_bfs = agent(m, footprints=True, shape='square', color=COLOR.red)  # Visualize BFS search order
+    agent_trace = agent(m, footprints=True, shape='circle', color=COLOR.green, filled=False)  # Full BFS path
+    agent_goal = agent(m, 1, 1, footprints=True, color=COLOR.blue, shape='star', filled=True, goal=(m.rows, m.cols))  # Goal agent
 
     # Visualize the agents' movements along their respective paths
-    m.tracePath({agent_bfs: exploration_order}, delay=100)  # BFS search order path
-    m.tracePath({agent_goal: visited_cells}, delay=100)  # Trace the BFS path to the goal
-    m.tracePath({agent_trace: path_to_goal}, delay=100)  # Trace the path from goal to start
+    m.tracePath({agent_bfs: exploration_order}, delay=150)  # BFS search order path
+    m.tracePath({agent_goal: visited_cells}, delay=1)  # Trace the BFS path to the goal
+    m.tracePath({agent_trace: path_to_goal}, delay=1)  # Trace the path from goal to start
 
     # Display the length of the BFS path and search steps
     textLabel(m, 'BFS Path Length', len(path_to_goal) + 1)  # Length of the path from goal to start
