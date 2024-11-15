@@ -1,98 +1,96 @@
-# Import necessary modules for maze generation, BFS algorithm, and maze visualization
+# Importing required modules for maze creation and visualization
 from pyamaze import maze, agent, COLOR, textLabel
 from collections import deque
 
-def BFS(m, start=None):
+def bfs_search(maze_obj, start=None):
     """
-    Perform a Breadth-First Search (BFS) on the given maze to find the shortest path.
-    If a start point is not provided, BFS will start from the bottom-right corner.
+    Performs a Breadth-First Search (BFS) on the maze to find the shortest path.
+    If no start point is given, it defaults to the bottom-right corner of the maze.
     """
-    
-    # Set the starting point of the BFS, default is bottom-right corner if not specified
+    # Start position == Bottom-right corner.
     if start is None:
-        start = (m.rows, m.cols)  # Bottom-right corner
+        start = (maze_obj.rows, maze_obj.cols)
     
-    # Initialize the frontier with the starting cell (deque acts like a queue)
-    frontier = deque()
-    frontier.append(start)
+    # Initialize BFS frontier with the start point
+    frontier = deque([start])
     
     # Dictionary to store the path taken to reach each cell
-    bfsPath = {}
-
-    # List to keep track of cells that have been explored
-    explored = [start]
+    visited = {}
     
-    # List to keep track of the order of cells explored during BFS
-    bfsSearch = []
+    # List to track cells visited in the search process
+    exploration_order = []
+    
+    # Set of explored cells to avoid revisiting
+    explored = set([start])
+    
+    while frontier:
+        # Dequeue the next cell to process
+        current = frontier.popleft()
 
-    # Continue processing until all reachable cells are explored or the goal is found
-    while len(frontier) > 0:
-        # Dequeue the current cell from the frontier (first cell in the queue)
-        currCell = frontier.popleft()
-
-        # If we've reached the goal, stop searching
-        if currCell == m._goal:
+        # If the goal is reached, stop the search
+        if current == maze_obj._goal:
             break
-
-        # Explore the neighboring cells (up, down, left, right)
-        for d in 'ESNW':  # Directions: East, South, North, West
-            # Check if the current direction is passable (no wall)
-            if m.maze_map[currCell][d] == True:
+        
+        # Check all four possible directions (East, West, South, North)
+        for direction in 'ESNW':
+            # If movement is possible in this direction (no wall)
+            if maze_obj.maze_map[current][direction]:
+                # Calculate the coordinates of the next cell in the direction
+                next_cell = get_next_cell(current, direction)
                 
-                # Calculate the coordinates of the neighboring cell based on direction
-                if d == 'E':  # East
-                    childCell = (currCell[0], currCell[1] + 1)
-                elif d == 'W':  # West
-                    childCell = (currCell[0], currCell[1] - 1)
-                elif d == 'S':  # South
-                    childCell = (currCell[0] + 1, currCell[1])
-                elif d == 'N':  # North
-                    childCell = (currCell[0] - 1, currCell[1])
+                # If the cell hasn't been visited yet, process it
+                if next_cell not in explored:
+                    frontier.append(next_cell)  # Add to the frontier
+                    explored.add(next_cell)     # Mark as visited
+                    visited[next_cell] = current  # Record the parent (current cell)
+                    exploration_order.append(next_cell)  # Track the exploration order
 
-                # If the child cell has already been explored, skip it
-                if childCell in explored:
-                    continue
+    # Reconstruct the path from the goal to the start using the visited dictionary
+    path_to_goal = {}
+    cell = maze_obj._goal
+    while cell != (maze_obj.rows, maze_obj.cols):
+        path_to_goal[visited[cell]] = cell
+        cell = visited[cell]
 
-                # Add the new cell to the frontier and mark it as explored
-                frontier.append(childCell)
-                explored.append(childCell)
+    return exploration_order, visited, path_to_goal
 
-                # Record the path taken to reach this cell (parent -> child)
-                bfsPath[childCell] = currCell
-                bfsSearch.append(childCell)  # Add to the order of exploration
+def get_next_cell(current, direction):
+    """
+    Returns the coordinates of the neighboring cell based on the direction.
+    Directions are 'E' (East), 'W' (West), 'S' (South), 'N' (North).
+    """
+    row, col = current
+    if direction == 'E':  # Move East
+        return (row, col + 1)
+    elif direction == 'W':  # Move West
+        return (row, col - 1)
+    elif direction == 'S':  # Move South
+        return (row + 1, col)
+    elif direction == 'N':  # Move North
+        return (row - 1, col)
 
-    # Reconstruct the path from the goal to the start by following the parent pointers
-    fwdPath = {}
-    cell = m._goal  # Start from the goal
-    while cell != (m.rows, m.cols):  # Keep going until we reach the start
-        fwdPath[bfsPath[cell]] = cell
-        cell = bfsPath[cell]
-
-    # Return the order of exploration, the path taken, and the forward path to the goal
-    return bfsSearch, bfsPath, fwdPath
-
-# Main function to create and run the maze
+# Main function to execute the maze creation and BFS search
 if __name__ == '__main__':
-    # Create a 15x15 maze and load a custom maze from a CSV file
+    # Create a 15x15 maze and load it from a CSV file
     m = maze(15, 15)
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/ICA Pyamaze Example/mazetest.csv')
 
-    # Perform BFS on the maze to find the search order and paths
-    bfsSearch, bfsPath, fwdPath = BFS(m)
+    # Perform BFS search on the maze and get the exploration order and paths
+    exploration_order, visited_cells, path_to_goal = bfs_search(m)
 
-    # Create agents to visualize the maze solving process
-    a = agent(m, footprints=True, shape='square', color=COLOR.green)  # Agent for BFS search order
-    b = agent(m, footprints=True, shape='square', color=COLOR.yellow, filled=False)  # Path tracing agent
-    c = agent(m, 1, 1, footprints=True, color=COLOR.cyan, shape='square', filled=True, goal=(m.rows, m.cols))  # Goal-seeking agent
+    # Create agents to visualize the BFS search process
+    agent_bfs = agent(m, footprints=True, shape='square', color=COLOR.green)  # Visualize BFS search order
+    agent_trace = agent(m, footprints=True, shape='square', color=COLOR.yellow, filled=False)  # Full BFS path
+    agent_goal = agent(m, 1, 1, footprints=True, color=COLOR.cyan, shape='square', filled=True, goal=(m.rows, m.cols))  # Goal agent
 
-    # Trace the agents' paths through the maze
-    m.tracePath({a: bfsSearch}, delay=300)  # Trace BFS search order
-    m.tracePath({c: bfsPath}, delay=300)  # Trace the path taken by BFS
-    m.tracePath({b: fwdPath}, delay=300)  # Trace the forward path from goal to start
+    # Visualize the agents' movements along their respective paths
+    m.tracePath({agent_bfs: exploration_order}, delay=100)  # BFS search order path
+    m.tracePath({agent_goal: visited_cells}, delay=100)  # Trace the BFS path to the goal
+    m.tracePath({agent_trace: path_to_goal}, delay=100)  # Trace the path from goal to start
 
-    # Now show the lengths of the BFS search and forward paths as labels
-    l = textLabel(m, 'BFS Path Length', len(fwdPath) + 1)  # Length of the path from goal to start
-    l = textLabel(m, 'BFS Search Length', len(bfsSearch))  # Total number of cells explored
+    # Display the length of the BFS path and search steps
+    textLabel(m, 'BFS Path Length', len(path_to_goal) + 1)  # Length of the path from goal to start
+    textLabel(m, 'BFS Search Length', len(exploration_order))  # Total number of explored cells
 
-    # Now finally run the maze.
+    # Run the maze visualization
     m.run()
