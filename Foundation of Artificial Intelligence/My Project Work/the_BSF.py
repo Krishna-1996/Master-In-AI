@@ -94,5 +94,5 @@ if __name__ == '__main__':
     l = textLabel(m, 'BFS Path Length', len(fwdPath) + 1)  # Length of the path from goal to start
     l = textLabel(m, 'BFS Search Length', len(bfsSearch))  # Total number of cells explored
 
-    # Run the maze simulation
+    # Now finally run the maze.
     m.run()
