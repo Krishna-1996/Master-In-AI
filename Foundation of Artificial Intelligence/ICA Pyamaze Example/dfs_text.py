@@ -1,4 +1,7 @@
+
+from pyamaze import maze, agent, COLOR, textLabel
 from collections import deque
+
 
 # Define the maze data (open directions for each cell)
 # The maze data format: (E, W, N, S)
