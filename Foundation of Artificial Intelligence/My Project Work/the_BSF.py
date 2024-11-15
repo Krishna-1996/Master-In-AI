@@ -3,10 +3,7 @@ from pyamaze import maze, agent, COLOR, textLabel
 from collections import deque
 
 def BFS_search(maze_obj, start=None):
-    """
-    Performs a Breadth-First Search (BFS) on the maze to find the shortest path.
-    If no start point is given, it defaults to the bottom-right corner of the maze.
-    """
+    
     # Start position == Bottom-right corner.
     if start is None:
         start = (maze_obj.rows, maze_obj.cols)

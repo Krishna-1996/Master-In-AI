@@ -3,11 +3,8 @@ from pyamaze import maze, agent, COLOR, textLabel
 from collections import deque
 
 def dfs_search(maze_obj, start=None):
-    """
-    Perform a Depth-First Search (DFS) on the maze to find a path from the start to the goal.
-    If no start point is given, it defaults to the bottom-right corner of the maze.
-    """
-    # Default start position is the bottom-right corner if not provided
+    
+    # Start position == Bottom-right corner.
     if start is None:
         start = (maze_obj.rows, maze_obj.cols)
 
