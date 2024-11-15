@@ -86,11 +86,11 @@ if __name__ == '__main__':
     c = agent(m, 1, 1, footprints=True, color=COLOR.cyan, shape='square', filled=True, goal=(m.rows, m.cols))  # Goal-seeking agent
 
     # Trace the agents' paths through the maze
-    m.tracePath({a: bfsSearch}, delay=100)  # Trace BFS search order
-    m.tracePath({c: bfsPath}, delay=100)  # Trace the path taken by BFS
-    m.tracePath({b: fwdPath}, delay=100)  # Trace the forward path from goal to start
+    m.tracePath({a: bfsSearch}, delay=300)  # Trace BFS search order
+    m.tracePath({c: bfsPath}, delay=300)  # Trace the path taken by BFS
+    m.tracePath({b: fwdPath}, delay=300)  # Trace the forward path from goal to start
 
-    # Display the lengths of the BFS search and forward paths as labels
+    # Now show the lengths of the BFS search and forward paths as labels
     l = textLabel(m, 'BFS Path Length', len(fwdPath) + 1)  # Length of the path from goal to start
     l = textLabel(m, 'BFS Search Length', len(bfsSearch))  # Total number of cells explored
 
