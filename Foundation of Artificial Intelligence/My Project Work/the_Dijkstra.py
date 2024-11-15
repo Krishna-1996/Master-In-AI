@@ -82,11 +82,11 @@ if __name__ == '__main__':
 
     # Create agents to visualize the maze solving process
     a = agent(m, footprints=True, shape='square', color=COLOR.green)  # Agent for Dijkstra search order
-    b = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=True)  # Path tracing agent
+    b = agent(m, footprints=True, shape='circle', color=COLOR.yellow, filled=True)  # Path tracing agent
     c = agent(m, 1, 1, footprints=True, color=COLOR.cyan, shape='square', filled=True, goal=(m.rows, m.cols))  # Goal-seeking agent
 
     # Trace the agents' paths through the maze
-    m.tracePath({a: exploration_order}, delay=100)  # Trace Dijkstra's search order
+    m.tracePath({a: exploration_order}, delay=10)  # Trace Dijkstra's search order
     m.tracePath({b: path_to_goal}, delay=100)  # Trace the path found by Dijkstra
     m.tracePath({c: path_to_goal}, delay=100)  # Trace the path from start to goal (final path)
 
