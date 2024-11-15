@@ -77,8 +77,8 @@ if __name__ == '__main__':
 
     # Create agents to visualize the DFS search process
     agent_dfs = agent(m, footprints=True, shape='square', color=COLOR.green)  # Visualize DFS search order
-    agent_trace = agent(m, footprints=True, shape='square', color=COLOR.yellow, filled=False)  # Full DFS path
-    agent_goal = agent(m, 1, 1, footprints=True, color=COLOR.cyan, shape='square', filled=True, goal=(m.rows, m.cols))  # Goal agent
+    agent_trace = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)  # Full DFS path
+    agent_goal = agent(m, 1, 1, footprints=True, color=COLOR.blue, shape='square', filled=True, goal=(m.rows, m.cols))  # Goal agent
 
     # Visualize the agents' movements along their respective paths
     m.tracePath({agent_dfs: exploration_order}, delay=100)  # DFS search order path

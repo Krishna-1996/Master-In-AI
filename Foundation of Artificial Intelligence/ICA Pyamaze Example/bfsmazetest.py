@@ -76,11 +76,11 @@ if __name__ == '__main__':
 
     # Create agents.
     a = agent(m, footprints=True, shape='square', color=COLOR.green)
-    b = agent(m, footprints=True, shape='square', color=COLOR.yellow, filled=False)
-    c = agent(m, 1, 1, footprints=True, color=COLOR.cyan, shape='square', filled=True, goal=(m.rows, m.cols))
+    b = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)
+    c = agent(m, 1, 1, footprints=True, color=COLOR.blue, shape='square', filled=True, goal=(m.rows, m.cols))
 
     # Make agents trace the paths.
-    m.tracePath({a: bfsSearch}, delay=100)
+    m.tracePath({a: bfsSearch}, delay=1)
     m.tracePath({c: bfsPath}, delay=100)
     m.tracePath({b: fwdPath}, delay=100)
 

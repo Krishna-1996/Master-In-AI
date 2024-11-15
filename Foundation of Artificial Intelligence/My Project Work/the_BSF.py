@@ -3,7 +3,7 @@ from pyamaze import maze, agent, COLOR, textLabel
 from collections import deque
 
 def BFS_search(maze_obj, start=None):
-    
+
     # Start position == Bottom-right corner.
     if start is None:
         start = (maze_obj.rows, maze_obj.cols)
@@ -77,13 +77,13 @@ if __name__ == '__main__':
 
     # Create agents to visualize the BFS search process
     agent_bfs = agent(m, footprints=True, shape='square', color=COLOR.red)  # Visualize BFS search order
-    agent_trace = agent(m, footprints=True, shape='circle', color=COLOR.green, filled=False)  # Full BFS path
-    agent_goal = agent(m, 1, 1, footprints=True, color=COLOR.blue, shape='star', filled=True, goal=(m.rows, m.cols))  # Goal agent
+    agent_trace = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)  # Full BFS path
+    agent_goal = agent(m, 1, 1, footprints=True, color=COLOR.blue, shape='square', filled=True, goal=(m.rows, m.cols))  # Goal agent
 
     # Visualize the agents' movements along their respective paths
-    m.tracePath({agent_bfs: exploration_order}, delay=150)  # BFS search order path
-    m.tracePath({agent_goal: visited_cells}, delay=1)  # Trace the BFS path to the goal
-    m.tracePath({agent_trace: path_to_goal}, delay=1)  # Trace the path from goal to start
+    m.tracePath({agent_bfs: exploration_order}, delay=1)  # BFS search order path
+    m.tracePath({agent_goal: visited_cells}, delay=100)  # Trace the BFS path to the goal
+    m.tracePath({agent_trace: path_to_goal}, delay=100)  # Trace the path from goal to start
 
     # Display the length of the BFS path and search steps
     textLabel(m, 'BFS Path Length', len(path_to_goal) + 1)  # Length of the path from goal to start
