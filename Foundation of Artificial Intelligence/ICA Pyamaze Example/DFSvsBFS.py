@@ -8,7 +8,7 @@ from timeit import timeit  # Function for measuring execution time
 m = maze()
 
 # Load the maze layout from a CSV file
-m.CreateMaze(loadMaze='mazetest.csv')
+m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/ICA Pyamaze Example/mazetest.csv')
 
 # Run the DFS algorithm on the maze and get the paths
 searchPath, dfsPath, fwdDFSPath = DFS(m)

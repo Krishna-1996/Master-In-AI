@@ -69,7 +69,7 @@ def BFS(m, start=None):
 if __name__ == '__main__':
     # Create a maze.
     m = maze(15, 15)
-    m.CreateMaze(loadMaze='mazetest.csv')
+    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/ICA Pyamaze Example/mazetest.csv')
 
     # Perform BFS on the maze and retrieve the search order and paths.
     bfsSearch, bfsPath, fwdPath = BFS(m)

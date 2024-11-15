@@ -64,7 +64,7 @@ if __name__ == '__main__':
     # Initialize a maze of size 15x15.
     m=maze(25,25)
     # Create the maze using the information from the csv file.
-    m.CreateMaze(loadMaze='mazetest.csv')
+    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/ICA Pyamaze Example/mazetest.csv')
 
     # Run the DFS algorithm on the maze and retrieve the paths.
     dSearch,dfsPath,fwdPath=DFS(m)
