@@ -8,16 +8,16 @@ def dfs_search(maze_obj, start=None):
     if start is None:
         start = (maze_obj.rows, maze_obj.cols)
 
-    # Initialize DFS stack with the start point
+    # From start point intiate the DFS
     stack = [start]
     
-    # Dictionary to store the path taken to reach each cell
+    # Dictionary is added to store the path taken to reach each cell
     visited = {}
     
-    # List to track the cells visited in the order of exploration
+    # Store the cell visted in the order they were explored. 
     exploration_order = []
     
-    # Set of explored cells to avoid revisiting
+    # Store the cells that are visited to avoid visiting again.
     explored = set([start])
     
     while stack:
