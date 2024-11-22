@@ -8,13 +8,14 @@ def dfs_search(maze_obj, start=None):
     if start is None:
         start = (maze_obj.rows, maze_obj.cols)
 
-    # From start point intiate the DFS
+    # From start point intiate the DFS (Current position at every step)
     stack = [start]
     
     # Dictionary is added to store the path taken to reach each cell
     visited = {}
     
     # Store the cell visted in the order they were explored. 
+    # It help to visualize how the algorithm explore the maze. 
     exploration_order = []
     
     # Store the cells that are visited to avoid visiting again.
@@ -81,7 +82,7 @@ if __name__ == '__main__':
     agent_goal = agent(m, 1, 1, footprints=True, color=COLOR.blue, shape='square', filled=True, goal=(m.rows, m.cols))  # Goal agent
 
     # Visualize the agents' movements along their respective paths
-    m.tracePath({agent_dfs: exploration_order}, delay=1000)  # DFS search order path
+    m.tracePath({agent_dfs: exploration_order}, delay=5000)  # DFS search order path
     m.tracePath({agent_goal: visited_cells}, delay=100)  # Trace the DFS path to the goal
     m.tracePath({agent_trace: path_to_goal}, delay=100)  # Trace the path from goal to start
 
