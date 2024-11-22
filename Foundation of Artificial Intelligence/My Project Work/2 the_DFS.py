@@ -82,9 +82,9 @@ if __name__ == '__main__':
     agent_goal = agent(m, 1, 1, footprints=True, color=COLOR.blue, shape='square', filled=True, goal=(m.rows, m.cols))  # Goal agent
 
     # Visualize the agents' movements along their respective paths
-    m.tracePath({agent_dfs: exploration_order}, delay=5000)  # DFS search order path
-    m.tracePath({agent_goal: visited_cells}, delay=100)  # Trace the DFS path to the goal
-    m.tracePath({agent_trace: path_to_goal}, delay=100)  # Trace the path from goal to start
+    m.tracePath({agent_dfs: exploration_order}, delay=5)  # DFS search order path
+    m.tracePath({agent_goal: visited_cells}, delay=1)  # Trace the DFS path to the goal
+    m.tracePath({agent_trace: path_to_goal}, delay=1)  # Trace the path from goal to start
 
     # Display the length of the DFS path and search steps
     textLabel(m, 'DFS Path Length', len(path_to_goal) + 1)  # Length of the path from goal to start
