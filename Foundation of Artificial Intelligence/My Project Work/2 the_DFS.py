@@ -21,7 +21,7 @@ def dfs_search(maze_obj, start=None):
     # Store the cells that are visited to avoid visiting again.
     explored = set([start])
     
-    while stack:
+    while stack: # Now DSf will continue till no cell is left to explore.
         # Pop the next cell from the stack (LIFO - Last In, First Out)
         current = stack.pop()
 
