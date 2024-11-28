@@ -70,7 +70,8 @@ def get_next_cell(current, direction):
 if __name__ == '__main__':
     # Create a 15x15 maze and load it from a CSV file
     m = maze(15, 15)
-    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/ICA Pyamaze Example/mazetest.csv')
+    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/mazetest.csv')
+ 
 
     # Perform BFS search on the maze and get the exploration order and paths
     exploration_order, visited_cells, path_to_goal = BFS_search(m)

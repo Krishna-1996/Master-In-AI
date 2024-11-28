@@ -3,7 +3,6 @@ from pyamaze import maze, agent, COLOR, textLabel
 from collections import deque
 
 def BFS_search(maze_obj, start=None):
-
     # Start position == Bottom-right corner.
     if start is None:
         start = (maze_obj.rows, maze_obj.cols)
@@ -68,9 +67,10 @@ def get_next_cell(current, direction):
 
 # Main function to execute the maze creation and BFS search
 if __name__ == '__main__':
-    # Create a 15x15 maze and load it from a CSV file
-    m = maze(15, 15)
-    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/ICA Pyamaze Example/mazetest.csv')
+    # Load the maze from the CSV file
+    file_path = 'D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/ICA Pyamaze Example/mazetest - Test.csv'
+    m = maze()  # Create an empty maze object
+    m.CreateMaze(loadMaze=file_path)  # Load maze dynamically based on the file
 
     # Perform BFS search on the maze and get the exploration order and paths
     exploration_order, visited_cells, path_to_goal = BFS_search(m)
