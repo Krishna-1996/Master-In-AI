@@ -1,47 +1,39 @@
-# Importing required modules for maze creation and visualization
+# file_path = 'D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/mazetest - Test.csv'
+# *****************************************************************************
+import csv
 from pyamaze import maze, agent, COLOR, textLabel
 from collections import deque
 
+def get_maze_dimensions(file_path):
+    """Reads the maze file to determine its dimensions."""
+    with open(file_path, 'r') as file:
+        reader = csv.reader(file)
+        rows = sum(1 for _ in reader)  # Count the number of rows
+        file.seek(0)  # Reset reader
+        cols = len(next(reader))  # Count the number of columns in the first row
+    return rows, cols
+
 def BFS_search(maze_obj, start=None):
-    # Start position == Bottom-right corner.
     if start is None:
         start = (maze_obj.rows, maze_obj.cols)
-    
-    # Initialize BFS frontier with the start point
     frontier = deque([start])
-    
-    # Dictionary to store the path taken to reach each cell
     visited = {}
-    
-    # List to track cells visited in the search process
     exploration_order = []
-    
-    # Set of explored cells to avoid revisiting
     explored = set([start])
-    
-    while frontier:
-        # Dequeue the next cell to process
-        current = frontier.popleft()
 
-        # If the goal is reached, stop the search
+    while frontier:
+        current = frontier.popleft()
         if current == maze_obj._goal:
             break
-        
-        # Check all four possible directions (East, West, South, North)
         for direction in 'ESNW':
-            # If movement is possible in this direction (no wall)
             if maze_obj.maze_map[current][direction]:
-                # Calculate the coordinates of the next cell in the direction
                 next_cell = get_next_cell(current, direction)
-                
-                # If the cell hasn't been visited yet, process it
                 if next_cell not in explored:
-                    frontier.append(next_cell)  # Add to the frontier
-                    explored.add(next_cell)     # Mark as visited
-                    visited[next_cell] = current  # Record the parent (current cell)
-                    exploration_order.append(next_cell)  # Track the exploration order
+                    frontier.append(next_cell)
+                    explored.add(next_cell)
+                    visited[next_cell] = current
+                    exploration_order.append(next_cell)
 
-    # Reconstruct the path from the goal to the start using the visited dictionary
     path_to_goal = {}
     cell = maze_obj._goal
     while cell != (maze_obj.rows, maze_obj.cols):
@@ -51,43 +43,69 @@ def BFS_search(maze_obj, start=None):
     return exploration_order, visited, path_to_goal
 
 def get_next_cell(current, direction):
-    """
-    Returns the coordinates of the neighboring cell based on the direction.
-    Directions are 'E' (East), 'W' (West), 'S' (South), 'N' (North).
-    """
     row, col = current
-    if direction == 'E':  # Move East
+    if direction == 'E':
         return (row, col + 1)
-    elif direction == 'W':  # Move West
+    elif direction == 'W':
         return (row, col - 1)
-    elif direction == 'S':  # Move South
+    elif direction == 'S':
         return (row + 1, col)
-    elif direction == 'N':  # Move North
+    elif direction == 'N':
         return (row - 1, col)
 
-# Main function to execute the maze creation and BFS search
+def load_maze_from_csv(file_path):
+    """Load maze from a CSV file and create the maze object accordingly."""
+    with open(file_path, 'r') as file:
+        reader = csv.reader(file)
+        maze_data = [row for row in reader]
+
+    return maze_data
+
+def create_maze_from_data(maze_data):
+    """Create the maze object from the loaded maze data."""
+    rows = len(maze_data)
+    cols = len(maze_data[0])
+
+    m = maze(rows, cols)  # Create maze with detected dimensions
+    for r in range(rows):
+        for c in range(cols):
+            if maze_data[r][c] == '1':  # Wall
+                m.walls[r, c] = True
+            else:  # Path
+                m.walls[r, c] = False
+
+    return m
+
 if __name__ == '__main__':
-    # Load the maze from the CSV file
-    file_path = 'D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/ICA Pyamaze Example/mazetest - Test.csv'
-    m = maze()  # Create an empty maze object
-    m.CreateMaze(loadMaze=file_path)  # Load maze dynamically based on the file
+    file_path = 'D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/mazetest - Test.csv'
+    
+    # Load maze from CSV
+    maze_data = load_maze_from_csv(file_path)
+    rows, cols = len(maze_data), len(maze_data[0])  # Automatically get maze dimensions
+    
+    # Create maze object from loaded data
+    m = create_maze_from_data(maze_data)
 
-    # Perform BFS search on the maze and get the exploration order and paths
-    exploration_order, visited_cells, path_to_goal = BFS_search(m)
+    # Set start and goal positions dynamically if required
+    start = (0, 0)  # You can set it as per your maze design
+    goal = (rows - 1, cols - 1)  # Set goal at bottom-right, adjust as necessary
 
-    # Create agents to visualize the BFS search process
-    agent_bfs = agent(m, footprints=True, shape='square', color=COLOR.red)  # Visualize BFS search order
-    agent_trace = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)  # Full BFS path
-    agent_goal = agent(m, 1, 1, footprints=True, color=COLOR.blue, shape='square', filled=True, goal=(m.rows, m.cols))  # Goal agent
+    # Perform BFS search
+    exploration_order, visited_cells, path_to_goal = BFS_search(m, start)
 
-    # Visualize the agents' movements along their respective paths
-    m.tracePath({agent_bfs: exploration_order}, delay=5)  # BFS search order path
-    m.tracePath({agent_goal: visited_cells}, delay=100)  # Trace the BFS path to the goal
-    m.tracePath({agent_trace: path_to_goal}, delay=100)  # Trace the path from goal to start
+    # Set up agents and display the maze
+    agent_bfs = agent(m, footprints=True, shape='square', color=COLOR.red)
+    agent_trace = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)
+    agent_goal = agent(m, goal[0], goal[1], footprints=True, color=COLOR.blue, shape='square', filled=True, goal=(m.rows, m.cols))
 
-    # Display the length of the BFS path and search steps
-    textLabel(m, 'BFS Path Length', len(path_to_goal) + 1)  # Length of the path from goal to start
-    textLabel(m, 'BFS Search Length', len(exploration_order))  # Total number of explored cells
+    m.tracePath({agent_bfs: exploration_order}, delay=5)
+    m.tracePath({agent_goal: visited_cells}, delay=100)
+    m.tracePath({agent_trace: path_to_goal}, delay=100)
 
-    # Run the maze visualization
+    # Display BFS path length and search length
+    textLabel(m, 'BFS Path Length', len(path_to_goal) + 1)
+    textLabel(m, 'BFS Search Length', len(exploration_order))
+
+    # Run the maze simulation
     m.run()
+  
