@@ -86,7 +86,7 @@ def get_next_cell(current, direction):
 if __name__ == '__main__':
     # Create a 15x15 maze and load it from a CSV file
     m = maze(15, 15)
-    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/ICA Pyamaze Example/mazetest.csv')
+    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze--2024-11-30--21-36-21.csv')
 
     # Run BFS and DFS search on the maze
     exploration_order_bfs, visited_cells_bfs, path_to_goal_bfs = BFS_search(m)
@@ -104,8 +104,8 @@ if __name__ == '__main__':
     m.tracePath({agent_dfs: exploration_order_dfs}, delay=5)  # DFS search order path
 
     # Visualize the full path for both BFS and DFS from start to goal
-    m.tracePath({agent_trace_bfs: path_to_goal_bfs}, delay=600)  # BFS path to the goal
-    m.tracePath({agent_trace_dfs: path_to_goal_dfs}, delay=600)  # DFS path to the goal
+    m.tracePath({agent_trace_bfs: path_to_goal_bfs}, delay=1)  # BFS path to the goal
+    m.tracePath({agent_trace_dfs: path_to_goal_dfs}, delay=1)  # DFS path to the goal
 
     # Display the length of the BFS and DFS paths and search steps
     textLabel(m, 'BFS Path Length', len(path_to_goal_bfs) + 1)  # Length of the BFS path

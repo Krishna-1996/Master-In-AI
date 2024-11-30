@@ -79,7 +79,7 @@ def greedy_bfs(m, start=None):
 if __name__ == '__main__':
     # Create a 15x15 maze and load a custom maze from a CSV file
     m = maze(15, 15)
-    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/ICA Pyamaze Example/mazetest.csv')
+    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze--2024-11-30--21-36-21.csv')
 
     # Perform Greedy BFS algorithm on the maze to find the search order and paths
     exploration_order, came_from, path_to_goal = greedy_bfs(m)
