@@ -26,7 +26,6 @@ def BFS_search(maze_obj, start=None):
 
         # If the goal is reached, stop the search
         if current == maze_obj._goal:
-            visited[current] = None  # Mark the goal's parent as None (goal reached)
             break
         
         # Check all four possible directions (East, West, South, North)
@@ -46,10 +45,7 @@ def BFS_search(maze_obj, start=None):
     # Reconstruct the path from the goal to the start using the visited dictionary
     path_to_goal = {}
     cell = maze_obj._goal
-    while cell != start:  # Ensure we stop when we reach the start
-        if cell not in visited:
-            print(f"Error: Cell {cell} not visited!")
-            break
+    while cell != (maze_obj.rows, maze_obj.cols):
         path_to_goal[visited[cell]] = cell
         cell = visited[cell]
 
@@ -73,10 +69,9 @@ def get_next_cell(current, direction):
 # Main function to execute the maze creation and BFS search
 if __name__ == '__main__':
     # Create a 15x15 maze and load it from a CSV file
-    m = maze(30, 50)
-    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/random_maze_old_format.csv')
-    'D:/Masters Projects/Master-In-AI'
- 
+    m = maze(15, 15)
+    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze--2024-11-30--21-36-21.csv')
+    m._goal(15,15)
 
     # Perform BFS search on the maze and get the exploration order and paths
     exploration_order, visited_cells, path_to_goal = BFS_search(m)
@@ -97,5 +92,3 @@ if __name__ == '__main__':
 
     # Run the maze visualization
     m.run()
-
-
