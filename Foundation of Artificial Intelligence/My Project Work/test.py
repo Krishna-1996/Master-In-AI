@@ -67,11 +67,14 @@ def get_next_cell(current, direction):
         return (row - 1, col)
 
 # Main function to execute the maze creation and BFS search
+# Main function to execute the maze creation and BFS search
 if __name__ == '__main__':
-    # Create a 15x15 maze and load it from a CSV file
-    m = maze(15, 15)
+    # Create a 30x50 maze and load it from a CSV file
+    m = maze(30, 50)  # Adjust to match the size of your maze
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze--2024-11-30--21-36-21.csv')
-    new_goal_position = (15, 15)
+
+    # Set the goal position to the top-right corner
+    new_goal_position = (1, m.cols)  # Goal is at the top-right corner, which is (1, 50) for a 30x50 maze
 
     # Perform BFS search on the maze and get the exploration order and paths
     exploration_order, visited_cells, path_to_goal = BFS_search(m)
@@ -79,7 +82,7 @@ if __name__ == '__main__':
     # Create agents to visualize the BFS search process
     agent_bfs = agent(m, footprints=True, shape='square', color=COLOR.red)  # Visualize BFS search order
     agent_trace = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)  # Full BFS path
-    agent_goal = agent(m, 1, 1, footprints=True, color=COLOR.blue, shape='square', filled=True, goal=(new_goal_position))  # Goal agent
+    agent_goal = agent(m, 1, 1, footprints=True, color=COLOR.blue, shape='square', filled=True, goal=new_goal_position)  # Set new goal position at top-right
 
     # Visualize the agents' movements along their respective paths
     m.tracePath({agent_bfs: exploration_order}, delay=5)  # BFS search order path
