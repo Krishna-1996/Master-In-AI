@@ -72,7 +72,7 @@ def get_next_cell(current, direction):
 # Main function to execute the maze creation and BFS search
 if __name__ == '__main__':
     # Create a 15x15 maze and load it from a CSV file
-    m = maze(30, 50)
+    m = maze(15, 15)
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze--2024-11-30--21-36-21.csv')
 
     # Perform BFS search on the maze and get the exploration order and paths
@@ -81,10 +81,7 @@ if __name__ == '__main__':
     # Create agents to visualize the BFS search process
     agent_bfs = agent(m, footprints=True, shape='square', color=COLOR.red)  # Visualize BFS search order
     agent_trace = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)  # Full BFS path
-
-    # Correctly set the goal agent at the middle of the maze
-    goal_position = (m.rows // 2, m.cols // 2)  # Middle of the maze
-    agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)
+    agent_goal = agent(m, 1, 1, footprints=True, color=COLOR.green, shape='square', filled=True, goal=(m.rows // 2, m.cols // 2))  # Goal agent at the middle of the maze
 
     # Visualize the agents' movements along their respective paths
     m.tracePath({agent_bfs: exploration_order}, delay=5)  # BFS search order path
