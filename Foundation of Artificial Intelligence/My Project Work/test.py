@@ -1,51 +1,48 @@
-# Importing required modules for maze creation and visualization
 from pyamaze import maze, agent, COLOR, textLabel
 from collections import deque
+import heapq
 
-def BFS_search(maze_obj, start=None, goal=None):
-    # Default start position: Bottom-right corner
+def heuristic(a, b):
+    # Manhattan distance heuristic
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+def A_star_search(maze_obj, start=None, goal=None):
     if start is None:
         start = (maze_obj.rows, maze_obj.cols)
 
-    # Default goal: Middle of the maze
     if goal is None:
-        goal = (maze_obj.rows // 2, maze_obj.cols // 2)  # Middle of the maze
+        goal = (maze_obj.rows // 2, maze_obj.cols // 2)
+    
+    if not (0 <= goal[0] < maze_obj.rows and 0 <= goal[1] < maze_obj.cols):
+        raise ValueError(f"Invalid goal position: {goal}. It must be within the bounds of the maze.")
 
-    # Initialize BFS frontier with the start point
-    frontier = deque([start])
-
-    # Dictionary to store the path taken to reach each cell
+    # Min-heap priority queue
+    frontier = []
+    heapq.heappush(frontier, (0 + heuristic(start, goal), start))  # (f-cost, position)
     visited = {}
-
-    # List to track cells visited in the search process
     exploration_order = []
-
-    # Set of explored cells to avoid revisiting
     explored = set([start])
+    g_costs = {start: 0}
 
     while frontier:
-        # Dequeue the next cell to process
-        current = frontier.popleft()
+        _, current = heapq.heappop(frontier)
 
-        # If the goal is reached, stop the search
         if current == goal:
             break
 
-        # Check all four possible directions (East, West, South, North)
         for direction in 'ESNW':
-            # If movement is possible in this direction (no wall)
             if maze_obj.maze_map[current][direction]:
-                # Calculate the coordinates of the next cell in the direction
                 next_cell = get_next_cell(current, direction)
+                new_g_cost = g_costs[current] + 1  # +1 for each move (uniform cost)
+                
+                if next_cell not in explored or new_g_cost < g_costs.get(next_cell, float('inf')):
+                    g_costs[next_cell] = new_g_cost
+                    f_cost = new_g_cost + heuristic(next_cell, goal)
+                    heapq.heappush(frontier, (f_cost, next_cell))
+                    visited[next_cell] = current
+                    exploration_order.append(next_cell)
+                    explored.add(next_cell)
 
-                # If the cell hasn't been visited yet, process it
-                if next_cell not in explored:
-                    frontier.append(next_cell)  # Add to the frontier
-                    explored.add(next_cell)     # Mark as visited
-                    visited[next_cell] = current  # Record the parent (current cell)
-                    exploration_order.append(next_cell)  # Track the exploration order
-
-    # Reconstruct the path from the goal to the start using the visited dictionary
     path_to_goal = {}
     cell = goal
     while cell != start:
@@ -54,36 +51,24 @@ def BFS_search(maze_obj, start=None, goal=None):
 
     return exploration_order, visited, path_to_goal
 
-def get_next_cell(current, direction):
-    """
-    Returns the coordinates of the neighboring cell based on the direction.
-    Directions are 'E' (East), 'W' (West), 'S' (South), 'N' (North).
-    """
-    row, col = current
-    if direction == 'E':  # Move East
-        return (row, col + 1)
-    elif direction == 'W':  # Move West
-        return (row, col - 1)
-    elif direction == 'S':  # Move South
-        return (row + 1, col)
-    elif direction == 'N':  # Move North
-        return (row - 1, col)
-
+# Main code remains the same as in the original
 # Main function to execute the maze creation and BFS search
 if __name__ == '__main__':
-    # Create a 15x15 maze and load it from a CSV file
+    # Create a 30x50 maze and load it from a CSV file
     m = maze(30, 50)
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze--2024-11-30--21-36-21.csv')
 
+    # Set your custom goal (within maze limits)
+    goal_position = (29, 1)  # Example goal, you can change this to any valid coordinate
+
     # Perform BFS search on the maze and get the exploration order and paths
-    exploration_order, visited_cells, path_to_goal = BFS_search(m)
+    exploration_order, visited_cells, path_to_goal = A_star_search(m, goal=goal_position)
 
     # Create agents to visualize the BFS search process
     agent_bfs = agent(m, footprints=True, shape='square', color=COLOR.red)  # Visualize BFS search order
     agent_trace = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)  # Full BFS path
 
-    # Correctly set the goal agent at the middle of the maze
-    goal_position = (m.rows // 2, m.cols // 2)  # Middle of the maze
+    # Create the goal agent at the custom goal position
     agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)
 
     # Visualize the agents' movements along their respective paths
