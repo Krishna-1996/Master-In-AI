@@ -1,4 +1,3 @@
-# Importing required modules for maze creation and visualization
 from pyamaze import maze, agent, COLOR, textLabel
 from collections import deque
 
@@ -7,9 +6,12 @@ def BFS_search(maze_obj, start=None, goal=None):
     if start is None:
         start = (maze_obj.rows, maze_obj.cols)
 
-    # Default goal: Middle of the maze
+    # Ensure goal is within the maze bounds
     if goal is None:
-        goal = (maze_obj.rows // 2, maze_obj.cols // 2)  # Middle of the maze
+        goal = (maze_obj.rows // 2, maze_obj.cols // 2)  # Default to the middle of the maze
+    # Check if the goal is valid (within bounds)
+    if not (0 <= goal[0] < maze_obj.rows and 0 <= goal[1] < maze_obj.cols):
+        raise ValueError(f"Invalid goal position: {goal}. It must be within the bounds of the maze.")
 
     # Initialize BFS frontier with the start point
     frontier = deque([start])
@@ -71,17 +73,22 @@ def get_next_cell(current, direction):
 
 # Main function to execute the maze creation and BFS search
 if __name__ == '__main__':
-    # Create a 15x15 maze and load it from a CSV file
-    m = maze(15, 15)
+    # Create a 30x50 maze and load it from a CSV file
+    m = maze(30, 50)
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze--2024-11-30--21-36-21.csv')
 
+    # Set your custom goal (within maze limits)
+    goal_position = (29, 1)  # Example goal, you can change this to any valid coordinate
+
     # Perform BFS search on the maze and get the exploration order and paths
-    exploration_order, visited_cells, path_to_goal = BFS_search(m)
+    exploration_order, visited_cells, path_to_goal = BFS_search(m, goal=goal_position)
 
     # Create agents to visualize the BFS search process
     agent_bfs = agent(m, footprints=True, shape='square', color=COLOR.red)  # Visualize BFS search order
     agent_trace = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)  # Full BFS path
-    agent_goal = agent(m, 1, 1, footprints=True, color=COLOR.green, shape='square', filled=True, goal=(m.rows // 2, m.cols // 2))  # Goal agent at the middle of the maze
+
+    # Create the goal agent at the custom goal position
+    agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)
 
     # Visualize the agents' movements along their respective paths
     m.tracePath({agent_bfs: exploration_order}, delay=5)  # BFS search order path
