@@ -1,6 +1,19 @@
 from pyamaze import maze, agent, COLOR, textLabel
 import heapq
 
+def get_next_cell(current, direction):
+    """Calculate the next cell based on the current cell and direction."""
+    x, y = current
+    if direction == 'E':  # Move east
+        return (x, y + 1)
+    elif direction == 'W':  # Move west
+        return (x, y - 1)
+    elif direction == 'N':  # Move north
+        return (x - 1, y)
+    elif direction == 'S':  # Move south
+        return (x + 1, y)
+    return current  # Return the current cell if direction is invalid
+
 def greedy_heuristic(a, b):
     # Manhattan distance heuristic for Greedy BFS
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
@@ -50,7 +63,7 @@ if __name__ == '__main__':
     m = maze(30, 50)
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze--2024-11-30--21-36-21.csv')
 
-    goal_position = (29, 3)  # Example goal, change to any valid coordinate
+    goal_position = (29 ,3)  # Example goal, change to any valid coordinate
 
     exploration_order, visited_cells, path_to_goal = greedy_BFS_search(m, goal=goal_position)
 
