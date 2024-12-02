@@ -8,7 +8,7 @@ def BFS_search(maze_obj, start=None, goal=None):
 
     # Ensure goal is within the maze bounds
     if goal is None:
-        goal = (maze_obj.rows // 2, maze_obj.cols // 2)  # Default to the middle of the maze
+        goal = (29, 1)  # Default to the middle of the maze
     # Check if the goal is valid (within bounds)
     if not (0 <= goal[0] < maze_obj.rows and 0 <= goal[1] < maze_obj.cols):
         raise ValueError(f"Invalid goal position: {goal}. It must be within the bounds of the maze.")
