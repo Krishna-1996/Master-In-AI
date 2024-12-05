@@ -95,6 +95,7 @@ if __name__ == '__main__':
     m.tracePath({c: path_to_goal}, delay=100)  # Trace the path from start to goal (final path)
 
     # Display the lengths of the Greedy BFS search and final paths as labels
+    
     l = textLabel(m, 'Greedy BFS Path Length', len(path_to_goal))  # Length of the path from start to goal
     l = textLabel(m, 'Greedy BFS Search Length', len(exploration_order))  # Total number of cells explored
 

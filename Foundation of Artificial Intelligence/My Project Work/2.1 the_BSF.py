@@ -96,6 +96,7 @@ if __name__ == '__main__':
     m.tracePath({agent_goal: visited_cells}, delay=100)  # Trace the BFS path to the goal
 
     # Display the length of the BFS path and search steps
+    textLabel(m, 'Goal Position', str(goal_position))
     textLabel(m, 'BFS Path Length', len(path_to_goal) + 1)  # Length of the path from goal to start
     textLabel(m, 'BFS Search Length', len(exploration_order))  # Total number of explored cells
 

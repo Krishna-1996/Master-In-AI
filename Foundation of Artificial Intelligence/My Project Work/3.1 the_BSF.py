@@ -78,7 +78,7 @@ if __name__ == '__main__':
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze--2024-11-30--21-36-21.csv')
 
     # Set your custom goal (within maze limits)
-    goal_position = (29 ,3)  # Example goal, you can change this to any valid coordinate
+    goal_position = (2 ,45)  # Example goal, you can change this to any valid coordinate
 
     # Perform BFS search on the maze and get the exploration order and paths
     exploration_order, visited_cells, path_to_goal = BFS_search(m, goal=goal_position)
@@ -96,6 +96,7 @@ if __name__ == '__main__':
     m.tracePath({agent_goal: visited_cells}, delay=100)  # Trace the BFS path to the goal
 
     # Display the length of the BFS path and search steps
+    textLabel(m, 'Goal Position', str(goal_position))
     textLabel(m, 'BFS Path Length', len(path_to_goal) + 1)  # Length of the path from goal to start
     textLabel(m, 'BFS Search Length', len(exploration_order))  # Total number of explored cells
 
