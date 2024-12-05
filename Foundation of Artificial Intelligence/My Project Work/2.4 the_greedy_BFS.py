@@ -75,6 +75,7 @@ if __name__ == '__main__':
     m.tracePath({agent_trace: path_to_goal}, delay=100)
     m.tracePath({agent_goal: visited_cells}, delay=100)
 
+    textLabel(m, 'Goal Position', str(goal_position))
     textLabel(m, 'Greedy BFS Path Length', len(path_to_goal) + 1)
     textLabel(m, 'Greedy BFS Search Length', len(exploration_order))
 
