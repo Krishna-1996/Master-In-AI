@@ -1,4 +1,5 @@
 from pyamaze import maze, agent, COLOR, textLabel
+from collections import deque
 
 def DFS_search(maze_obj, start=None, goal=None):
     # Default start position: Bottom-right corner
@@ -7,7 +8,7 @@ def DFS_search(maze_obj, start=None, goal=None):
 
     # Ensure goal is within the maze bounds
     if goal is None:
-        goal = (maze_obj.rows // 2, maze_obj.cols // 2)  # Default to the middle of the maze
+        goal = ( 1,1)  # Default to the middle of the maze
     # Check if the goal is valid (within bounds)
     if not (0 <= goal[0] < maze_obj.rows and 0 <= goal[1] < maze_obj.cols):
         raise ValueError(f"Invalid goal position: {goal}. It must be within the bounds of the maze.")
@@ -25,7 +26,7 @@ def DFS_search(maze_obj, start=None, goal=None):
     explored = set([start])
 
     while stack:
-        # Pop the next cell to process (LIFO order)
+        # Pop the next cell to process (DFS works by LIFO - Last In, First Out)
         current = stack.pop()
 
         # If the goal is reached, stop the search
@@ -41,8 +42,8 @@ def DFS_search(maze_obj, start=None, goal=None):
 
                 # If the cell hasn't been visited yet, process it
                 if next_cell not in explored:
-                    stack.append(next_cell)  # Add to the stack (LIFO)
-                    explored.add(next_cell)   # Mark as visited
+                    stack.append(next_cell)  # Add to the stack
+                    explored.add(next_cell)  # Mark as visited
                     visited[next_cell] = current  # Record the parent (current cell)
                     exploration_order.append(next_cell)  # Track the exploration order
 
@@ -77,7 +78,7 @@ if __name__ == '__main__':
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze--2024-11-30--21-36-21.csv')
 
     # Set your custom goal (within maze limits)
-    goal_position = (1, 1)  # Example goal, you can change this to any valid coordinate
+    goal_position = (29 ,3)  # Example goal, you can change this to any valid coordinate
 
     # Perform DFS search on the maze and get the exploration order and paths
     exploration_order, visited_cells, path_to_goal = DFS_search(m, goal=goal_position)
@@ -94,10 +95,8 @@ if __name__ == '__main__':
     m.tracePath({agent_trace: path_to_goal}, delay=100)  # Trace the path from goal to start (final agent path)
     m.tracePath({agent_goal: visited_cells}, delay=100)  # Trace the DFS path to the goal
 
-    # Add a text label to display the goal position on the maze
-    textLabel(m, 'Goal Position', str(goal_position))
-
     # Display the length of the DFS path and search steps
+    textLabel(m, 'Goal Position', str(goal_position))
     textLabel(m, 'DFS Path Length', len(path_to_goal) + 1)  # Length of the path from goal to start
     textLabel(m, 'DFS Search Length', len(exploration_order))  # Total number of explored cells
 
