@@ -71,7 +71,7 @@ if __name__ == '__main__':
     # Create a 15x15 maze and load it from a CSV file
     m = maze(15, 15)
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze--2024-11-30--21-36-21.csv')
-    
+    goal_position = ("0, 0")
 
     # Perform BFS search on the maze and get the exploration order and paths
     exploration_order, visited_cells, path_to_goal = BFS_search(m)
@@ -87,7 +87,7 @@ if __name__ == '__main__':
     m.tracePath({agent_trace: path_to_goal}, delay=100)  # Trace the path from goal to start
 
     # Display the length of the BFS path and search steps
-    
+    textLabel(m, 'Goal Position',(goal_position))
     textLabel(m, 'BFS Path Length', len(path_to_goal) + 1)  # Length of the path from goal to start
     textLabel(m, 'BFS Search Length', len(exploration_order))  # Total number of explored cells
 
