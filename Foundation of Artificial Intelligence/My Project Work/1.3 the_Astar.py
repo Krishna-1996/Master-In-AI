@@ -98,7 +98,7 @@ if __name__ == '__main__':
     # Trace the agents' paths through the maze
     m.tracePath({a: exploration_order}, delay=10)  # Trace A* search order
     m.tracePath({b: path_to_goal}, delay=100)  # Trace the path found by A*
-    m.tracePath({c: path_to_goal}, delay=100)  # Trace the path from start to goal (final path)
+    m.tracePath({c: path_to_goal}, delay=10)  # Trace the path from start to goal (final path)
 
     # Display the lengths of the A* search and final paths as labels
     
