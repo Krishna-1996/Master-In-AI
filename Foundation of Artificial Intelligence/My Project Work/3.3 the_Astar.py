@@ -68,7 +68,7 @@ if __name__ == '__main__':
     m = maze(30, 50)
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze--2024-11-30--21-36-21.csv')
 
-    goal_position = (29, 45)  # Example goal, change to any valid coordinate
+    goal_position = (2, 45)  # Example goal, change to any valid coordinate
 
     exploration_order, visited_cells, path_to_goal = A_star_search(m, goal=goal_position)
 

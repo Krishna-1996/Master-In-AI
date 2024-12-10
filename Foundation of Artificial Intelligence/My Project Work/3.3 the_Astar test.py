@@ -55,14 +55,18 @@ def A_star_search(maze_obj, start=None, goal=None):
                     visited[next_cell] = current
                     exploration_order.append(next_cell)
 
-    # Reconstruct path from goal to start
+    # Reconstruct path from goal to start (if the goal was found)
     path_to_goal = []
-    cell = goal
-    while cell != start:
-        path_to_goal.append(cell)
-        cell = visited[cell]
-    path_to_goal.append(start)
-    path_to_goal.reverse()  # Reverse to get the path from start to goal
+    if goal in visited:  # Check if the goal has been reached
+        cell = goal
+        while cell != start:
+            path_to_goal.append(cell)
+            cell = visited[cell]
+        path_to_goal.append(start)
+        path_to_goal.reverse()  # Reverse to get the path from start to goal
+    else:
+        print("Goal not reached. Path reconstruction failed.")
+        path_to_goal = []
 
     return exploration_order, path_to_goal
 
@@ -84,7 +88,8 @@ if __name__ == '__main__':
     agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)
 
     # Trace the path found by A* algorithm
-    m.tracePath({agent_astar: path_to_goal}, delay=5)
+    if path_to_goal:  # Only trace the path if it's valid
+        m.tracePath({agent_astar: path_to_goal}, delay=5)
 
     # Display text labels on the maze
     textLabel(m, 'Goal Position', str(goal_position))
