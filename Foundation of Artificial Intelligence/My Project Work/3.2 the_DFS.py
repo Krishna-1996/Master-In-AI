@@ -77,7 +77,7 @@ if __name__ == '__main__':
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze--2024-11-30--21-36-21.csv')
 
     # Set your custom goal (within maze limits)
-    goal_position = (2, 45)  # Example goal, you can change this to any valid coordinate
+    goal_position = (1, 10)  # Example goal, you can change this to any valid coordinate
 
     # Perform DFS search on the maze and get the exploration order and paths
     exploration_order, visited_cells, path_to_goal = DFS_search(m, goal=goal_position)
@@ -90,9 +90,9 @@ if __name__ == '__main__':
     agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)
 
     # Visualize the agents' movements along their respective paths
-    m.tracePath({agent_dfs: exploration_order}, delay=5)  # DFS search order path
-    m.tracePath({agent_trace: path_to_goal}, delay=100)  # Trace the path from goal to start (final agent path)
-    m.tracePath({agent_goal: visited_cells}, delay=100)  # Trace the DFS path to the goal
+    m.tracePath({agent_dfs: exploration_order}, delay=3)  # DFS search order path
+    m.tracePath({agent_trace: path_to_goal}, delay=1)  # Trace the path from goal to start (final agent path)
+    m.tracePath({agent_goal: visited_cells}, delay=1)  # Trace the DFS path to the goal
 
     # Add a text label to display the goal position on the maze
     textLabel(m, 'Goal Position', str(goal_position))
