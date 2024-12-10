@@ -84,12 +84,18 @@ if __name__ == '__main__':
     exploration_order, path_to_goal = A_star_search(m, start=start_position, goal=goal_position)
 
     # Create the agent and path visualization
-    agent_astar = agent(m, footprints=True, shape='square', color=COLOR.red)
-    agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)
+    agent_astar = agent(m, footprints=True, shape='square', color=COLOR.red)  # A* Agent (exploring)
+    agent_trace = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)  # Path Trace Agent
+    agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)  # Goal Agent
 
-    # Trace the path found by A* algorithm
-    if path_to_goal:  # Only trace the path if it's valid
-        m.tracePath({agent_astar: path_to_goal}, delay=5)
+    # Trace the exploration process (how A* explores the maze)
+    m.tracePath({agent_astar: exploration_order}, delay=5)
+
+    # Trace the final path after A* finds the goal
+    m.tracePath({agent_trace: path_to_goal}, delay=100)
+
+    # Display the goal agent at the goal position
+    m.tracePath({agent_goal: [goal_position]}, delay=100)
 
     # Display text labels on the maze
     textLabel(m, 'Goal Position', str(goal_position))
