@@ -97,8 +97,8 @@ if __name__ == '__main__':
 
     # Visualize the agents' movements along their respective paths
     m.tracePath({agent_dfs: exploration_order}, delay=1)  # DFS search order path
-    m.tracePath({agent_trace: path_to_goal}, delay=1)  # Trace the path from goal to start (final agent path)
-    m.tracePath({agent_goal: [goal_position]}, delay=1)  # Trace the DFS path to the goal
+    m.tracePath({agent_trace: path_to_goal}, delay=100)  # Trace the path from goal to start (final agent path)
+    m.tracePath({agent_goal: [goal_position]}, delay=100)  # Trace the DFS path to the goal
 
     # Add a text label to display the goal position on the maze
     textLabel(m, 'Goal Position', str(goal_position))
