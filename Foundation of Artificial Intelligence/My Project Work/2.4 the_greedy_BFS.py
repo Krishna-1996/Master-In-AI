@@ -61,9 +61,9 @@ def greedy_BFS_search(maze_obj, start=None, goal=None):
 # Main function for Greedy BFS search
 if __name__ == '__main__':
     m = maze(30, 50)
-    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze--2024-11-30--21-36-21.csv')
+    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze_update2.csv')
 
-    goal_position = (29 ,3)  # Example goal, change to any valid coordinate
+    goal_position = (1 ,1)  # Example goal, change to any valid coordinate
 
     exploration_order, visited_cells, path_to_goal = greedy_BFS_search(m, goal=goal_position)
 
@@ -71,9 +71,9 @@ if __name__ == '__main__':
     agent_trace = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)
     agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)
 
-    m.tracePath({agent_greedy: exploration_order}, delay=5)
-    m.tracePath({agent_trace: path_to_goal}, delay=100)
-    m.tracePath({agent_goal: visited_cells}, delay=100)
+    m.tracePath({agent_greedy: exploration_order}, delay=1)
+    m.tracePath({agent_trace: path_to_goal}, delay=1)
+    m.tracePath({agent_goal: visited_cells}, delay=1)
 
     textLabel(m, 'Goal Position', str(goal_position))
     textLabel(m, 'Greedy BFS Path Length', len(path_to_goal) + 1)

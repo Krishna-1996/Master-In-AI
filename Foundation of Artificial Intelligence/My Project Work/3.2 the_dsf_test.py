@@ -78,7 +78,7 @@ def get_next_cell(current, direction):
 if __name__ == '__main__':
     # Create a 30x50 maze and load it from a CSV file
     m = maze(30, 50)
-    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze--2024-11-30--21-36-21.csv')
+    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze_update2.csv')
 
     # Set your custom goal (within maze limits)
     goal_position = (1, 10)  # Custom goal position (change this to any valid coordinate)
