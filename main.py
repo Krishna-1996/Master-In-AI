@@ -1,5 +1,5 @@
-print("Hello World")
-def printThis(x,y,c):
-    return ((x+y)/c)
-
-print(printThis(50,40,10))
+from pyamaze import maze
+m = maze(30, 75)
+m.CreateMaze(loopPercent=45,saveMaze=True)
+# m.CreateMaze(saveMaze=True)
+m.run()
