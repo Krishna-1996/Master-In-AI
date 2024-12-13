@@ -1,6 +1,9 @@
+
 # Importing required modules for maze creation and visualization
 from pyamaze import maze, agent, COLOR, textLabel
 from collections import deque
+
+
 
 def BFS_search(maze_obj, start=None):
     # If no start position is provided, use the bottom-right corner of the maze as the start
@@ -19,6 +22,8 @@ def BFS_search(maze_obj, start=None):
     # Set of explored cells to avoid revisiting
     explored = set([start])  # Start with the start cell marked as explored
     
+
+
     while frontier:  # Loop while there are still cells in the frontier to explore
         current = frontier.popleft()  # Dequeue the next cell to process
 
@@ -40,6 +45,8 @@ def BFS_search(maze_obj, start=None):
                     visited[next_cell] = current  # Record the parent (current cell) for path reconstruction
                     exploration_order.append(next_cell)  # Track the order of exploration
 
+
+
     # Reconstruct the path from the goal to the start using the visited dictionary
     path_to_goal = {}  # Dictionary to store the reconstructed path from goal to start
     cell = maze_obj._goal  # Start from the goal cell
@@ -47,7 +54,9 @@ def BFS_search(maze_obj, start=None):
         path_to_goal[visited[cell]] = cell  # Map each cell to its predecessor
         cell = visited[cell]  # Move to the previous cell in the path
 
-    return exploration_order, visited, path_to_goal  # Return exploration order, visited cells, and the path to the goal
+    # Return exploration order, visited cells, and the path to the goal
+    return exploration_order, visited, path_to_goal  
+
 
 def get_next_cell(current, direction):
     """
@@ -75,9 +84,12 @@ if __name__ == '__main__':
     exploration_order, visited_cells, path_to_goal = BFS_search(m)  # Call BFS to get the search results
 
     # Create agents to visualize the BFS search process
-    agent_bfs = agent(m, footprints=True, shape='square', color=COLOR.red)  # Agent for BFS search order visualization
-    agent_trace = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)  # Agent for the full BFS path
-    agent_goal = agent(m, 1, 1, footprints=True, color=COLOR.blue, shape='square', filled=True, goal=(m.rows, m.cols))  # Agent to mark the goal position
+    agent_bfs = agent(m, footprints=True, shape='square', 
+                      color=COLOR.red)  # Agent for BFS search order visualization
+    agent_trace = agent(m, footprints=True, shape='star', 
+                        color=COLOR.yellow, filled=False)  # Agent for the full BFS path
+    agent_goal = agent(m, 1, 1, footprints=True, color=COLOR.blue, shape='square', 
+                       filled=True, goal=(m.rows, m.cols))  # Agent to mark the goal position
 
     # Visualize the agents' movements along their respective paths
     m.tracePath({agent_bfs: exploration_order}, delay=1)  # Visualize the BFS search order with a 1-second delay
