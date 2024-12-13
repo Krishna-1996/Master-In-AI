@@ -1,89 +1,111 @@
 from pyamaze import maze, agent, COLOR, textLabel
-import heapq  # Priority queue for A* algorithm
 
-# Heuristic function for A* (Manhattan distance)
-def heuristic(cell, goal):
-    return abs(cell[0] - goal[0]) + abs(cell[1] - goal[1])
+def DFS_search(maze_obj, start=None, goal=None):
+    # Default start position: Bottom-right corner
+    start = (30, 50)
 
-# A* algorithm to find the shortest path in the maze
-def a_star(m, start=None):
-    # Set default start point if not provided (bottom-right corner)
-    start = start or (m.rows, m.cols)
-    
-    # Initialize distances and priority queue
-    g_costs = {cell: float('inf') for cell in m.grid}
-    g_costs[start] = 0
-    f_costs = {cell: float('inf') for cell in m.grid}
-    f_costs[start] = heuristic(start, m._goal)
-    
-    # Priority queue to explore the cell with the lowest f(n)
-    priority_queue = [(f_costs[start], start)]
-    
-    # Store the path and the order of exploration
-    came_from = {}
+    # Ensure goal is within the maze bounds
+    goal = (2, 10)
+
+    # Initialize DFS stack with the start point
+    stack = [start]
+
+    # Dictionary to store the path taken to reach each cell
+    visited = {}
+
+    # List to track cells visited in the search process
     exploration_order = []
-    
-    # A* search loop
-    while priority_queue:
-        _, current_cell = heapq.heappop(priority_queue)
-        
-        # If goal is reached, stop
-        if current_cell == m._goal:
+
+    # Set of explored cells to avoid revisiting
+    explored = set([start])
+
+    # Debugging output
+    print("Starting DFS Search")
+
+    while stack:
+        # Pop the next cell to process (LIFO order)
+        current = stack.pop()
+        print(f"Processing cell: {current}")
+
+        # If the goal is reached, stop the search
+        if current == goal:
+            print(f"Goal reached at {current}")
             break
-        
-        # Explore neighboring cells (East, South, North, West)
-        for d in 'ESNW':
-            if m.maze_map[current_cell][d]:  # Check if move is valid
-                # Get neighboring cell based on direction
-                if d == 'E': neighbor_cell = (current_cell[0], current_cell[1] + 1)
-                elif d == 'W': neighbor_cell = (current_cell[0], current_cell[1] - 1)
-                elif d == 'S': neighbor_cell = (current_cell[0] + 1, current_cell[1])
-                elif d == 'N': neighbor_cell = (current_cell[0] - 1, current_cell[1])
-                
-                # Calculate tentative g(n) cost
-                tentative_g_cost = g_costs[current_cell] + 1
-                
-                # If found a better path, update the costs and add to priority queue
-                if tentative_g_cost < g_costs[neighbor_cell]:
-                    came_from[neighbor_cell] = current_cell
-                    g_costs[neighbor_cell] = tentative_g_cost
-                    f_costs[neighbor_cell] = tentative_g_cost + heuristic(neighbor_cell, m._goal)
-                    heapq.heappush(priority_queue, (f_costs[neighbor_cell], neighbor_cell))
-                    exploration_order.append(neighbor_cell)
-    
-    # Reconstruct the path from goal to start
-    path_to_goal = []
-    cell = m._goal
+
+        # Check all four possible directions (East, West, South, North)
+        for direction in 'ESNW':
+            # If movement is possible in this direction (no wall)
+            if maze_obj.maze_map[current][direction]:
+                # Calculate the coordinates of the next cell in the direction
+                next_cell = get_next_cell(current, direction)
+
+                # If the cell hasn't been visited yet, process it
+                if next_cell not in explored:
+                    stack.append(next_cell)  # Add to the stack (LIFO)
+                    explored.add(next_cell)   # Mark as visited
+                    visited[next_cell] = current  # Record the parent (current cell)
+                    exploration_order.append(next_cell)  # Track the exploration order
+
+    # Check if the goal was reached and in the visited set
+    if goal not in explored:
+        print("Goal not reached during DFS!")
+    else:
+        print("Goal reached during DFS!")
+
+    # Reconstruct the path from the goal to the start using the visited dictionary
+    path_to_goal = {}
+    cell = goal
     while cell != start:
-        path_to_goal.append(cell)
-        cell = came_from[cell]
-    path_to_goal.append(start)
-    path_to_goal.reverse()  # Reverse path to get start-to-goal
-    
-    return exploration_order, came_from, path_to_goal
+        path_to_goal[visited[cell]] = cell
+        cell = visited[cell]
 
-# Main function to create and visualize the maze
+    return exploration_order, visited, path_to_goal
+
+def get_next_cell(current, direction):
+    """
+    Returns the coordinates of the neighboring cell based on the direction.
+    Directions are 'E' (East), 'W' (West), 'S' (South), 'N' (North).
+    """
+    row, col = current
+    if direction == 'E':  # Move East
+        return (row, col + 1)
+    elif direction == 'W':  # Move West
+        return (row, col - 1)
+    elif direction == 'S':  # Move South
+        return (row + 1, col)
+    elif direction == 'N':  # Move North
+        return (row - 1, col)
+
+# Main function to execute the maze creation and DFS search
 if __name__ == '__main__':
-    # Create a maze and load a custom maze from a CSV file
+    # Create a 30x50 maze and load it from a CSV file
     m = maze(30, 50)
-    m.CreateMaze(loadMaze= 'D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze--2024-11-30--21-36-21.csv')
+    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze--2024-11-30--21-36-21.csv')
 
-    # Run A* algorithm to get exploration order and path
-    exploration_order, came_from, path_to_goal = a_star(m)
+    # Set your custom goal (within maze limits)
+    goal_position = (2, 10)  # Example goal, you can change this to any valid coordinate
 
-    # Create agents for visualization
-    a = agent(m, footprints=True, shape='square', color=COLOR.green)  # A* search path agent
-    b = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)  # Path agent
-    c = agent(m, 1, 1, footprints=True, color=COLOR.blue, shape='square', filled=True, goal=(m.rows, m.cols))  # Goal-seeking agent
+    # Perform DFS search on the maze and get the exploration order and paths
+    exploration_order, visited_cells, path_to_goal = DFS_search(m, goal=goal_position)
 
-    # Trace agents' paths
-    m.tracePath({a: exploration_order}, delay= 1)  # A* exploration path
-    m.tracePath({b: path_to_goal}, delay=1)  # Path from start to goal
-    m.tracePath({c: path_to_goal}, delay=1)  # Trace final goal path
+    # Create agents to visualize the DFS search process
+    agent_dfs = agent(m, footprints=True, shape='square', color=COLOR.red)  # Visualize DFS search order
+    agent_trace = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)  # Full DFS path
 
-    # Display path lengths as labels
-    textLabel(m, 'A* Path Length', len(path_to_goal))
-    textLabel(m, 'A* Search Length', len(exploration_order))
+    # Create the goal agent at the custom goal position
+    agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)
 
-    # Run the simulation
+    # Visualize the agents' movements along their respective paths
+    m.tracePath({agent_dfs: exploration_order}, delay=1)  # DFS search order path
+    m.tracePath({agent_trace: path_to_goal}, delay=1)  # Trace the path from goal to start (final agent path)
+    m.tracePath({agent_goal: visited_cells}, delay=1)  # Trace the DFS path to the goal
+
+    # Add a text label to display the goal position on the maze
+    textLabel(m, 'Goal Position', str(goal_position))
+
+    # Display the length of the DFS path and search steps
+    textLabel(m, 'DFS Path Length', len(path_to_goal) + 1)  # Length of the path from goal to start
+    textLabel(m, 'DFS Search Length', len(exploration_order))  # Total number of explored cells
+
+    # Run the maze visualization
     m.run()
