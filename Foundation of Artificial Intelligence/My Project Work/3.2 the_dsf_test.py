@@ -76,15 +76,15 @@ def get_next_cell(current, direction):
 
 # Main function to execute the maze creation and DFS search
 if __name__ == '__main__':
-    # Create a 30x50 maze and load it from a CSV file
-    m = maze(30, 50)
+    # Create a 50, 120 maze and load it from a CSV file
+    m = maze(50, 120)
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze_update2.csv')
 
     # Set your custom goal (within maze limits)
     goal_position = (1, 10)  # Custom goal position (change this to any valid coordinate)
 
     # Set your custom start (bottom-right corner)
-    start_position = (30, 50)  # Starting position is always bottom-right corner
+    start_position = (50, 120)  # Starting position is always bottom-right corner
 
     # Perform DFS search on the maze and get the exploration order and paths
     exploration_order, path_to_goal = DFS_search(m, start=start_position, goal=goal_position)

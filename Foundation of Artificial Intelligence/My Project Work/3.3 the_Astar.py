@@ -65,7 +65,7 @@ def A_star_search(maze_obj, start=None, goal=None):
 
 # Main function for A* search
 if __name__ == '__main__':
-    m = maze(30, 50)
+    m = maze(50, 120)
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze_update2.csv')
 
     goal_position = (29, 4)  # Example goal, change to any valid coordinate
