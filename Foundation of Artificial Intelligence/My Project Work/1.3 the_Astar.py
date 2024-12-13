@@ -85,7 +85,7 @@ def a_star(m, start=None):
 if __name__ == '__main__':
     # Create a 30 x 50 maze and load a custom maze from a CSV file
     m = maze(30, 50)
-    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze--2024-11-30--21-36-21.csv')
+    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze_update2.csv')
     goal_position = (1,1)
     # Perform A* algorithm on the maze to find the search order and paths
     exploration_order, came_from, path_to_goal = a_star(m)

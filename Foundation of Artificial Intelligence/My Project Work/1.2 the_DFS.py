@@ -2,10 +2,10 @@ from pyamaze import maze, agent, COLOR, textLabel
 
 def DFS_search(maze_obj, start=None, goal=None):
     # Default start position: Bottom-right corner
-    start = (30, 50)
+    start = (50, 120)
 
     # Ensure goal is within the maze bounds
-    goal = (2, 10)
+    goal = (1, 1)
 
     # Initialize DFS stack with the start point
     stack = [start]
@@ -69,10 +69,10 @@ def get_next_cell(current, direction):
 if __name__ == '__main__':
     # Create a 30x50 maze and load it from a CSV file
     m = maze(30, 50)
-    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze--2024-11-30--21-36-21.csv')
+    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze_update2.csv')
 
     # Set your custom goal (within maze limits)
-    goal_position = (2, 10)  # Example goal, you can change this to any valid coordinate
+    goal_position = (1, 1)  # Example goal, you can change this to any valid coordinate
 
     # Perform DFS search on the maze and get the exploration order and paths
     exploration_order, visited_cells, path_to_goal = DFS_search(m, goal=goal_position)
