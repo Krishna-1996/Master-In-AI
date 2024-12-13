@@ -2,15 +2,10 @@ from pyamaze import maze, agent, COLOR, textLabel
 
 def DFS_search(maze_obj, start=None, goal=None):
     # Default start position: Bottom-right corner
-    if start is None:
-        start = (maze_obj.rows, maze_obj.cols)
+    start = (30, 50)
 
     # Ensure goal is within the maze bounds
-    if goal is None:
-        goal = (maze_obj.rows // 2, maze_obj.cols // 2)  # Default to the middle of the maze
-    # Check if the goal is valid (within bounds)
-    if not (0 <= goal[0] < maze_obj.rows and 0 <= goal[1] < maze_obj.cols):
-        raise ValueError(f"Invalid goal position: {goal}. It must be within the bounds of the maze.")
+    goal = (2, 10)
 
     # Initialize DFS stack with the start point
     stack = [start]
@@ -90,9 +85,9 @@ if __name__ == '__main__':
     agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)
 
     # Visualize the agents' movements along their respective paths
-    m.tracePath({agent_dfs: exploration_order}, delay=5)  # DFS search order path
-    m.tracePath({agent_trace: path_to_goal}, delay=100)  # Trace the path from goal to start (final agent path)
-    m.tracePath({agent_goal: visited_cells}, delay=100)  # Trace the DFS path to the goal
+    m.tracePath({agent_dfs: exploration_order}, delay=1)  # DFS search order path
+    m.tracePath({agent_trace: path_to_goal}, delay=1)  # Trace the path from goal to start (final agent path)
+    m.tracePath({agent_goal: visited_cells}, delay=1)  # Trace the DFS path to the goal
 
     # Add a text label to display the goal position on the maze
     textLabel(m, 'Goal Position', str(goal_position))
