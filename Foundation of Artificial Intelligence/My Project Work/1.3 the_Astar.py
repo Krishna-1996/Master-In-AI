@@ -83,10 +83,10 @@ def a_star(m, start=None):
 
 # Main function to create and run the maze
 if __name__ == '__main__':
-    # Create a 15x15 maze and load a custom maze from a CSV file
-    m = maze(15, 15)
+    # Create a 30 x 50 maze and load a custom maze from a CSV file
+    m = maze(30, 50)
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze--2024-11-30--21-36-21.csv')
-
+    goal_position = (1,1)
     # Perform A* algorithm on the maze to find the search order and paths
     exploration_order, came_from, path_to_goal = a_star(m)
 
@@ -101,7 +101,7 @@ if __name__ == '__main__':
     m.tracePath({c: path_to_goal}, delay=10)  # Trace the path from start to goal (final path)
 
     # Display the lengths of the A* search and final paths as labels
-    
+    l = textLabel(m, 'Goal Position', str(goal_position))
     l = textLabel(m, 'A* Path Length', len(path_to_goal))  # Length of the path from start to goal
     l = textLabel(m, 'A* Search Length', len(exploration_order))  # Total number of cells explored
 
