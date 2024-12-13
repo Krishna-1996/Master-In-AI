@@ -92,8 +92,8 @@ if __name__ == '__main__':
 
     # Visualize the agents' movements along their respective paths
     m.tracePath({agent_bfs: exploration_order}, delay=5)  # BFS search order path
-    m.tracePath({agent_trace: path_to_goal}, delay=100)  # Trace the path from goal to start (final agent path)
-    m.tracePath({agent_goal: visited_cells}, delay=100)  # Trace the BFS path to the goal
+    m.tracePath({agent_trace: path_to_goal}, delay=1)  # Trace the path from goal to start (final agent path)
+    m.tracePath({agent_goal: visited_cells}, delay=1)  # Trace the BFS path to the goal
 
     # Display the length of the BFS path and search steps
     textLabel(m, 'Goal Position', str(goal_position))
