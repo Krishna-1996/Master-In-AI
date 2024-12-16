@@ -77,22 +77,25 @@ if __name__ == '__main__':
     # Perform DFS search on the maze and get the exploration order and paths
     exploration_order, visited_cells, path_to_goal = DFS_search(m, goal=goal_position)
 
-    # Create agents to visualize the DFS search process
-    agent_dfs = agent(m, footprints=True, shape='square', color=COLOR.red)  # Visualize DFS search order
-    agent_trace = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)  # Full DFS path
-
-    # Create the goal agent at the custom goal position
-    agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)
+    # Create agents to visualize the BFS search process
+    agent_dfs = agent(m, footprints=True, shape='square', 
+                      color=COLOR.red)  # Visualize BFS search order
+    agent_trace = agent(m, footprints=True, shape='star', 
+                        color=COLOR.yellow, filled=False)  # Full BFS path
+    agent_goal = agent(m, 1, 1, footprints=True, color=COLOR.blue, 
+                       shape='square', filled=True, goal=(m.rows, m.cols))  # Goal agent
 
     # Visualize the agents' movements along their respective paths
     m.tracePath({agent_dfs: exploration_order}, delay=5)  # DFS search order path
-    m.tracePath({agent_trace: path_to_goal}, delay=1)  # Trace the path from goal to start (final agent path)
     m.tracePath({agent_goal: visited_cells}, delay=1)  # Trace the DFS path to the goal
+    m.tracePath({agent_trace: path_to_goal}, delay=1)  # Trace the path from goal to start (final agent path)
+    
 
     # Add a text label to display the goal position on the maze
     textLabel(m, 'Goal Position', str(goal_position))
 
     # Display the length of the DFS path and search steps
+    textLabel(m, 'Goal Position',(goal_position))
     textLabel(m, 'DFS Path Length', len(path_to_goal) + 1)  # Length of the path from goal to start
     textLabel(m, 'DFS Search Length', len(exploration_order))  # Total number of explored cells
 

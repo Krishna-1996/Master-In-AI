@@ -90,13 +90,16 @@ if __name__ == '__main__':
     # Perform A* algorithm on the maze to find the search order and paths
     exploration_order, came_from, path_to_goal = a_star(m)
 
-    # Create agents to visualize the maze solving process
-    a = agent(m, footprints=True, shape='square', color=COLOR.green)  # Agent for A* search order
-    b = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)  # Path tracing agent
-    c = agent(m, 1, 1, footprints=True, color=COLOR.blue, shape='square', filled=True, goal=(m.rows, m.cols))  # Goal-seeking agent
+    # Create agents to visualize the BFS search process
+    agent_Astar = agent(m, footprints=True, shape='square', 
+                      color=COLOR.red)  # Visualize BFS search order
+    agent_trace = agent(m, footprints=True, shape='star', 
+                        color=COLOR.yellow, filled=False)  # Full BFS path
+    agent_goal = agent(m, 1, 1, footprints=True, color=COLOR.blue, 
+                       shape='square', filled=True, goal=(m.rows, m.cols))  # Goal agent
 
     # Trace the agents' paths through the maze
-    m.tracePath({a: exploration_order}, delay=1)  # Trace A* search order
+    m.tracePath({agent_Astar: exploration_order}, delay=1)  # Trace A* search order
     m.tracePath({b: path_to_goal}, delay=1)  # Trace the path found by A*
     m.tracePath({c: path_to_goal}, delay=1)  # Trace the path from start to goal (final path)
 
