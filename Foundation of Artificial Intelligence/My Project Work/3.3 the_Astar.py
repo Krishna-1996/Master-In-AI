@@ -68,7 +68,7 @@ if __name__ == '__main__':
     m = maze(50, 120)
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze_update2.csv')
 
-    goal_position = (29, 4)  # Example goal, change to any valid coordinate
+    goal_position = (2, 119)  # Example goal, change to any valid coordinate
 
     exploration_order, visited_cells, path_to_goal = A_star_search(m, goal=goal_position)
 
@@ -76,7 +76,7 @@ if __name__ == '__main__':
     agent_trace = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)
     agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)
 
-    m.tracePath({agent_astar: exploration_order}, delay=5)
+    m.tracePath({agent_astar: exploration_order}, delay=1)
     m.tracePath({agent_trace: path_to_goal}, delay=1)
     m.tracePath({agent_goal: visited_cells}, delay=1)
 
