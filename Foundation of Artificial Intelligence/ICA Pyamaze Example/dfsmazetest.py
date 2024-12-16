@@ -71,7 +71,7 @@ if __name__ == '__main__':
 
     # Initialize the agents with their properties.
     a=agent(m,footprints=True,filled=True,shape='arrow',color=COLOR.red)
-    b=agent(m,6, 5,goal=(15,15),footprints=True,filled=True,color=COLOR.blue)
+    b=agent(m,1,1,goal=(15,15),footprints=True,filled=True,color=COLOR.blue)
     c=agent(m,footprints=True,color=COLOR.yellow)
 
     # Have the agents trace the paths.
