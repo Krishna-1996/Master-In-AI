@@ -90,11 +90,7 @@ if __name__ == '__main__':
     m.tracePath({agent_goal: visited_cells}, delay=1)  # Trace the DFS path to the goal
     m.tracePath({agent_trace: path_to_goal}, delay=1)  # Trace the path from goal to start (final agent path)
     
-
-    # Add a text label to display the goal position on the maze
-    textLabel(m, 'Goal Position', str(goal_position))
-
-    # Display the length of the DFS path and search steps
+    # Display goal position, the length of the DFS path and search steps
     textLabel(m, 'Goal Position',(goal_position))
     textLabel(m, 'DFS Path Length', len(path_to_goal) + 1)  # Length of the path from goal to start
     textLabel(m, 'DFS Search Length', len(exploration_order))  # Total number of explored cells
