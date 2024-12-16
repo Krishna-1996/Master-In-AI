@@ -10,9 +10,7 @@ def DFS_search(maze_obj, start=None, goal=None):
     if start is None:
         start = (maze_obj.rows, maze_obj.cols)
 
-    # If no goal position is provided, default to the top-left corner
-    if goal is None:
-        goal = (49, 2)
+    goal = (49, 2)
 
     # Initialize DFS stack with the start point
     stack = [start]
