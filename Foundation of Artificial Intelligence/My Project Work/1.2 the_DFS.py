@@ -1,16 +1,16 @@
-# Importing required modules for maze creation and visualization
 from pyamaze import maze, agent, COLOR, textLabel
-from collections import deque
 
 def DFS_search(maze_obj, start=None, goal=None):
-    """
-    Perform Depth-First Search (DFS) to solve the maze.
-    """
-    # If no start position is provided, default to the bottom-right corner
+    # Default start position: Bottom-right corner
     if start is None:
         start = (maze_obj.rows, maze_obj.cols)
 
-    goal = (49, 2)
+    # Ensure goal is within the maze bounds
+    if goal is None:
+        goal = (maze_obj.rows // 2, maze_obj.cols // 2)  # Default to the middle of the maze
+    # Check if the goal is valid (within bounds)
+    if not (0 <= goal[0] < maze_obj.rows and 0 <= goal[1] < maze_obj.cols):
+        raise ValueError(f"Invalid goal position: {goal}. It must be within the bounds of the maze.")
 
     # Initialize DFS stack with the start point
     stack = [start]
@@ -25,7 +25,7 @@ def DFS_search(maze_obj, start=None, goal=None):
     explored = set([start])
 
     while stack:
-        # Pop the next cell to process (DFS uses stack)
+        # Pop the next cell to process (LIFO order)
         current = stack.pop()
 
         # If the goal is reached, stop the search
@@ -41,8 +41,8 @@ def DFS_search(maze_obj, start=None, goal=None):
 
                 # If the cell hasn't been visited yet, process it
                 if next_cell not in explored:
-                    stack.append(next_cell)  # Add to the stack (DFS)
-                    explored.add(next_cell)  # Mark as visited
+                    stack.append(next_cell)  # Add to the stack (LIFO)
+                    explored.add(next_cell)   # Mark as visited
                     visited[next_cell] = current  # Record the parent (current cell)
                     exploration_order.append(next_cell)  # Track the exploration order
 
@@ -74,29 +74,30 @@ def get_next_cell(current, direction):
 if __name__ == '__main__':
     # Create a 50, 120 maze and load it from a CSV file
     m = maze(50, 120)
-    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence//My Project Work/maze_update2.csv')
+    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze_update2.csv')
 
-    # Specify your goal position here (row, col)
-    goal_position = (49, 2)  # Example goal position; change as required.
+    # Set your custom goal (within maze limits)
+    goal_position = (49 ,2)  # Example goal, you can change this to any valid coordinate
 
     # Perform DFS search on the maze and get the exploration order and paths
     exploration_order, visited_cells, path_to_goal = DFS_search(m, goal=goal_position)
 
     # Create agents to visualize the DFS search process
-    agent_dfs = agent(m, footprints=True, shape='square', 
-                      color=COLOR.green)  # Visualize DFS search order
-    agent_trace = agent(m, footprints=True, shape='star', 
-                        color=COLOR.yellow, filled=False)  # Full DFS path
-    agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, 
-                       color=COLOR.blue, shape='square', filled=True, goal=goal_position)  # Goal agent
+    agent_dfs = agent(m, footprints=True, shape='square', color=COLOR.red)  # Visualize DFS search order
+    agent_trace = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)  # Full DFS path
+
+    # Create the goal agent at the custom goal position
+    agent_goal = agent(m, 49, 2, footprints=True, color=COLOR.green, shape='square', filled=True)
 
     # Visualize the agents' movements along their respective paths
     m.tracePath({agent_dfs: exploration_order}, delay=1)  # DFS search order path
-    m.tracePath({agent_goal: visited_cells}, delay=1)  # Trace the DFS path to the goal
-    m.tracePath({agent_trace: path_to_goal}, delay=1)  # Trace the path from goal to start
+    m.tracePath({agent_trace: path_to_goal}, delay=1)  # Trace the path from goal to start (final agent path)
+    #m.tracePath({agent_goal: visited_cells}, delay=1)  # Trace the DFS path to the goal
 
-    # Display the length of the DFS path and search steps
-    textLabel(m, 'Goal Position', str(goal_position))  # Display goal position
+   
+
+    # Display the length of the goal position, DFS path and search steps
+    textLabel(m, 'Goal Position', str(goal_position))
     textLabel(m, 'DFS Path Length', len(path_to_goal) + 1)  # Length of the path from goal to start
     textLabel(m, 'DFS Search Length', len(exploration_order))  # Total number of explored cells
 
