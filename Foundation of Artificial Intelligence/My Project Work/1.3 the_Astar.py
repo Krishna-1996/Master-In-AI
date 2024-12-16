@@ -1,112 +1,87 @@
-# Import necessary modules for maze generation, A* algorithm, and maze visualization
 from pyamaze import maze, agent, COLOR, textLabel
-import heapq  # For the priority queue used in A* algorithm
+import heapq
 
-def heuristic(cell, goal):
-    """
-    Calculate the Manhattan distance from the current cell to the goal.
-    This is the heuristic function used in A*.
-    """
-    return abs(cell[0] - goal[0]) + abs(cell[1] - goal[1])
+def heuristic(a, b):
+    # Manhattan distance heuristic
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
-def a_star(m, start=None):
-    """
-    Perform A* Algorithm to find the shortest path in the maze.
-    A* algorithm uses both the distance from the start and a heuristic to guide the search.
-    """
+def get_next_cell(current, direction):
+    """Calculate the next cell based on the current cell and direction."""
+    x, y = current
+    if direction == 'E':  # Move east
+        return (x, y + 1)
+    elif direction == 'W':  # Move west
+        return (x, y - 1)
+    elif direction == 'N':  # Move north
+        return (x - 1, y)
+    elif direction == 'S':  # Move south
+        return (x + 1, y)
+    return current  # Return the current cell if direction is invalid
 
-    # Set the starting point of the A* algorithm. Default is the bottom-right corner if not specified.
+def A_star_search(maze_obj, start=None, goal=None):
     if start is None:
-        start = (m.rows, m.cols)  # Bottom-right corner
-    
-    # Initialize the distance dictionaries and priority queue
-    g_costs = {cell: float('inf') for cell in m.grid}  # g(n): cost from start to current node
-    g_costs[start] = 0  # Starting point has a g(n) cost of 0
-    f_costs = {cell: float('inf') for cell in m.grid}  # f(n): g(n) + h(n)
-    f_costs[start] = heuristic(start, m._goal)  # f(n) = g(n) + h(n)
-    
-    # Priority queue (min-heap) for selecting the next node to explore based on f(n)
-    priority_queue = []
-    heapq.heappush(priority_queue, (f_costs[start], start))  # Push the start cell with f(n)
-    
-    # Dictionary to store the path (previous cell) that leads to each cell
-    came_from = {}
-    
-    # List to store the order in which cells are explored
+        start = (maze_obj.rows, maze_obj.cols)
+
+    if goal is None:
+        goal = (maze_obj.rows // 2, maze_obj.cols // 2)
+
+    if not (0 <= goal[0] < maze_obj.rows and 0 <= goal[1] < maze_obj.cols):
+        raise ValueError(f"Invalid goal position: {goal}. It must be within the bounds of the maze.")
+
+    # Min-heap priority queue
+    frontier = []
+    heapq.heappush(frontier, (0 + heuristic(start, goal), start))  # (f-cost, position)
+    visited = {}
     exploration_order = []
-    
-    # Process the priority queue until it's empty
-    while priority_queue:
-        _, current_cell = heapq.heappop(priority_queue)  # Get the cell with the lowest f(n)
-        
-        # If the current cell is the goal, we stop the algorithm
-        if current_cell == m._goal:
+    explored = set([start])
+    g_costs = {start: 0}
+
+    while frontier:
+        _, current = heapq.heappop(frontier)
+
+        if current == goal:
             break
-        
-        # Explore the neighboring cells (up, down, left, right)
-        for d in 'ESNW':  # Directions: East, South, North, West
-            # Check if the current direction is passable (no wall)
-            if m.maze_map[current_cell][d] == True:
-                
-                # Calculate the coordinates of the neighboring cell based on direction
-                if d == 'E':  # East
-                    neighbor_cell = (current_cell[0], current_cell[1] + 1)
-                elif d == 'W':  # West
-                    neighbor_cell = (current_cell[0], current_cell[1] - 1)
-                elif d == 'S':  # South
-                    neighbor_cell = (current_cell[0] + 1, current_cell[1])
-                elif d == 'N':  # North
-                    neighbor_cell = (current_cell[0] - 1, current_cell[1])
-                
-                # Calculate the tentative g(n) cost to reach this neighbor
-                tentative_g_cost = g_costs[current_cell] + 1  # All moves have equal cost (1)
-                
-                # If the new g(n) cost is lower, update the costs and add it to the priority queue
-                if tentative_g_cost < g_costs[neighbor_cell]:
-                    came_from[neighbor_cell] = current_cell
-                    g_costs[neighbor_cell] = tentative_g_cost
-                    f_costs[neighbor_cell] = tentative_g_cost + heuristic(neighbor_cell, m._goal)
-                    heapq.heappush(priority_queue, (f_costs[neighbor_cell], neighbor_cell))
-                    exploration_order.append(neighbor_cell)  # Track the order of exploration
 
-    # Reconstruct the path from the goal to the start by following the `came_from` dictionary
-    path_to_goal = []
-    cell = m._goal
+        for direction in 'ESNW':
+            if maze_obj.maze_map[current][direction]:
+                next_cell = get_next_cell(current, direction)
+                new_g_cost = g_costs[current] + 1  # +1 for each move (uniform cost)
+                
+                if next_cell not in explored or new_g_cost < g_costs.get(next_cell, float('inf')):
+                    g_costs[next_cell] = new_g_cost
+                    f_cost = new_g_cost + heuristic(next_cell, goal)
+                    heapq.heappush(frontier, (f_cost, next_cell))
+                    visited[next_cell] = current
+                    exploration_order.append(next_cell)
+                    explored.add(next_cell)
+
+    path_to_goal = {}
+    cell = goal
     while cell != start:
-        path_to_goal.append(cell)
-        cell = came_from[cell]
-    path_to_goal.append(start)
-    path_to_goal.reverse()  # Reverse the path to get it from start to goal
-    
-    # Return the exploration order and the reconstructed path to the goal
-    return exploration_order, came_from, path_to_goal
+        path_to_goal[visited[cell]] = cell
+        cell = visited[cell]
 
-# Main function to create and run the maze
+    return exploration_order, visited, path_to_goal
+
+# Main function for A* search
 if __name__ == '__main__':
-    # Create a 50, 120 maze and load a custom maze from a CSV file
     m = maze(50, 120)
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze_update2.csv')
-    goal_position = (1,1)
-    # Perform A* algorithm on the maze to find the search order and paths
-    exploration_order, came_from, path_to_goal = a_star(m)
 
-    # Create agents to visualize the BFS search process
-    agent_Astar = agent(m, footprints=True, shape='square', 
-                      color=COLOR.red)  # Visualize BFS search order
-    agent_trace = agent(m, footprints=True, shape='star', 
-                        color=COLOR.yellow, filled=False)  # Full BFS path
-    agent_goal = agent(m, 1, 1, footprints=True, color=COLOR.blue, 
-                       shape='square', filled=True, goal=(m.rows, m.cols))  # Goal agent
+    goal_position = (1 ,1)  # Example goal, change to any valid coordinate
 
-    # Trace the agents' paths through the maze
-    m.tracePath({agent_Astar: exploration_order}, delay=1)  # Trace A* search order
-    m.tracePath({agent_goal: came_from}, delay=1)  # Trace the path found by A*
-    m.tracePath({agent_trace: path_to_goal}, delay=1)  # Trace the path from start to goal (final path)
+    exploration_order, visited_cells, path_to_goal = A_star_search(m, goal=goal_position)
 
-    # Display the lengths of the A* search and final paths as labels
-    l = textLabel(m, 'Goal Position', str(goal_position))
-    l = textLabel(m, 'A* Path Length', len(path_to_goal))  # Length of the path from start to goal
-    l = textLabel(m, 'A* Search Length', len(exploration_order))  # Total number of cells explored
+    agent_astar = agent(m, footprints=True, shape='square', color=COLOR.red)
+    agent_trace = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)
+    agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)
 
-    # Run the maze simulation
+    m.tracePath({agent_astar: exploration_order}, delay=1)
+    m.tracePath({agent_trace: path_to_goal}, delay=1)
+    m.tracePath({agent_goal: visited_cells}, delay=1)
+
+    textLabel(m, 'Goal Position', str(goal_position))
+    textLabel(m, 'A* Path Length', len(path_to_goal) + 1)
+    textLabel(m, 'A* Search Length', len(exploration_order))
+
     m.run()

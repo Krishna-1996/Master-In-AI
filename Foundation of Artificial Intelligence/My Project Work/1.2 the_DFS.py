@@ -5,7 +5,7 @@ def DFS_search(maze_obj, start=None, goal=None):
     start = (50, 120)
 
     # Ensure goal is within the maze bounds
-    goal = (1, 1)
+    goal = (49, 2)
 
     # Initialize DFS stack with the start point
     stack = [start]
@@ -72,7 +72,7 @@ if __name__ == '__main__':
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze_update2.csv')
 
     # Set your custom goal (within maze limits)
-    goal_position = (1, 1)  # Example goal, you can change this to any valid coordinate
+    goal_position = (49, 2)  # Example goal, you can change this to any valid coordinate
 
     # Perform DFS search on the maze and get the exploration order and paths
     exploration_order, visited_cells, path_to_goal = DFS_search(m, goal=goal_position)
@@ -82,7 +82,7 @@ if __name__ == '__main__':
                       color=COLOR.red)  # Visualize BFS search order
     agent_trace = agent(m, footprints=True, shape='star', 
                         color=COLOR.yellow, filled=False)  # Full BFS path
-    agent_goal = agent(m, 1, 1, footprints=True, color=COLOR.blue, 
+    agent_goal = agent(m, 49, 2, footprints=True, color=COLOR.blue, 
                        shape='square', filled=True, goal=(m.rows, m.cols))  # Goal agent
 
     # Visualize the agents' movements along their respective paths
@@ -90,6 +90,7 @@ if __name__ == '__main__':
     m.tracePath({agent_goal: visited_cells}, delay=1)  # Trace the DFS path to the goal
     m.tracePath({agent_trace: path_to_goal}, delay=1)  # Trace the path from goal to start (final agent path)
     
+
     # Display goal position, the length of the DFS path and search steps
     textLabel(m, 'Goal Position',(goal_position))
     textLabel(m, 'DFS Path Length', len(path_to_goal) + 1)  # Length of the path from goal to start
