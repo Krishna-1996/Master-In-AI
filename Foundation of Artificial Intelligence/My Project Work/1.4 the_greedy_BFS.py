@@ -80,12 +80,12 @@ if __name__ == '__main__':
     # Create a 50, 120 maze and load a custom maze from a CSV file
     m = maze(50, 120)
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze_update2.csv')
-
+    goal_position = (1, 1)
     # Perform Greedy BFS algorithm on the maze to find the search order and paths
     exploration_order, came_from, path_to_goal = greedy_bfs(m)
 
     # Create agents to visualize the BFS search process
-    agent_Astar = agent(m, footprints=True, shape='square', 
+    agent_greedyBFS = agent(m, footprints=True, shape='square', 
                       color=COLOR.red)  # Visualize BFS search order
     agent_trace = agent(m, footprints=True, shape='star', 
                         color=COLOR.yellow, filled=False)  # Full BFS path
@@ -93,12 +93,12 @@ if __name__ == '__main__':
                        shape='square', filled=True, goal=(m.rows, m.cols))  # Goal agent
 
     # Trace the agents' paths through the maze
-    m.tracePath({agent_Astar: exploration_order}, delay=1)  # Trace A* search order
+    m.tracePath({agent_greedyBFS: exploration_order}, delay=1)  # Trace A* search order
     m.tracePath({agent_goal: came_from}, delay=1)  # Trace the path found by A*
     m.tracePath({agent_trace: path_to_goal}, delay=1)  # Trace the path from start to goal (final path)
 
     # Display the lengths of the Greedy BFS search and final paths as labels
-    
+    l = textLabel(m, 'Goal Position', str(goal_position))
     l = textLabel(m, 'Greedy BFS Path Length', len(path_to_goal))  # Length of the path from start to goal
     l = textLabel(m, 'Greedy BFS Search Length', len(exploration_order))  # Total number of cells explored
 
