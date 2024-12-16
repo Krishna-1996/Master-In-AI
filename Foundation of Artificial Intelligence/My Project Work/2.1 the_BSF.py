@@ -78,7 +78,7 @@ if __name__ == '__main__':
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze_update2.csv')
 
     # Set your custom goal (within maze limits)
-    goal_position = (1 ,1)  # Example goal, you can change this to any valid coordinate
+    goal_position = (49 ,2)  # Example goal, you can change this to any valid coordinate
 
     # Perform BFS search on the maze and get the exploration order and paths
     exploration_order, visited_cells, path_to_goal = BFS_search(m, goal=goal_position)
