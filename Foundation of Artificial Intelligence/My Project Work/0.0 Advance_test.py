@@ -14,8 +14,7 @@ def get_next_cell(current, direction):
     return current  # Return the current cell if direction is invalid
 
 def DFS_search(maze_obj, start=None, goal=None):
-    if start is None:
-        start = (maze_obj.rows, maze_obj.cols)
+    start = (maze_obj.rows, maze_obj.cols)
 
     if goal is None:
         goal = (maze_obj.rows // 2, maze_obj.cols // 2)
