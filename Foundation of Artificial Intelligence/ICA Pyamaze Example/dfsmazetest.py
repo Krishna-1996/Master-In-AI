@@ -3,7 +3,6 @@ from pyamaze import maze, agent, COLOR, textLabel
 def DFS(m):
     # The starting point of the maze, in this case, the bottom right corner.
     start=(m.rows,m.cols)
-    
 
     # List to keep track of the cells we have already explored.
     explored=[start]
@@ -63,19 +62,17 @@ def DFS(m):
 # Main script begins here.
 if __name__ == '__main__':
     # Initialize a maze of size 15x15.
-    m=maze(25,25)
+    m=maze(50, 120)
     # Create the maze using the information from the csv file.
-    # m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/ICA Pyamaze Example/mazetest.csv')
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence//My Project Work/maze_update2.csv')
 
-    goal_position = (49, 2)
     # Run the DFS algorithm on the maze and retrieve the paths.
     dSearch,dfsPath,fwdPath=DFS(m)
 
     # Initialize the agents with their properties.
-    a=agent(m, footprints=True, shape='square', color=COLOR.red)
-    b=agent(m, goal=goal_position, footprints=True, color=COLOR.blue, shape='square', filled=True)
-    c=agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)
+    a=agent(m,footprints=True,filled=True,shape='arrow',color=COLOR.red)
+    b=agent(m,1,1,goal=(15,15),footprints=True,filled=True,color=COLOR.blue)
+    c=agent(m,footprints=True,color=COLOR.yellow)
 
     # Have the agents trace the paths.
     m.tracePath({a:dSearch},showMarked=True,delay=1)
@@ -85,26 +82,6 @@ if __name__ == '__main__':
     # Display some statistics about the path lengths.
     l=textLabel(m, 'DFS Path Length',len(fwdPath)+1)
     l=textLabel(m, 'DFS Search Length',len(dSearch))
-    '''
-    # Create agents to visualize the DFS search process
-    agent_dfs = agent(m, footprints=True, shape='square', color=COLOR.red)  # Create the agent for DFS
-    agent_dfs.position = start_position  # Set the agent's start position
-
-    agent_trace = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)  # Full DFS path
-    agent_trace.position = start_position  # Set the trace agent's start position
-
-    agent_goal = agent(m, goal=goal_position, footprints=True, color=COLOR.blue, shape='square', filled=True)  # Goal agent
-    agent_goal.position = goal_position  # Set the goal agent's position
-
-    # Visualize the agents' movements along their respective paths
-    m.tracePath({agent_dfs: exploration_order}, delay=1)  # DFS search order path
-    m.tracePath({agent_goal: visited_cells}, delay=1)  # Trace the DFS path to the goal
-    m.tracePath({agent_trace: path_to_goal}, delay=1)  # Trace the path from goal to start
-
-    # Display the length of the DFS path and search steps
-    textLabel(m, 'Goal Position', (goal_position))
-    textLabel(m, 'DFS Path Length', len(path_to_goal) + 1)  # Length of the path from goal to start
-    textLabel(m, 'DFS Search Length', len(exploration_order))  # Total number of explored cells'''
 
     # Run the visualization.
     m.run()
