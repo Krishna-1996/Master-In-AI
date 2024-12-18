@@ -37,9 +37,9 @@ def DFS_search(maze_obj, start=None, goal=None):
 
         # Check all 4 possible directions ('E', 'W', 'N', 'S')
         for direction in 'ESNW':
-            # In pyamaze, we check if the move is possible by examining the current position in maze_map
-            # For instance, maze_map stores the open paths between cells.
-            if maze_obj.maze_map[current][direction]:  # If there's a path in that direction
+            # Check if the path is open in this direction using `maze_obj.is_open(x, y, direction)`
+            x, y = current
+            if maze_obj.is_open(x, y, direction):  # If there's a path in that direction
                 next_cell = get_next_cell(current, direction)
 
                 if next_cell not in explored:
