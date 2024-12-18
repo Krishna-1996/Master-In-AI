@@ -72,22 +72,16 @@ if __name__ == '__main__':
 
     exploration_order, visited_cells, path_to_goal = A_star_search(m, goal=goal_position)
 
-    # Create agents to visualize the BFS search process
-    agent_A_star = agent(m, footprints=True, shape='square', 
-                      color=COLOR.red)  # Visualize BFS search order
-    agent_trace = agent(m, footprints=True, shape='star', 
-                        color=COLOR.yellow, filled=False)  # Full BFS path
-    agent_goal = agent(m, 1, 1, footprints=True, color=COLOR.blue, 
-                       shape='square', filled=True, goal=(m.rows, m.cols))  # Goal agent
+    agent_astar = agent(m, footprints=True, shape='square', color=COLOR.red)
+    agent_trace = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)
+    agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)
 
-    # Trace the agents' paths through the maze
-    m.tracePath({agent_A_star: exploration_order}, delay=1)  # Trace A* search order
-    m.tracePath({agent_goal: visited_cells}, delay=1)  # Trace the path found by A*
-    m.tracePath({agent_trace: path_to_goal}, delay=1)  # Trace the path from start to goal (final path)
+    m.tracePath({agent_astar: exploration_order}, delay=1)
+    m.tracePath({agent_trace: path_to_goal}, delay=1)
+    m.tracePath({agent_goal: visited_cells}, delay=1)
 
-    # Display the lengths of the Greedy BFS search and final paths as labels
     textLabel(m, 'Goal Position', str(goal_position))
-    textLabel(m, 'Greedy A* Path Length', len(path_to_goal))  # Length of the path from start to goal
-    textLabel(m, 'Greedy A* Search Length', len(exploration_order))  # Total number of cells explored
+    textLabel(m, 'A* Path Length', len(path_to_goal) + 1)
+    textLabel(m, 'A* Search Length', len(exploration_order))
 
     m.run()
