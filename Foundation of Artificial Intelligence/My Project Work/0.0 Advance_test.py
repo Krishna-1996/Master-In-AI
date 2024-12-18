@@ -14,9 +14,11 @@ def get_next_cell(current, direction):
     return current  # Return the current cell if direction is invalid
 
 def DFS_search(maze_obj, start=None, goal=None):
-    start = (50, 120)
+    if start is None:
+        start = (0, 0)  # Set a default valid start point
 
-    goal = (2, 119)
+    if goal is None:
+        goal = (maze_obj.rows // 2, maze_obj.cols // 2)  # Default goal in the center
 
     if not (0 <= goal[0] < maze_obj.rows and 0 <= goal[1] < maze_obj.cols):
         raise ValueError(f"Invalid goal position: {goal}. It must be within the bounds of the maze.")
@@ -63,11 +65,9 @@ if __name__ == '__main__':
 
     agent_dfs = agent(m, footprints=True, shape='square', color=COLOR.red)
     agent_trace = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)
-    agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)
 
     m.tracePath({agent_dfs: exploration_order}, delay=1)
     m.tracePath({agent_trace: path_to_goal}, delay=1)
-    m.tracePath({agent_goal: visited_cells}, delay=1)
 
     textLabel(m, 'Goal Position', str(goal_position))
     textLabel(m, 'DFS Path Length', len(path_to_goal) + 1)
