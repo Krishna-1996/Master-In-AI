@@ -16,8 +16,7 @@ def get_next_cell(current, direction):
 def DFS_search(maze_obj, start=None, goal=None):
     start = (50, 120)
 
-    if goal is None:
-        goal = (maze_obj.rows // 2, maze_obj.cols // 2)
+    goal = (119, 2)
 
     if not (0 <= goal[0] < maze_obj.rows and 0 <= goal[1] < maze_obj.cols):
         raise ValueError(f"Invalid goal position: {goal}. It must be within the bounds of the maze.")
