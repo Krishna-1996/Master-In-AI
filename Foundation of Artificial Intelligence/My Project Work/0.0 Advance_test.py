@@ -36,7 +36,8 @@ def DFS_search(maze_obj, start=None, goal=None):
             break
 
         for direction in 'ESNW':
-            if maze_obj.maze_map[current][direction]:
+            # Use the correct method to check if the move is valid in the maze
+            if maze_obj.is_open(current, direction):
                 next_cell = get_next_cell(current, direction)
                 
                 if next_cell not in explored:
