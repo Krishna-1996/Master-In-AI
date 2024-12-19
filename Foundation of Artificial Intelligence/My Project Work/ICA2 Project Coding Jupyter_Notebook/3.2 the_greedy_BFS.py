@@ -62,7 +62,7 @@ def greedy_BFS_search(maze_obj, start=None, goal=None):
 if __name__ == '__main__':
     m = maze(50, 120)
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze_update2.csv')
-    '''
+    
     goal_position = (1, 119)  # Example goal, change to any valid coordinate
 
     exploration_order, visited_cells, path_to_goal = greedy_BFS_search(m, goal=goal_position)
@@ -78,5 +78,5 @@ if __name__ == '__main__':
     textLabel(m, 'Goal Position', str(goal_position))
     textLabel(m, 'Greedy BFS Path Length', len(path_to_goal) + 1)
     textLabel(m, 'Greedy BFS Search Length', len(exploration_order))
-    '''
+    
     m.run()
