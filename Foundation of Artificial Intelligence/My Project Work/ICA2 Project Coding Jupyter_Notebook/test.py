@@ -104,3 +104,5 @@ if __name__ == '__main__':
     # %%
     # Run the maze visualization
     m.run()
+
+# %%
