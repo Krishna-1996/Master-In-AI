@@ -19,23 +19,41 @@ search_lengths = {
 }
 
 # Set up the bar width and positions for the bars
-bar_width = 0.35
+bar_width = 0.2
 index = np.arange(len(scenarios))
 
-# Create the plot
-fig, ax = plt.subplots(figsize=(10, 6))
+# Create the figure with two subplots: one for Path Length and one for Search Length
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
 
-# Create bars for Path Length and Search Length
-bar1 = ax.bar(index - bar_width/2, [path_lengths[alg][i] for i, alg in enumerate(algorithms)], bar_width, label='Path Length')
-bar2 = ax.bar(index + bar_width/2, [search_lengths[alg][i] for i, alg in enumerate(algorithms)], bar_width, label='Search Length')
+# Create grouped bar charts for Path Length and Search Length
+# Path Length plot
+ax1.bar(index - bar_width, path_lengths['BFS'], bar_width, label='BFS', color='skyblue')
+ax1.bar(index, path_lengths['Greedy_BFS'], bar_width, label='Greedy_BFS', color='lightgreen')
+ax1.bar(index + bar_width, path_lengths['A*'], bar_width, label='A*', color='lightcoral')
+ax1.set_xlabel('Scenarios', fontsize=12)
+ax1.set_ylabel('Path Length', fontsize=12)
+ax1.set_title('Path Length Comparison', fontsize=14)
+ax1.set_xticks(index)
+ax1.set_xticklabels(scenarios, fontsize=10)
+ax1.legend()
 
-# Add labels and title
-ax.set_xlabel('Scenarios')
-ax.set_ylabel('Length')
-ax.set_title('Comparison of Search Algorithms for Different Scenarios')
-ax.set_xticks(index)
-ax.set_xticklabels(scenarios)
-ax.legend()
+# Search Length plot
+ax2.bar(index - bar_width, search_lengths['BFS'], bar_width, label='BFS', color='skyblue')
+ax2.bar(index, search_lengths['Greedy_BFS'], bar_width, label='Greedy_BFS', color='lightgreen')
+ax2.bar(index + bar_width, search_lengths['A*'], bar_width, label='A*', color='lightcoral')
+ax2.set_xlabel('Scenarios', fontsize=12)
+ax2.set_ylabel('Search Length', fontsize=12)
+ax2.set_title('Search Length Comparison', fontsize=14)
+ax2.set_xticks(index)
+ax2.set_xticklabels(scenarios, fontsize=10)
+ax2.legend()
 
+# Annotate each bar with its value
+for i, scenario in enumerate(scenarios):
+    for j, algorithm in enumerate(algorithms):
+        ax1.text(index[i] - bar_width + j * bar_width, path_lengths[algorithm][i] + 5, path_lengths[algorithm][i], ha='center', fontsize=10)
+        ax2.text(index[i] - bar_width + j * bar_width, search_lengths[algorithm][i] + 5, search_lengths[algorithm][i], ha='center', fontsize=10)
+
+# Tight layout for better spacing
 plt.tight_layout()
 plt.show()
