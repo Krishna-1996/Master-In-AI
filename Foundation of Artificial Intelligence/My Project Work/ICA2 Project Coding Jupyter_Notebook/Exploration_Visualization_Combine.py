@@ -179,16 +179,14 @@ if __name__ == '__main__':
     # Create agents to visualize the search processes
     agent_bfs = agent(m, footprints=True, shape='square', color=COLOR.red, filled='full')  # BFS
     agent_astar = agent(m, footprints=True, shape='square', color=COLOR.yellow, filled='full')  # A*
-    agent_greedyBFS = agent(m, footprints=True, shape='square', color=COLOR.blue, filled='full')  # Greedy BFS
+    agent_greedyBFS = agent(m, footprints=True, shape='square', color=COLOR.green, filled='full')  # Greedy BFS
 
     # Visualize BFS search order
     m.tracePath({agent_bfs: exploration_order_bfs}, delay=1)
-
-    # Visualize Greedy BFS search order
-    m.tracePath({agent_greedyBFS: exploration_order_greedy}, delay=1)
-
     # Visualize A* search order
     m.tracePath({agent_astar: exploration_order_astar}, delay=1)
+    # Visualize Greedy BFS search order
+    m.tracePath({agent_greedyBFS: exploration_order_greedy}, delay=1)
 
     # # Visualize the paths from start to goal for each algorithm
     # m.tracePath({agent_bfs: path_to_goal_bfs}, delay=1)
