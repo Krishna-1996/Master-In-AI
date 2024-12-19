@@ -85,12 +85,9 @@ if __name__ == '__main__':
     exploration_order, came_from, path_to_goal = greedy_bfs(m)
 
     # Create agents to visualize the BFS search process
-    agent_greedyBFS = agent(m, footprints=True, shape='square', 
-                      color=COLOR.red)  # Visualize BFS search order
-    agent_trace = agent(m, footprints=True, shape='star', 
-                        color=COLOR.yellow, filled=False)  # Full BFS path
-    agent_goal = agent(m, 1, 1, footprints=True, color=COLOR.blue, 
-                       shape='square', filled=True, goal=(m.rows, m.cols))  # Goal agent
+    agent_greedyBFS = agent(m, footprints=True, shape='square',color=COLOR.red)  # Visualize BFS search order
+    agent_trace = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)  # Full BFS path
+    agent_goal = agent(m, 1, 1, footprints=True, color=COLOR.blue, shape='square', filled=True, goal=(m.rows, m.cols))  # Goal agent
 
     # Trace the agents' paths through the maze
     m.tracePath({agent_greedyBFS: exploration_order}, delay=1)  # Trace A* search order
