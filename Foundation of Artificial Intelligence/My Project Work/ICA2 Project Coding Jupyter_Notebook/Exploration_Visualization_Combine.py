@@ -183,7 +183,7 @@ if __name__ == '__main__':
     # Create agents to visualize the search processes
     agent_bfs = agent(m, footprints=True, shape='square', color=COLOR.red, filled='full')  # BFS
     agent_astar = agent(m, footprints=True, shape='square', color=COLOR.yellow, filled='full')  # A*
-    agent_greedyBFS = agent(m, footprints=True, shape='square', color=COLOR.green, filled='full')  # Greedy BFS
+    agent_greedyBFS = agent(m, footprints=True, shape='square', color=COLOR.blue, filled='full')  # Greedy BFS
 
     # Visualize BFS search order
     m.tracePath({agent_bfs: exploration_order_bfs}, delay=1)
