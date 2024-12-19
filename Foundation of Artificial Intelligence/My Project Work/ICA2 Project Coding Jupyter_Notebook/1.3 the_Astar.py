@@ -76,10 +76,12 @@ if __name__ == '__main__':
     agent_trace = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)
     agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.blue, shape='square', filled=True)
 
+    # Trace the A* search path for the red agent
     m.tracePath({agent_astar: exploration_order}, delay=1)
-    m.tracePath({agent_goal: visited_cells}, delay=1)
+    # Trace the path to the goal for the yellow agent
     m.tracePath({agent_trace: path_to_goal}, delay=1)
-    
+    # Correctly trace the goal path for the blue agent (path from start to goal)
+    m.tracePath({agent_goal: path_to_goal}, delay=1)  # This should be the correct path
 
     textLabel(m, 'Goal Position', str(goal_position))
     textLabel(m, 'A* Path Length', len(path_to_goal) + 1)

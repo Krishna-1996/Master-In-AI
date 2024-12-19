@@ -78,7 +78,7 @@ if __name__ == '__main__':
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze_update2.csv')
 
     # Set your custom goal (within maze limits)
-    goal_position = (2 ,119)  # Example goal, you can change this to any valid coordinate
+    goal_position = (1 ,119)  # Example goal, you can change this to any valid coordinate
 
     # Perform BFS search on the maze and get the exploration order and paths
     exploration_order, visited_cells, path_to_goal = BFS_search(m, goal=goal_position)
@@ -91,7 +91,7 @@ if __name__ == '__main__':
     agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)
 
     # Visualize the agents' movements along their respective paths
-    m.tracePath({agent_bfs: exploration_order}, delay=5)  # BFS search order path
+    m.tracePath({agent_bfs: exploration_order}, delay=1)  # BFS search order path
     m.tracePath({agent_trace: path_to_goal}, delay=1)  # Trace the path from goal to start (final agent path)
     m.tracePath({agent_goal: visited_cells}, delay=1)  # Trace the BFS path to the goal
 
