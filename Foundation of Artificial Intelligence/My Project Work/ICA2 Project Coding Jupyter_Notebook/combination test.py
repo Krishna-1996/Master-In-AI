@@ -165,9 +165,9 @@ if __name__ == '__main__':
     exploration_order_astar, visited_cells_astar, path_to_goal_astar = A_star_search(m, goal=goal_position)
 
     # Create agents to visualize the search processes
-    agent_bfs = agent(m, footprints=True, shape= 'square' , color=COLOR.red, )  # BFS
-    agent_greedyBFS = agent(m, footprints=True, shape='square', color=COLOR.green )  # Greedy BFS
-    agent_astar = agent(m, footprints=True, shape='square', color=COLOR.blue)  # A*
+    agent_bfs = agent(m, footprints=True, shape= 'triangle' , color=COLOR.red, )  # BFS
+    agent_greedyBFS = agent(m, footprints=True, shape='star', color=COLOR.green )  # Greedy BFS
+    agent_astar = agent(m, footprints=True, shape='square', color=COLOR.yellow)  # A*
 
     # # Visualize BFS search order
     # m.tracePath({agent_bfs: exploration_order_bfs}, delay=1)
