@@ -19,9 +19,11 @@ def get_next_cell(current, direction):
         return (row - 1, col)
 
 # BFS Algorithm
-def BFS_search(maze_obj, start=None):
+def BFS_search(maze_obj, start=None, goal=None):
     if start is None:
         start = (maze_obj.rows, maze_obj.cols)
+    if goal is None:
+        goal = maze_obj._goal  # Use the current goal position if none is passed
 
     frontier = deque([start])
     visited = {}
@@ -30,7 +32,7 @@ def BFS_search(maze_obj, start=None):
 
     while frontier:
         current = frontier.popleft()
-        if current == maze_obj._goal:
+        if current == goal:
             break
 
         for direction in 'ESNW':
@@ -43,12 +45,12 @@ def BFS_search(maze_obj, start=None):
                     exploration_order.append(next_cell)
 
     # Ensure goal cell is not included in exploration order
-    if maze_obj._goal in exploration_order:
-        exploration_order.remove(maze_obj._goal)
+    if goal in exploration_order:
+        exploration_order.remove(goal)
 
     path_to_goal = {}
-    cell = maze_obj._goal
-    while cell != (maze_obj.rows, maze_obj.cols):
+    cell = goal
+    while cell != start:
         path_to_goal[visited[cell]] = cell
         cell = visited[cell]
 
@@ -62,12 +64,14 @@ def heuristic(cell, goal):
     """
     return abs(cell[0] - goal[0]) + abs(cell[1] - goal[1])
 
-def greedy_bfs(m, start=None):
+def greedy_bfs(m, start=None, goal=None):
     if start is None:
         start = (m.rows, m.cols)
+    if goal is None:
+        goal = m._goal  # Use the current goal position if none is passed
 
     f_costs = {cell: float('inf') for cell in m.grid}
-    f_costs[start] = heuristic(start, m._goal)
+    f_costs[start] = heuristic(start, goal)
 
     priority_queue = []
     heapq.heappush(priority_queue, (f_costs[start], start))
@@ -76,7 +80,7 @@ def greedy_bfs(m, start=None):
     exploration_order = []
     while priority_queue:
         _, current_cell = heapq.heappop(priority_queue)
-        if current_cell == m._goal:
+        if current_cell == goal:
             break
 
         for d in 'ESNW':
@@ -92,16 +96,16 @@ def greedy_bfs(m, start=None):
 
                 if neighbor_cell not in came_from:
                     came_from[neighbor_cell] = current_cell
-                    f_costs[neighbor_cell] = heuristic(neighbor_cell, m._goal)
+                    f_costs[neighbor_cell] = heuristic(neighbor_cell, goal)
                     heapq.heappush(priority_queue, (f_costs[neighbor_cell], neighbor_cell))
                     exploration_order.append(neighbor_cell)
 
     # Ensure goal cell is not included in exploration order
-    if m._goal in exploration_order:
-        exploration_order.remove(m._goal)
+    if goal in exploration_order:
+        exploration_order.remove(goal)
 
     path_to_goal = []
-    cell = m._goal
+    cell = goal
     while cell != start:
         path_to_goal.append(cell)
         cell = came_from[cell]
@@ -114,9 +118,8 @@ def greedy_bfs(m, start=None):
 def A_star_search(maze_obj, start=None, goal=None):
     if start is None:
         start = (maze_obj.rows, maze_obj.cols)
-
     if goal is None:
-        goal = (maze_obj.rows // 2, maze_obj.cols // 2)
+        goal = maze_obj._goal  # Use the current goal position if none is passed
 
     if not (0 <= goal[0] < maze_obj.rows and 0 <= goal[1] < maze_obj.cols):
         raise ValueError(f"Invalid goal position: {goal}. It must be within the bounds of the maze.")
@@ -165,13 +168,14 @@ if __name__ == '__main__':
     m = maze(50, 120)
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze_update2.csv')
 
-    goal_position = (2, 118)  # You can change this to any valid goal position
+    goal_position = (1, 119)  # You can change this to any valid goal position
+    m._goal = goal_position  # Set the goal position in the maze
 
     # Perform BFS search on the maze
-    exploration_order_bfs, visited_cells_bfs, path_to_goal_bfs = BFS_search(m)
+    exploration_order_bfs, visited_cells_bfs, path_to_goal_bfs = BFS_search(m, goal=goal_position)
 
     # Perform Greedy BFS search on the maze
-    exploration_order_greedy, came_from_greedy, path_to_goal_greedy = greedy_bfs(m)
+    exploration_order_greedy, came_from_greedy, path_to_goal_greedy = greedy_bfs(m, goal=goal_position)
 
     # Perform A* search on the maze
     exploration_order_astar, visited_cells_astar, path_to_goal_astar = A_star_search(m, goal=goal_position)
@@ -187,17 +191,6 @@ if __name__ == '__main__':
     m.tracePath({agent_astar: exploration_order_astar}, delay=1)
     # Visualize Greedy BFS search order
     m.tracePath({agent_greedyBFS: exploration_order_greedy}, delay=1)
-
-    # # Visualize the paths from start to goal for each algorithm
-    # m.tracePath({agent_bfs: path_to_goal_bfs}, delay=1)
-    # m.tracePath({agent_greedyBFS: path_to_goal_greedy}, delay=1)
-    # m.tracePath({agent_astar: path_to_goal_astar}, delay=1)
-
-    # # Display the length of the paths for each algorithm
-    # textLabel(m, 'Goal Position', str(goal_position))
-    # textLabel(m, 'BFS Path Length', len(path_to_goal_bfs))
-    # textLabel(m, 'Greedy BFS Path Length', len(path_to_goal_greedy))
-    # textLabel(m, 'A* Path Length', len(path_to_goal_astar))
 
     # Display the exploration length for each algorithm
     textLabel(m, 'BFS Exploration Length', len(exploration_order_bfs))
