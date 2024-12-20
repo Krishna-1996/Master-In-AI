@@ -1,0 +1,6 @@
+about deque.. why deque in search algorithms...
+In search algorithms, particularly Breadth-First Search (BFS) or Depth-First Search (DFS), you might need to add or remove elements from both ends of the data structure for different reasons:
+
+BFS (Breadth-First Search):
+
+In BFS, you explore nodes level by level, so you typically add new nodes to the back (tail) of the queue and remove nodes from the front (head) to explore them. This ensures the algorithm processes nodes in the correct order (first-in, first-out).
