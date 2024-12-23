@@ -84,8 +84,8 @@ if __name__ == '__main__':
     exploration_order, visited_cells, path_to_goal = BFS_search(m, goal=goal_position)
 
     # Create agents to visualize the BFS search process
-    agent_bfs = agent(m, footprints=True, shape='square', color=COLOR.red)  # Visualize BFS search order
-    agent_trace = agent(m, footprints=True, shape='star', color=COLOR.yellow, filled=False)  # Full BFS path
+    agent_bfs = agent(m, footprints=True, shape='square', color=COLOR.red, filled=True)  # Visualize BFS search order
+    agent_trace = agent(m, footprints=True, shape='square', color=COLOR.yellow, filled=True)  # Full BFS path
 
     # Create the goal agent at the custom goal position
     agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)

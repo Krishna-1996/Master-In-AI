@@ -1,40 +1,45 @@
-# Importing required modules for maze creation and visualization
 from pyamaze import maze, agent, COLOR, textLabel
 from collections import deque
 
-def BFS_search(maze_obj, start=None):
-
-    # Start position == Bottom-right corner.
+def BFS_search(maze_obj, start=None, goal=None):
+    # Default start position: Bottom-right corner
     if start is None:
         start = (maze_obj.rows, maze_obj.cols)
-    
+
+    # Ensure goal is within the maze bounds
+    if goal is None:
+        goal = (29, 1)  # Default to the middle of the maze
+    # Check if the goal is valid (within bounds)
+    if not (0 <= goal[0] < maze_obj.rows and 0 <= goal[1] < maze_obj.cols):
+        raise ValueError(f"Invalid goal position: {goal}. It must be within the bounds of the maze.")
+
     # Initialize BFS frontier with the start point
     frontier = deque([start])
-    
+
     # Dictionary to store the path taken to reach each cell
     visited = {}
-    
+
     # List to track cells visited in the search process
     exploration_order = []
-    
+
     # Set of explored cells to avoid revisiting
     explored = set([start])
-    
+
     while frontier:
         # Dequeue the next cell to process
         current = frontier.popleft()
 
         # If the goal is reached, stop the search
-        if current == maze_obj._goal:
+        if current == goal:
             break
-        
+
         # Check all four possible directions (East, West, South, North)
         for direction in 'ESNW':
             # If movement is possible in this direction (no wall)
             if maze_obj.maze_map[current][direction]:
                 # Calculate the coordinates of the next cell in the direction
                 next_cell = get_next_cell(current, direction)
-                
+
                 # If the cell hasn't been visited yet, process it
                 if next_cell not in explored:
                     frontier.append(next_cell)  # Add to the frontier
@@ -44,8 +49,8 @@ def BFS_search(maze_obj, start=None):
 
     # Reconstruct the path from the goal to the start using the visited dictionary
     path_to_goal = {}
-    cell = maze_obj._goal
-    while cell != (maze_obj.rows, maze_obj.cols):
+    cell = goal
+    while cell != start:
         path_to_goal[visited[cell]] = cell
         cell = visited[cell]
 
@@ -70,27 +75,28 @@ def get_next_cell(current, direction):
 if __name__ == '__main__':
     # Create a 50, 120 maze and load it from a CSV file
     m = maze(50, 120)
-    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence//My Project Work/maze_update2.csv')
-    goal_position = ("1, 1")
+    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze_update2.csv')
+
+    # Set your custom goal (within maze limits)
+    goal_position = (1 ,1)  # Example goal, you can change this to any valid coordinate
 
     # Perform BFS search on the maze and get the exploration order and paths
-    exploration_order, visited_cells, path_to_goal = BFS_search(m)
+    exploration_order, visited_cells, path_to_goal = BFS_search(m, goal=goal_position)
 
     # Create agents to visualize the BFS search process
-    agent_bfs = agent(m, footprints=True, shape='square', 
-                      color=COLOR.red)  # Visualize BFS search order
-    agent_trace = agent(m, footprints=True, shape='star', 
-                        color=COLOR.yellow, filled=False)  # Full BFS path
-    agent_goal = agent(m, 1, 1, footprints=True, color=COLOR.blue, 
-                       shape='square', filled=True, goal=(m.rows, m.cols))  # Goal agent
+    agent_bfs = agent(m, footprints=True, shape='square', color=COLOR.red, filled=True)  # Visualize BFS search order
+    agent_trace = agent(m, footprints=True, shape='square', color=COLOR.yellow, filled=True)  # Full BFS path
+
+    # Create the goal agent at the custom goal position
+    agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)
 
     # Visualize the agents' movements along their respective paths
     m.tracePath({agent_bfs: exploration_order}, delay=1)  # BFS search order path
+    m.tracePath({agent_trace: path_to_goal}, delay=1)  # Trace the path from goal to start (final agent path)
     m.tracePath({agent_goal: visited_cells}, delay=1)  # Trace the BFS path to the goal
-    m.tracePath({agent_trace: path_to_goal}, delay=1)  # Trace the path from goal to start
 
     # Display the length of the BFS path and search steps
-    textLabel(m, 'Goal Position',(goal_position))
+    textLabel(m, 'Goal Position', str(goal_position))
     textLabel(m, 'BFS Path Length', len(path_to_goal) + 1)  # Length of the path from goal to start
     textLabel(m, 'BFS Search Length', len(exploration_order))  # Total number of explored cells
 
