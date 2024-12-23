@@ -1,7 +1,8 @@
-# Importing required modules for maze creation and visualization
+# %%
+# # Importing required modules for maze creation and visualization
 from pyamaze import maze, agent, COLOR, textLabel
 from collections import deque
-
+# %%
 def BFS_search(maze_obj, start=None):
 
     # Start position == Bottom-right corner.
@@ -51,6 +52,7 @@ def BFS_search(maze_obj, start=None):
 
     return exploration_order, visited, path_to_goal
 
+# %%
 def get_next_cell(current, direction):
     """
     Returns the coordinates of the neighboring cell based on the direction.
@@ -66,6 +68,7 @@ def get_next_cell(current, direction):
     elif direction == 'N':  # Move North
         return (row - 1, col)
 
+# %%
 # Main function to execute the maze creation and BFS search
 if __name__ == '__main__':
     # Create a 50, 120 maze and load it from a CSV file
@@ -96,3 +99,5 @@ if __name__ == '__main__':
 
     # Run the maze visualization
     m.run()
+
+# %%
