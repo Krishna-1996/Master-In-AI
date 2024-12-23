@@ -1,10 +1,13 @@
-from pyamaze import maze, agent, COLOR, textLabel
+# %%
+# from pyamaze import maze, agent, COLOR, textLabel
 import heapq
 
+# %%
 def heuristic(a, b):
     # Manhattan distance heuristic
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
+# %%
 def get_next_cell(current, direction):
     """Calculate the next cell based on the current cell and direction."""
     x, y = current
@@ -18,6 +21,7 @@ def get_next_cell(current, direction):
         return (x + 1, y)
     return current  # Return the current cell if direction is invalid
 
+# %%
 def A_star_search(maze_obj, start=None, goal=None):
     if start is None:
         start = (maze_obj.rows, maze_obj.cols)
