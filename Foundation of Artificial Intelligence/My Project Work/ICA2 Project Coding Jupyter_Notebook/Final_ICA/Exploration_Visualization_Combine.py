@@ -168,7 +168,7 @@ if __name__ == '__main__':
     m = maze(50, 120)
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze_update2.csv')
 
-    goal_position = (49, 1)  # You can change this to any valid goal position
+    goal_position = (1, 1)  # You can change this to any valid goal position
     m._goal = goal_position  # Set the goal position in the maze
 
     # Perform BFS search on the maze
