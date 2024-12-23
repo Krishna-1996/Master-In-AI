@@ -192,10 +192,7 @@ if __name__ == '__main__':
     # Visualize Greedy BFS search order
     m.tracePath({agent_greedyBFS: exploration_order_greedy}, delay=1)
 
-    # Display the exploration length for each algorithm
-    textLabel(m, 'BFS Exploration Length', len(exploration_order_bfs))
-    textLabel(m, 'Greedy BFS Exploration Length', len(exploration_order_greedy))
-    textLabel(m, 'A* Exploration Length', len(exploration_order_astar))
+    
 
     # Run the maze visualization
     m.run()

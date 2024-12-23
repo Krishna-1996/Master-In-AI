@@ -187,13 +187,7 @@ if __name__ == '__main__':
     # Create agent for goal visualization (for all algorithms)
     agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)
 
-    # # Visualize BFS search order
-    # m.tracePath({agent_bfs: exploration_order_bfs}, delay=1)
-    # # Visualize A* search order
-    # m.tracePath({agent_astar: exploration_order_astar}, delay=1)
-    # # Visualize Greedy BFS search order
-    # m.tracePath({agent_greedyBFS: exploration_order_greedy}, delay=1)
-
+    
     # Visualize BFS path to goal
     agent_bfs_path = agent(m, footprints=True, shape='square', color=COLOR.red, filled=True)
     m.tracePath({agent_bfs_path: path_to_goal_bfs}, delay=1)
@@ -205,16 +199,6 @@ if __name__ == '__main__':
     # Visualize Greedy BFS path to goal
     agent_greedyBFS_path = agent(m, footprints=True, shape='square', color=COLOR.blue, filled=True)
     m.tracePath({agent_greedyBFS_path: path_to_goal_greedy}, delay=1)
-
-    # # Display the exploration length for each algorithm
-    # textLabel(m, 'BFS Exploration Length', len(exploration_order_bfs))
-    # textLabel(m, 'Greedy BFS Exploration Length', len(exploration_order_greedy))
-    # textLabel(m, 'A* Exploration Length', len(exploration_order_astar))
-
-    # Display the path lengths for each algorithm
-    textLabel(m, 'BFS Path Length', len(path_to_goal_bfs))
-    textLabel(m, 'Greedy BFS Path Length', len(path_to_goal_greedy))
-    textLabel(m, 'A* Path Length', len(path_to_goal_astar))
 
     # Run the maze visualization
     m.run()
