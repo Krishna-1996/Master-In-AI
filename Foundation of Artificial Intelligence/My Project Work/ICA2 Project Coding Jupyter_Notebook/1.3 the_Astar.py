@@ -67,6 +67,7 @@ def A_star_search(maze_obj, start=None, goal=None):
 
     return exploration_order, visited, path_to_goal
 
+# %%
 # Main function for A* search
 if __name__ == '__main__':
     m = maze(50, 120)
