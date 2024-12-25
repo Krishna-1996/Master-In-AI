@@ -97,13 +97,13 @@ def display_text_labels(m, heuristic_name, goal_position, path_length, search_le
     y_position = 50  # Starting y-position for text labels
 
     # Display each information as text labels
-    textLabel(m, f'{heuristic_name} Heuristic - Goal Position: {goal_position}', )
-    
-    textLabel(m, f'{heuristic_name} Heuristic - Path Length: {path_length}', )
-    
-    textLabel(m, f'{heuristic_name} Heuristic - Search Length: {search_length}', )
-    
-    textLabel(m, f'{heuristic_name} Heuristic - Execution Time (s): {round(execution_time, 4)}', )
+    textLabel(m, f'{heuristic_name} Heuristic - Goal Position: {goal_position}', (x_position, y_position))
+    y_position += 30
+    textLabel(m, f'{heuristic_name} Heuristic - Path Length: {path_length}', (x_position, y_position))
+    y_position += 30
+    textLabel(m, f'{heuristic_name} Heuristic - Search Length: {search_length}', (x_position, y_position))
+    y_position += 30
+    textLabel(m, f'{heuristic_name} Heuristic - Execution Time (s): {round(execution_time, 4)}', (x_position, y_position))
 
 # Main function
 if __name__ == '__main__':
@@ -130,12 +130,6 @@ if __name__ == '__main__':
     m.tracePath({agent_explore: exploration_order}, delay=1)
     m.tracePath({agent_trace: path_to_goal}, delay=1)
     m.tracePath({agent_goal: visited_cells}, delay=1)
-
-    # Display heuristic information
-    textLabel(m, f'Euclidean Heuristic - Goal Position: {goal_position}' )
-    textLabel(m, f'Euclidean Heuristic - A* Path Length: {path_length}' )
-    textLabel(m, f'Euclidean Heuristic - A* Search Length: {search_length}' )
-    textLabel(m, f'Euclidean Heuristic - Execution Time (s): {round(execution_time, 4)}' )
 
     # Display heuristic information in a separate Tkinter window
     update_info_window("Chebyshev", goal_position, path_length, search_length, execution_time)
