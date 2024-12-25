@@ -109,7 +109,7 @@ def display_text_labels(m, heuristic_name, goal_position, path_length, search_le
 if __name__ == '__main__':
     # Create maze and set goal position
     m = maze(50, 120)
-    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze_update2.csv')  # Path updated
+    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 2 ICA/My_Maze.csv')  # Path updated
 
     goal_position = (1, 1)  # Example goal position
 
@@ -123,8 +123,8 @@ if __name__ == '__main__':
     path_length = len(path_to_goal) + 1  # Include the goal cell
 
     # Visualization setup for agents
-    agent_explore = agent(m, footprints=True, shape='circle', color=COLOR.red)  # Exploration path (red circle)
-    agent_trace = agent(m, footprints=True, shape='star', color=COLOR.blue, filled=False)  # Path to goal (blue star)
+    agent_explore = agent(m, footprints=True, shape='square', color=COLOR.red, filled=True)  # Exploration path (red circle)
+    agent_trace = agent(m, footprints=True, shape='square', color=COLOR.blue, filled=True)  # Path to goal (blue star)
     agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)  # Goal (green square)
 
     m.tracePath({agent_explore: exploration_order}, delay=1)

@@ -109,7 +109,7 @@ def display_text_labels(m, heuristic_name, goal_position, path_length, search_le
 if __name__ == '__main__':
     # Create maze and set goal position
     m = maze(50, 120)
-    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/My Project Work/maze_update2.csv')  # Path updated
+    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 2 ICA/My_Maze.csv')  # Path updated
 
     goal_position = (1, 1)  # Example goal position
 
