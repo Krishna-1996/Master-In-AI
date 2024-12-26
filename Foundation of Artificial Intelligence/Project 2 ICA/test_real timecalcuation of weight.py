@@ -2,22 +2,19 @@ import heapq
 import time
 from pyamaze import maze, agent, COLOR
 import tkinter as tk
-from tkinter import ttk  # For using the table-like grid in Tkinter
-
+from tkinter import ttk
 
 # Manhattan Heuristic Function
 def manhattan_heuristic(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
-
 # Directional weights
 directional_weights = {
-    'N': 15,  # Moving north adds 15
-    'E': 15,  # Moving east adds 15
-    'S': -10,  # Moving south subtracts 10
-    'W': -10,  # Moving west subtracts 10
+    'N': 15,  # Moving north costs 15
+    'E': 15,  # Moving east costs 15
+    'S': -10,  # Moving south costs -10
+    'W': -10,  # Moving west costs -10
 }
-
 
 # Get next cell in the maze based on direction
 def get_next_cell(current, direction):
@@ -31,7 +28,6 @@ def get_next_cell(current, direction):
     elif direction == 'S':  # Move south
         return (x + 1, y)
     return current
-
 
 # A* search algorithm
 def A_star_search(maze_obj, start=None, goal=None, heuristic_method=manhattan_heuristic):
@@ -76,20 +72,33 @@ def A_star_search(maze_obj, start=None, goal=None, heuristic_method=manhattan_he
 
     return exploration_order, visited, path_to_goal
 
+# Function to update the Tkinter window with heuristic data
+def update_info_window(heuristic_name, goal_position, path_length, search_length, execution_time, weights):
+    info_window = tk.Tk()
+    info_window.title(f"{heuristic_name} Heuristic Information")
 
-# Real-time weight tracker with path tracing
+    table = ttk.Treeview(info_window, columns=("Metric", "Value"), show="headings")
+    table.heading("Metric", text="Metric")
+    table.heading("Value", text="Value")
+
+    # Ensure everything passed is a string
+    goal_position_str = f"({goal_position[0]}, {goal_position[1]})"
+    weights_str = f"N={weights['N']}, E={weights['E']}, S={weights['S']}, W={weights['W']}"
+    execution_time_str = str(round(execution_time, 4))
+
+    # Add information to the table
+    table.insert("", "end", values=("Directional Weights", weights_str))
+    table.insert("", "end", values=("Heuristic", heuristic_name))
+    table.insert("", "end", values=("Goal Position", goal_position_str))
+    table.insert("", "end", values=("Path Length", str(path_length)))
+    table.insert("", "end", values=("Search Length", str(search_length)))
+    table.insert("", "end", values=("Execution Time (s)", execution_time_str))
+
+    table.pack(fill=tk.BOTH, expand=True)
+    return info_window
+
+# Function to trace the path with weight updates
 def trace_path_with_weights(m, agent, path, weights, label, delay):
-    """
-    Traces the path from start to goal (or goal to start) while calculating weights in real time.
-
-    Parameters:
-    - m: Maze object
-    - agent: Agent object
-    - path: List of cells representing the path
-    - weights: Dictionary of directional weights
-    - label: Tkinter label to display weight updates
-    - delay: Delay in seconds for visualization
-    """
     total_weight = 0  # Initialize total weight
     current_cell = path[0]
 
@@ -132,7 +141,6 @@ def trace_path_with_weights(m, agent, path, weights, label, delay):
     )
     label.update()
 
-
 # Reverse the path for goal-to-start tracing
 def reverse_path(path_to_goal, start, goal):
     reversed_path = []
@@ -146,13 +154,12 @@ def reverse_path(path_to_goal, start, goal):
     reversed_path.reverse()
     return reversed_path
 
-
 # Main function
 if __name__ == '__main__':
     delay = 1  # Adjust visualization delay
 
     m = maze(20, 20)
-    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 2 ICA/My_Maze_2.csv')
+    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 2 ICA/TEST_MAZE.csv')
 
     goal_position = (1, 1)  # Define goal position
     start_position = (m.rows, m.cols)
@@ -201,4 +208,3 @@ if __name__ == '__main__':
 
     info_window.mainloop()
     m.run()
-
