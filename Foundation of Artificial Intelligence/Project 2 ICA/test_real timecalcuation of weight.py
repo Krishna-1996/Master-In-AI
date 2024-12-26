@@ -149,7 +149,7 @@ if __name__ == '__main__':
     delay = 500  # Change delay time to control visualization speed
 
     m = maze(20, 20)
-    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 2 ICA/My_Maze_2.csv')
+    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 2 ICA/TEST_MAZE.csv')
 
     goal_position = (1, 1)  # Example goal position
 
