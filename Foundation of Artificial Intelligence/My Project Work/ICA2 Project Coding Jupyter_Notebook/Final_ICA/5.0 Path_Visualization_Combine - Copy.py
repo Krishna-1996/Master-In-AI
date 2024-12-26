@@ -119,6 +119,7 @@ def greedy_bfs(m, start=None, goal=None):
 
     return exploration_order, came_from, path_to_goal
 
+# %%
 # A* Algorithm
 def A_star_search(maze_obj, start=None, goal=None):
     if start is None:
