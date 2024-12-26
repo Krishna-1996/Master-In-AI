@@ -8,8 +8,16 @@ from pyamaze import maze, agent, COLOR
 def manhattan_heuristic(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
+# Directional weights
+directional_weights = {
+    'N': 1,  # Moving north costs 1
+    'E': 1,  # Moving east costs 1
+    'S': 5,  # Moving south costs 5
+    'W': 2,  # Moving west costs 2
+}
+
 # Get next cell in the maze based on direction
-def get_next_cell(current, direction):
+def get_next_cell_with_direction(current, direction):
     x, y = current
     if direction == 'E':  # Move east
         return (x, y + 1)
@@ -21,13 +29,15 @@ def get_next_cell(current, direction):
         return (x + 1, y)
     return current
 
-# Weighted cost function
-def get_cell_cost(cell, weighted_map):
-    # Return cost based on the cell type (e.g., "mud", "water", or default cost 1)
-    return weighted_map.get(cell, 1)
+# Weighted cost function with direction
+def get_directional_cost(direction, cell, weighted_map):
+    # Base cost depends on direction
+    direction_cost = directional_weights.get(direction, 1)  # Default cost is 1 if direction not defined
+    cell_cost = weighted_map.get(cell, 0)  # Add additional terrain cost if applicable
+    return direction_cost + cell_cost
 
-# A* search algorithm with Weighted Costs
-def A_star_search_weighted(maze_obj, start=None, goal=None, heuristic_method=manhattan_heuristic, weighted_map=None):
+# A* search algorithm with Directional and Weighted Costs
+def A_star_search_directional(maze_obj, start=None, goal=None, heuristic_method=manhattan_heuristic, weighted_map=None):
     if start is None:
         start = (maze_obj.rows, maze_obj.cols)
 
@@ -53,8 +63,8 @@ def A_star_search_weighted(maze_obj, start=None, goal=None, heuristic_method=man
 
         for direction in 'ESNW':
             if maze_obj.maze_map[current][direction]:
-                next_cell = get_next_cell(current, direction)
-                move_cost = get_cell_cost(next_cell, weighted_map)  # Cost of moving into the next cell
+                next_cell = get_next_cell_with_direction(current, direction)
+                move_cost = get_directional_cost(direction, next_cell, weighted_map)  # Cost depends on direction
                 new_g_cost = g_costs[current] + move_cost  # Cost = g_cost + move cost
 
                 if next_cell not in explored or new_g_cost < g_costs.get(next_cell, float('inf')):
@@ -82,7 +92,7 @@ if __name__ == '__main__':
 
     goal_position = (1, 1)  # Example goal position
 
-    # Define a weighted map for cells
+    # Define a weighted map for cells (optional)
     weighted_map = {
         (5, 5): 5,  # Example: "Mud" cell with cost 5
         (10, 10): 10,  # Example: "Water" cell with cost 10
@@ -90,7 +100,7 @@ if __name__ == '__main__':
     }
 
     start_time = time.time()
-    exploration_order, visited_cells, path_to_goal = A_star_search_weighted(
+    exploration_order, visited_cells, path_to_goal = A_star_search_directional(
         m, goal=goal_position, heuristic_method=manhattan_heuristic, weighted_map=weighted_map
     )
     end_time = time.time()
@@ -107,7 +117,7 @@ if __name__ == '__main__':
     m.tracePath({agent_explore: exploration_order}, delay=10)
     m.tracePath({agent_trace: path_to_goal}, delay=10)
 
-    print(f"Weighted Costs - Heuristic: Manhattan")
+    print(f"Directional Weighted Costs - Heuristic: Manhattan")
     print(f"Goal Position: {goal_position}")
     print(f"Path Length: {path_length}")
     print(f"Search Length: {search_length}")
