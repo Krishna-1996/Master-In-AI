@@ -1,7 +1,9 @@
-from pyamaze import maze, agent, COLOR, textLabel
+# %%
+# from pyamaze import maze, agent, COLOR, textLabel
 from collections import deque
 import heapq
 
+# %%
 # Helper function to get the next cell based on direction
 def get_next_cell(current, direction):
     """
@@ -18,6 +20,7 @@ def get_next_cell(current, direction):
     elif direction == 'N':  # Move North
         return (row - 1, col)
 
+# %%
 # BFS Algorithm
 def BFS_search(maze_obj, start=None, goal=None):
     if start is None:
@@ -56,6 +59,7 @@ def BFS_search(maze_obj, start=None, goal=None):
 
     return exploration_order, visited, path_to_goal
 
+# %%
 # Greedy BFS Algorithm (Greedy Best-First Search)
 def heuristic(cell, goal):
     """
