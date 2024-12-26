@@ -146,7 +146,7 @@ def update_info_window(heuristic_name, goal_position, path_length, search_length
 
 # Main function
 if __name__ == '__main__':
-    delay = 500  # Change delay time to control visualization speed
+    delay = 1  # Change delay time to control visualization speed
 
     m = maze(20, 20)
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 2 ICA/TEST_MAZE.csv')
