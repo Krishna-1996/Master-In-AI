@@ -68,6 +68,7 @@ def heuristic(cell, goal):
     """
     return abs(cell[0] - goal[0]) + abs(cell[1] - goal[1])
 
+# %%
 def greedy_bfs(m, start=None, goal=None):
     if start is None:
         start = (m.rows, m.cols)
