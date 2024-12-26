@@ -1,8 +1,8 @@
 
 from pyamaze import maze
 
-my_Maze = maze(60, 150)
-my_Maze.CreateMaze(loopPercent=10, pattern= 'v', saveMaze=True)
+my_Maze = maze(70, 180)
+my_Maze.CreateMaze(loopPercent=35, saveMaze=True)
 
 # Display the maze
 my_Maze.run()
