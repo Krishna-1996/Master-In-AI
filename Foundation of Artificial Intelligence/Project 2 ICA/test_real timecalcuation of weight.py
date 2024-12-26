@@ -1,3 +1,5 @@
+# m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 2 ICA/TEST_MAZE.csv') 
+
 import heapq
 import time
 from pyamaze import maze, agent, COLOR
@@ -12,10 +14,10 @@ def manhattan_heuristic(a, b):
 
 # Directional weights
 directional_weights = {
-    'N': 15,  # Moving north adds 15
-    'E': 15,  # Moving east adds 15
-    'S': -10,  # Moving south subtracts 10
-    'W': -10,  # Moving west subtracts 10
+    'N': 15,  # Moving north costs 15
+    'E': 15,  # Moving east costs 15
+    'S': -10,  # Moving south costs -10
+    'W': -10,  # Moving west costs -10
 }
 
 
@@ -78,7 +80,7 @@ def A_star_search(maze_obj, start=None, goal=None, heuristic_method=manhattan_he
 
 
 # Real-time weight tracker with path tracing
-def trace_path_with_weights(m, agent, path, weights, label, delay):
+def trace_path_with_weights(m, agent, path, weights, label):
     total_weight = 0  # Initialize total weight
     current_cell = path[0]
 
@@ -105,8 +107,8 @@ def trace_path_with_weights(m, agent, path, weights, label, delay):
             label.update()  # Update label in real-time
 
         # Simulate movement with tracePath
-        m.tracePath({agent: [next_cell]}, delay=delay)
-        time.sleep(delay / 10)  # Pause to simulate movement
+        m.tracePath({agent: [next_cell]}, delay=100)
+        time.sleep(0.1)  # Pause to simulate movement
 
         # Update current cell
         current_cell = next_cell
@@ -146,9 +148,7 @@ def update_info_window(heuristic_name, goal_position, path_length, search_length
 
 # Main function
 if __name__ == '__main__':
-    delay = 1  # Change delay time to control visualization speed
-
-    m = maze(20, 20)
+    m = maze(20, 20)  # Adjust maze size for testing
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 2 ICA/TEST_MAZE.csv')
 
     goal_position = (1, 1)  # Example goal position
@@ -158,10 +158,6 @@ if __name__ == '__main__':
     end_time = time.time()
 
     execution_time = end_time - start_time
-
-    # Adjust execution time based on delay
-    adjusted_time = execution_time if delay == 1 else execution_time / delay
-
     search_length = len(exploration_order)
     path_length = len(path_to_goal) + 1
 
@@ -170,10 +166,10 @@ if __name__ == '__main__':
     agent_trace = agent(m, footprints=True, shape='square', color=COLOR.blue, filled=True)
 
     # Update Tkinter window with information
-    weight_label, info_window = update_info_window("Manhattan", goal_position, path_length, search_length, adjusted_time, directional_weights)
+    weight_label, info_window = update_info_window("Manhattan", goal_position, path_length, search_length, execution_time, directional_weights)
 
     # Trace exploration path
-    m.tracePath({agent_explore: exploration_order}, delay=delay)
+    m.tracePath({agent_explore: exploration_order}, delay=100)
 
     # Trace final path with weight updates
     trace_path_with_weights(
@@ -181,8 +177,7 @@ if __name__ == '__main__':
         agent_trace,
         list(path_to_goal.keys()) + [goal_position],
         directional_weights,
-        weight_label,
-        delay
+        weight_label
     )
 
     info_window.mainloop()
