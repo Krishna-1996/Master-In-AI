@@ -1,9 +1,9 @@
 import heapq
 import time
-import math  # <-- Add this import to resolve the 'math' error
+import math
 from pyamaze import maze, agent, COLOR, textLabel
 import tkinter as tk
-from tkinter import ttk  # For using the table-like grid in Tkinter
+from tkinter import ttk
 
 # Manhattan Heuristic Function
 def manhattan_heuristic(a, b):
