@@ -5,9 +5,9 @@ from pyamaze import maze, agent, COLOR, textLabel
 import tkinter as tk
 from tkinter import ttk  # For using the table-like grid in Tkinter
 
-# Manhattan Heuristic Function
-def manhattan_heuristic(a, b):
-    return abs(a[0] - b[0]) + abs(a[1] - b[1])
+# Chebyshev Heuristic Function
+def chebyshev_heuristic(a, b):
+    return max(abs(a[0] - b[0]), abs(a[1] - b[1]))
 
 # Get next cell in the maze based on direction
 def get_next_cell(current, direction):
@@ -22,8 +22,8 @@ def get_next_cell(current, direction):
         return (x + 1, y)
     return current
 
-# Greedy BFS search algorithm with Manhattan heuristic
-def greedy_bfs_search(maze_obj, start=None, goal=None, heuristic_method=manhattan_heuristic):
+# Greedy BFS search algorithm with Chebyshev heuristic
+def greedy_bfs_search(maze_obj, start=None, goal=None, heuristic_method=chebyshev_heuristic):
     if start is None:
         start = (maze_obj.rows, maze_obj.cols)
 
@@ -105,12 +105,12 @@ def display_text_labels(m, heuristic_name, goal_position, path_length, search_le
 if __name__ == '__main__':
     # Create maze and set goal position
     m = maze(50, 120)
-    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 2 ICA/My_Maze.csv')  # Update with correct path
+    m.CreateMaze(loadMaze='path_to_your_maze_file.csv')  # Update with correct path
 
     goal_position = (1, 1)  # Example goal position
 
     start_time = time.time()
-    exploration_order, visited_cells, path_to_goal = greedy_bfs_search(m, goal=goal_position, heuristic_method=manhattan_heuristic)
+    exploration_order, visited_cells, path_to_goal = greedy_bfs_search(m, goal=goal_position, heuristic_method=chebyshev_heuristic)
     end_time = time.time()
 
     execution_time = end_time - start_time
@@ -127,9 +127,9 @@ if __name__ == '__main__':
     m.tracePath({agent_goal: visited_cells}, delay=1)
 
     # Display heuristic information in a separate Tkinter window
-    update_info_window("Manhattan", goal_position, path_length, search_length, execution_time)
+    update_info_window("Chebyshev", goal_position, path_length, search_length, execution_time)
 
     # Display the same information as text labels in the maze window
-    display_text_labels(m, "Manhattan", goal_position, path_length, search_length, execution_time)
+    display_text_labels(m, "Chebyshev", goal_position, path_length, search_length, execution_time)
 
     m.run()
