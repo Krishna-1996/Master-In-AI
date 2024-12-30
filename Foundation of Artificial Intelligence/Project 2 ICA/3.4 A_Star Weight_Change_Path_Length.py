@@ -1,11 +1,11 @@
 import heapq
 import time
+import math
 from pyamaze import maze, agent, COLOR
 import tkinter as tk
-from tkinter import ttk  # For using the table-like grid in Tkinter
-import math
+from tkinter import ttk
 
-# Define heuristic functions
+# Heuristic Functions
 def manhattan_heuristic(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
@@ -47,7 +47,7 @@ def A_star_search(maze_obj, start=None, goal=None, heuristic_method=manhattan_he
     frontier = []
     heapq.heappush(frontier, (0 + heuristic_method(start, goal), start))  # (f-cost, position)
     visited = {}
-    path_to_goal = {}
+    exploration_order = []
     explored = set([start])
     g_costs = {start: 0}
 
@@ -68,77 +68,77 @@ def A_star_search(maze_obj, start=None, goal=None, heuristic_method=manhattan_he
                     f_cost = new_g_cost + heuristic_method(next_cell, goal)
                     heapq.heappush(frontier, (f_cost, next_cell))
                     visited[next_cell] = current
+                    exploration_order.append(next_cell)
                     explored.add(next_cell)
 
-    # Trace the path to the goal
+    path_to_goal = {}
     cell = goal
     while cell != start:
         path_to_goal[visited[cell]] = cell
         cell = visited[cell]
 
-    return path_to_goal
+    # Return the path to the goal and the path length
+    return exploration_order, visited, path_to_goal, len(path_to_goal) + 1  # Include the goal cell
 
 # Function to update the Tkinter window with heuristic data
-def update_info_window(path_lengths, weights):
+def update_info_window(path_lengths):
     info_window = tk.Tk()
-    info_window.title("Heuristic Path Lengths")
+    info_window.title(f"Heuristic Comparison Information")
 
     table = ttk.Treeview(info_window, columns=("Heuristic", "Path Length"), show="headings")
     table.heading("Heuristic", text="Heuristic")
     table.heading("Path Length", text="Path Length")
 
-    # Add directional weights and heuristic data
-    table.insert("", "end", values=("Directional Weights", f"N={weights['N']}, E={weights['E']}, S={weights['S']}, W={weights['W']}"))
-    
-    for heuristic, length in path_lengths.items():
-        table.insert("", "end", values=(heuristic, length))
+    # Add information to the table
+    for heuristic_name, path_length in path_lengths.items():
+        table.insert("", "end", values=(heuristic_name, path_length))
 
     table.pack(fill=tk.BOTH, expand=True)
     info_window.mainloop()
 
 # Main function
-if __name__ == '__main__':
+def run_maze_with_all_heuristics():
     m = maze()  # Adjust maze size for testing
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 2 ICA/TEST_MAZE.csv')  # Adjust maze file path
 
-    start_position = (m.rows, m.cols)  # Start at the bottom-right corner
     goal_position = (1, 1)  # Example goal position
+    start_position = (m.rows, m.cols)
 
-    # Dictionary to store path lengths for each heuristic
+    # Run for all heuristics
+    heuristics = [
+        (manhattan_heuristic, "Manhattan", COLOR.red),
+        (euclidean_heuristic, "Euclidean", COLOR.green),
+        (chebyshev_heuristic, "Chebyshev", COLOR.blue)
+    ]
+
     path_lengths = {}
 
-    # Create a list of agent objects (one for each heuristic)
-    agent_goal_manhattan = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)
-    agent_goal_euclidean = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.blue, shape='square', filled=True)
-    agent_goal_chebyshev = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.red, shape='square', filled=True)
+    # Create agents for each heuristic
+    agent_explore_manhattan = agent(m, footprints=True, shape='square', color=COLOR.red, filled=True)
+    agent_explore_euclidean = agent(m, footprints=True, shape='square', color=COLOR.green, filled=True)
+    agent_explore_chebyshev = agent(m, footprints=True, shape='square', color=COLOR.blue, filled=True)
 
-    # Loop through each heuristic
-    for heuristic_function, agent_goal in zip([manhattan_heuristic, euclidean_heuristic, chebyshev_heuristic],
-                                               [agent_goal_manhattan, agent_goal_euclidean, agent_goal_chebyshev]):
-        start_time = time.time()
-        path_to_goal = A_star_search(m, start=start_position, goal=goal_position, heuristic_method=heuristic_function)
-        end_time = time.time()
+    # Trace paths for each heuristic
+    for heuristic, name, color in heuristics:
+        # Run A* search for each heuristic
+        exploration_order, visited_cells, path_to_goal, path_length = A_star_search(m, start=start_position, goal=goal_position, heuristic_method=heuristic)
+        
+        # Trace the optimal path (only) for this heuristic in its designated color
+        if name == "Manhattan":
+            m.tracePath({agent_explore_manhattan: path_to_goal}, delay=100)
+        elif name == "Euclidean":
+            m.tracePath({agent_explore_euclidean: path_to_goal}, delay=100)
+        elif name == "Chebyshev":
+            m.tracePath({agent_explore_chebyshev: path_to_goal}, delay=100)
 
-        path_length = len(path_to_goal) + 1  # Include the goal cell
+        # Store the path length
+        path_lengths[name] = path_length
 
-        # Prepare the path in the correct order for tracing
-        path = [start_position]  # Start with the start position
-        while path[-1] != goal_position:
-            current = path[-1]
-            if current in path_to_goal:
-                path.append(path_to_goal[current])
-            else:
-                break  # If path is not valid (shouldn't happen)
+    # Update Tkinter window with path lengths for all heuristics
+    update_info_window(path_lengths)
 
-        # Trace the path for each agent
-        print(f"Tracing path for {heuristic_function.__name__}...")
-        m.tracePath({agent_goal: path}, delay=0.5)  # Adjust delay for better visualization of the agent
-
-        # Store the path length for the current heuristic
-        path_lengths[heuristic_function.__name__] = path_length
-
-    # Update Tkinter window with all heuristic path lengths
-    update_info_window(path_lengths, directional_weights)
-
-    # Run the maze after all paths have been traced
     m.run()
+
+# Run the main function
+if __name__ == '__main__':
+    run_maze_with_all_heuristics()
