@@ -1,9 +1,4 @@
-import heapq
-import math
-import time
-from pyamaze import maze, agent, COLOR, textLabel
-import tkinter as tk
-from tkinter import ttk  # For using the table-like grid in Tkinter
+ For using the table-like grid in Tkinter
 
 # Euclidean Heuristic Function
 def euclidean_heuristic(a, b):

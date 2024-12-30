@@ -1,7 +1,6 @@
 import heapq
 import math
-import time
-from pyamaze import maze, agent, COLOR, textLabel
+R, textLabel
 import tkinter as tk
 from tkinter import ttk  # For using the table-like grid in Tkinter
 
