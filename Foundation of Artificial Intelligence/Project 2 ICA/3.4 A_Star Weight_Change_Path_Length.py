@@ -121,9 +121,18 @@ if __name__ == '__main__':
 
         path_length = len(path_to_goal) + 1  # Include the goal cell
 
+        # Prepare the path in the correct order for tracing
+        path = [start_position]  # Start with the start position
+        while path[-1] != goal_position:
+            current = path[-1]
+            if current in path_to_goal:
+                path.append(path_to_goal[current])
+            else:
+                break  # If path is not valid (shouldn't happen)
+
         # Trace the path for each agent
         print(f"Tracing path for {heuristic_function.__name__}...")
-        m.tracePath({agent_goal: path_to_goal}, delay=0.5)  # Adjust delay for better visualization of the agent
+        m.tracePath({agent_goal: path}, delay=0.5)  # Adjust delay for better visualization of the agent
 
         # Store the path length for the current heuristic
         path_lengths[heuristic_function.__name__] = path_length
