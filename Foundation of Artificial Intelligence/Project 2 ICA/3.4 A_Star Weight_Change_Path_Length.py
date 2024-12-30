@@ -17,10 +17,10 @@ def chebyshev_heuristic(a, b):
 
 # Directional weights
 directional_weights = {
-    'N': 15,  # Moving north costs
-    'E': 15,  # Moving east costs
-    'S': -10,  # Moving south costs
-    'W': -10,  # Moving west costs
+    'N': -15,  # Moving north costs
+    'E': -15,  # Moving east costs
+    'S': 10,  # Moving south costs
+    'W': 10,  # Moving west costs
 }
 
 # Get next cell in the maze based on direction
@@ -125,11 +125,11 @@ def run_maze_with_all_heuristics():
         
         # Trace the optimal path (only) for this heuristic in its designated color
         if name == "Manhattan":
-            m.tracePath({agent_explore_manhattan: path_to_goal}, delay=100)
+            m.tracePath({agent_explore_manhattan: path_to_goal}, delay=50)
         elif name == "Euclidean":
-            m.tracePath({agent_explore_euclidean: path_to_goal}, delay=100)
+            m.tracePath({agent_explore_euclidean: path_to_goal}, delay=30)
         elif name == "Chebyshev":
-            m.tracePath({agent_explore_chebyshev: path_to_goal}, delay=100)
+            m.tracePath({agent_explore_chebyshev: path_to_goal}, delay=20)
 
         # Store the path length
         path_lengths[name] = path_length
