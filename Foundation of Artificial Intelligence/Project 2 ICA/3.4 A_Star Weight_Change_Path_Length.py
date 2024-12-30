@@ -18,7 +18,7 @@ def chebyshev_heuristic(a, b):
 # Directional weights
 directional_weights = {
     'N': 0,  # Moving north costs
-    'E': 0,  # Moving east costs
+    'E': 10,  # Moving east costs
     'S': 0,  # Moving south costs
     'W': -10,  # Moving west costs
 }
