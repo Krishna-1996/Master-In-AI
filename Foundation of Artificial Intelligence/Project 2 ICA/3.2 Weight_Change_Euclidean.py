@@ -11,10 +11,10 @@ def euclidean_heuristic(a, b):
 
 # Directional weights
 directional_weights = {
-    'N': 15,  # Moving north costs 1
-    'E': 15,  # Moving east costs 1
-    'S': -10,  # Moving south costs 5
-    'W': -10,  # Moving west costs 2
+    'N': 15,  # Moving north costs
+    'E': 15,  # Moving east costs
+    'S': -10,  # Moving south costs
+    'W': -10,  # Moving west costs
 }
 
 # Get next cell in the maze based on direction
