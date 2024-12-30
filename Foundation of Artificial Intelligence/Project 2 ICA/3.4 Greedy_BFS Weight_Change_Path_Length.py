@@ -1,5 +1,4 @@
 import heapq
-import time
 import math
 from pyamaze import maze, agent, COLOR
 import tkinter as tk
@@ -17,10 +16,10 @@ def chebyshev_heuristic(a, b):
 
 # Directional weights
 directional_weights = {
-    'N': 0,  # Moving north costs
-    'E': 10,  # Moving east costs
-    'S': 0,  # Moving south costs
-    'W': -10,  # Moving west costs
+    'N': -200,  # Moving north costs
+    'E': 110,  # Moving east costs
+    'S': 110,  # Moving south costs
+    'W': -20,  # Moving west costs
 }
 
 # Get next cell in the maze based on direction
@@ -36,8 +35,8 @@ def get_next_cell(current, direction):
         return (x + 1, y)
     return current
 
-# A* search algorithm
-def A_star_search(maze_obj, start=None, goal=None, heuristic_method=manhattan_heuristic):
+# Greedy BFS search algorithm
+def greedy_bfs_search(maze_obj, start=None, goal=None, heuristic_method=manhattan_heuristic):
     if start is None:
         start = (maze_obj.rows, maze_obj.cols)
 
@@ -45,7 +44,7 @@ def A_star_search(maze_obj, start=None, goal=None, heuristic_method=manhattan_he
         goal = (maze_obj.rows // 2, maze_obj.cols // 2)
 
     frontier = []
-    heapq.heappush(frontier, (0 + heuristic_method(start, goal), start))  # (f-cost, position)
+    heapq.heappush(frontier, (heuristic_method(start, goal), start))  # (f-cost, position)
     visited = {}
     exploration_order = []
     explored = set([start])
@@ -63,9 +62,9 @@ def A_star_search(maze_obj, start=None, goal=None, heuristic_method=manhattan_he
                 move_cost = directional_weights[direction]  # Use directional weight
                 new_g_cost = g_costs[current] + move_cost
 
-                if next_cell not in explored or new_g_cost < g_costs.get(next_cell, float('inf')):
+                if next_cell not in explored:
                     g_costs[next_cell] = new_g_cost
-                    f_cost = new_g_cost + heuristic_method(next_cell, goal)
+                    f_cost = heuristic_method(next_cell, goal)  # Greedy BFS uses only heuristic
                     heapq.heappush(frontier, (f_cost, next_cell))
                     visited[next_cell] = current
                     exploration_order.append(next_cell)
@@ -99,7 +98,8 @@ def update_info_window(path_lengths):
 # Main function
 def run_maze_with_all_heuristics():
     m = maze()  # Adjust maze size for testing
-    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 2 ICA/TEST_MAZE.csv')  # Adjust maze file path
+    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 2 ICA/My_Maze_2.csv')
+    # m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 2 ICA/My_Maze.csv')  # Adjust maze file path
 
     goal_position = (1, 1)  # Example goal position
     start_position = (m.rows, m.cols)
@@ -120,8 +120,8 @@ def run_maze_with_all_heuristics():
 
     # Trace paths for each heuristic
     for heuristic, name, color in heuristics:
-        # Run A* search for each heuristic
-        exploration_order, visited_cells, path_to_goal, path_length = A_star_search(m, start=start_position, goal=goal_position, heuristic_method=heuristic)
+        # Run Greedy BFS search for each heuristic
+        exploration_order, visited_cells, path_to_goal, path_length = greedy_bfs_search(m, start=start_position, goal=goal_position, heuristic_method=heuristic)
         
         # Trace the optimal path (only) for this heuristic in its designated color
         if name == "Manhattan":
