@@ -1,9 +1,8 @@
 import heapq
-import time
 import math
-from pyamaze import maze, agent, COLOR, textLabel
 import tkinter as tk
 from tkinter import ttk
+from pyamaze import maze, agent, COLOR
 
 # Manhattan Heuristic Function
 def manhattan_heuristic(a, b):
@@ -70,69 +69,66 @@ def greedy_bfs_search(maze_obj, start=None, goal=None, heuristic_method=manhatta
 
     return exploration_order, visited, path_to_goal
 
-# Function to display the heuristic data as text labels in the maze window
-def display_text_labels(m, heuristic_name, goal_position, path_length, search_length, execution_time):
-    # Position where the text labels will appear
-    x_position = 20
-    y_position = 50  # Starting y-position for text labels
+# Function to display the heuristic data in a tabular format using Tkinter Treeview
+def display_info_window(path_lengths):
+    # Create a new Tkinter window for displaying the results
+    info_window = tk.Tk()
+    info_window.title("Path Length Comparison for Heuristics")
 
-    # Display each information as text labels
-    textLabel(m, f'{heuristic_name} Heuristic - Goal Position: {goal_position}', (x_position, y_position))
-    y_position += 30
-    textLabel(m, f'{heuristic_name} Heuristic - Path Length: {path_length}', (x_position, y_position))
-    y_position += 30
-    textLabel(m, f'{heuristic_name} Heuristic - Search Length: {search_length}', (x_position, y_position))
-    y_position += 30
-    textLabel(m, f'{heuristic_name} Heuristic - Execution Time (s): {round(execution_time, 4)}', (x_position, y_position))
+    # Create a table (Treeview) widget for displaying the metrics
+    table = ttk.Treeview(info_window, columns=("Heuristic", "Path Length"), show="headings")
+    table.heading("Heuristic", text="Heuristic")
+    table.heading("Path Length", text="Path Length")
+
+    # Insert the data into the table for all three heuristics
+    for heuristic, length in path_lengths.items():
+        table.insert("", "end", values=(heuristic, length))
+
+    # Pack the table into the window
+    table.pack(fill=tk.BOTH, expand=True)
+
+    # Run the Tkinter main loop to display the window
+    info_window.mainloop()
 
 # Main function
 if __name__ == '__main__':
-    # Create Tkinter root window
-    root = tk.Tk()
-    root.withdraw()  # Hide the Tkinter main window (we don't need it)
-
-    # Create maze and set goal position
+    # Create the maze
     m = maze(50, 120)
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 2 ICA/My_Maze.csv')  # Update with correct path
 
     goal_position = (1, 1)  # Example goal position
 
-    # Start Timer for Manhattan Heuristic
-    start_time = time.time()
+    # Run Greedy BFS for Manhattan Heuristic
     exploration_order_manhattan, visited_manhattan, path_to_goal_manhattan = greedy_bfs_search(m, goal=goal_position, heuristic_method=manhattan_heuristic)
-    end_time = time.time()
-    execution_time_manhattan = end_time - start_time
-    search_length_manhattan = len(exploration_order_manhattan)
     path_length_manhattan = len(path_to_goal_manhattan) + 1  # Include the goal cell
 
-    # Start Timer for Euclidean Heuristic
-    start_time = time.time()
+    # Run Greedy BFS for Euclidean Heuristic
     exploration_order_euclidean, visited_euclidean, path_to_goal_euclidean = greedy_bfs_search(m, goal=goal_position, heuristic_method=euclidean_heuristic)
-    end_time = time.time()
-    execution_time_euclidean = end_time - start_time
-    search_length_euclidean = len(exploration_order_euclidean)
-    path_length_euclidean = len(path_to_goal_euclidean) + 1  # Include the goal cell
+    path_length_euclidean = len(path_to_goal_euclidean) + 1
 
-    # Start Timer for Chebyshev Heuristic
-    start_time = time.time()
+    # Run Greedy BFS for Chebyshev Heuristic
     exploration_order_chebyshev, visited_chebyshev, path_to_goal_chebyshev = greedy_bfs_search(m, goal=goal_position, heuristic_method=chebyshev_heuristic)
-    end_time = time.time()
-    execution_time_chebyshev = end_time - start_time
-    search_length_chebyshev = len(exploration_order_chebyshev)
-    path_length_chebyshev = len(path_to_goal_chebyshev) + 1  # Include the goal cell
+    path_length_chebyshev = len(path_to_goal_chebyshev) + 1
 
     # Visualization setup for agents
-    agent_goal_manhattan = agent(m, footprints=True, shape='square', color=COLOR.red, filled=True)  # Path with Manhattan Heuristic (Red)
-    agent_goal_euclidean = agent(m, footprints=True, shape='square', color=COLOR.blue, filled=True)  # Path with Euclidean Heuristic (Blue)
-    agent_goal_chebyshev = agent(m, footprints=True, shape='square', color=COLOR.yellow, filled=True)  # Path with Chebyshev Heuristic (Yellow)
+    agent_goal_manhattan = agent(m, footprints=True, shape='square', color=COLOR.red, filled=True)  # Red path for Manhattan
+    agent_goal_euclidean = agent(m, footprints=True, shape='square', color=COLOR.blue, filled=True)  # Blue path for Euclidean
+    agent_goal_chebyshev = agent(m, footprints=True, shape='square', color=COLOR.yellow, filled=True)  # Yellow path for Chebyshev
 
+    # Trace paths
     m.tracePath({agent_goal_manhattan: path_to_goal_manhattan}, delay=1)
     m.tracePath({agent_goal_euclidean: path_to_goal_euclidean}, delay=1)
     m.tracePath({agent_goal_chebyshev: path_to_goal_chebyshev}, delay=1)
 
-    # Display heuristic information in a separate Tkinter window
-    display_text_labels(m, "Manhattan", goal_position, path_length_manhattan, search_length_manhattan, execution_time_manhattan)
-    display_text_labels(m, "Euclidean", goal_position, path_length_euclidean, search_length_euclidean, execution_time_euclidean)
-    display_text_labels(m, "Chebyshev", goal_position, path_length_chebyshev, search_length_chebyshev, execution_time_chebyshev)
+    # Store the path lengths for each heuristic
+    path_lengths = {
+        "Manhattan": path_length_manhattan,
+        "Euclidean": path_length_euclidean,
+        "Chebyshev": path_length_chebyshev
+    }
 
+    # Display the information in tabular format for all three heuristics
+    display_info_window(path_lengths)
+
+    # Run the PyAmaze visualization (ensure this is the last line)
     m.run()
