@@ -1,5 +1,1 @@
-
-
 # m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 2 ICA/My_Maze.csv')  # Path updated
-
-    
