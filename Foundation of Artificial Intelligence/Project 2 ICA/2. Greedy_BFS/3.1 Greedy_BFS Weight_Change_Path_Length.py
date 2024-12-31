@@ -16,10 +16,10 @@ def chebyshev_heuristic(a, b):
 
 # Directional weights
 directional_weights = {
-    'N': -200,  # Moving north costs
-    'E': 110,  # Moving east costs
-    'S': 110,  # Moving south costs
-    'W': -20,  # Moving west costs
+    'N': -5,  # Moving north costs
+    'E': -5,  # Moving east costs
+    'S': 10,  # Moving south costs
+    'W': 10,  # Moving west costs
 }
 
 # Get next cell in the maze based on direction
