@@ -17,8 +17,8 @@ def chebyshev_heuristic(a, b):
 # Directional weights
 directional_weights = {
     'N': 10,  # Moving north costs
-    'E': -10,  # Moving east costs
-    'S': -10,  # Moving south costs
+    'E': 10,  # Moving east costs
+    'S': 10,  # Moving south costs
     'W': 10,  # Moving west costs
 }
 
@@ -98,8 +98,7 @@ def update_info_window(path_lengths):
 # Main function
 def run_maze_with_all_heuristics():
     m = maze()  # Adjust maze size for testing
-    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 2 ICA/My_Maze_2.csv')
-    # m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 2 ICA/My_Maze.csv')  # Adjust maze file path
+    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 2 ICA/My_Maze.csv') # Adjust maze file path
 
     goal_position = (1, 1)  # Example goal position
     start_position = (m.rows, m.cols)
