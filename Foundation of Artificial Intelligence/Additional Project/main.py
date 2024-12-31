@@ -1,6 +1,7 @@
 import heapq
 import pandas as pd
 import logging
+import math
 from pyamaze import maze, agent, COLOR
 
 # Configure logging
