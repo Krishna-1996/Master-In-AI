@@ -4,3 +4,26 @@ In search algorithms, particularly Breadth-First Search (BFS) or Depth-First Sea
 BFS (Breadth-First Search):
 
 In BFS, you explore nodes level by level, so you typically add new nodes to the back (tail) of the queue and remove nodes from the front (head) to explore them. This ensures the algorithm processes nodes in the correct order (first-in, first-out).
+Start at the root: BFS begins at the root node and adds it to the deque. The deque will hold nodes to be processed.
+Deque for tracking nodes: A deque allows you to efficiently add nodes to both ends, but in BFS, you typically add new nodes to the back of the deque for processing in the correct order (FIFO).
+Explore neighbors: For the current node, BFS explores all unvisited neighboring nodes and adds them to the back of the deque.
+Mark visited nodes: Each node is marked as visited when added to the deque, ensuring that the same node is not processed multiple times.
+Level-by-level traversal: Nodes are processed in the order they were added, ensuring BFS checks one level completely before moving to the next, making it suitable for finding the shortest path. 
+E Badr, O Loubna, E Hiba, H Ayoub, E Chama, B Yassine, EL M Karim,
+
+In all three scenarios, A* usually finds the shortest path and explores fewer cells compared to BFS. BFS finds the shortest path but explores many more cells. Greedy BFS explores the least cells but often gives a longer path.
+
+Scenario 1: BFS and A* found the same shortest path (189), but BFS explored many more cells. Greedy BFS had a longer path but explored fewer cells.
+Scenario 2: BFS and A* again had the same path (174), but BFS explored more cells. Greedy BFS had a longer path but explored the fewest cells.
+Scenario 3: BFS and A* both found the shortest path (83), but BFS explored more cells. Greedy BFS found a longer path with very few explored cells.
+
+Conclusion:
+
+BFS is exhaustive and guarantees the shortest path but is computationally expensive in terms of explored nodes.
+Greedy BFS is faster but sacrifices optimality, often leading to longer paths.
+A* offers a balanced approach, finding the optimal path efficiently by exploring fewer nodes.
+Future Work:
+
+Experiment with different heuristics for A*, like Manhattan and Euclidean, to see how they impact performance.
+Compare BFS, Greedy BFS, and A* with other algorithms like IDDFS (Iterative Deepening DFS) and Dijkstra's Algorithm in different scenarios.
+Explore the impact of obstacles or non-uniform cost grids to add complexity and realism to search problems.
