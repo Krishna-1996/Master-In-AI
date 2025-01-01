@@ -18,8 +18,8 @@ def chebyshev_heuristic(a, b):
 # Directional weights
 directional_weights = {
     'N': 10,  # Moving north costs
-    'E': 10,  # Moving east costs
-    'S': 10,  # Moving south costs
+    'E': 0,  # Moving east costs
+    'S': 0,  # Moving south costs
     'W': 10,  # Moving west costs
 }
 
@@ -36,8 +36,8 @@ def get_next_cell(current, direction):
         return (x + 1, y)
     return current
 
-# Greedy BFS algorithm
-def greedy_bfs_search(maze_obj, start=None, goal=None, heuristic_method=manhattan_heuristic):
+# A* search algorithm
+def A_star_search(maze_obj, start=None, goal=None, heuristic_method=manhattan_heuristic):
     if start is None:
         start = (maze_obj.rows, maze_obj.cols)
 
@@ -45,10 +45,11 @@ def greedy_bfs_search(maze_obj, start=None, goal=None, heuristic_method=manhatta
         goal = (maze_obj.rows // 2, maze_obj.cols // 2)
 
     frontier = []
-    heapq.heappush(frontier, (heuristic_method(start, goal), start))  # (heuristic-cost, position)
+    heapq.heappush(frontier, (0 + heuristic_method(start, goal), start))  # (f-cost, position)
     visited = {}
     exploration_order = []
     explored = set([start])
+    g_costs = {start: 0}
 
     while frontier:
         _, current = heapq.heappop(frontier)
@@ -59,9 +60,12 @@ def greedy_bfs_search(maze_obj, start=None, goal=None, heuristic_method=manhatta
         for direction in 'ESNW':
             if maze_obj.maze_map[current][direction]:
                 next_cell = get_next_cell(current, direction)
+                move_cost = directional_weights[direction]  # Use directional weight
+                new_g_cost = g_costs[current] + move_cost
 
-                if next_cell not in explored:
-                    f_cost = heuristic_method(next_cell, goal)  # Greedy BFS uses only the heuristic
+                if next_cell not in explored or new_g_cost < g_costs.get(next_cell, float('inf')):
+                    g_costs[next_cell] = new_g_cost
+                    f_cost = new_g_cost + heuristic_method(next_cell, goal)
                     heapq.heappush(frontier, (f_cost, next_cell))
                     visited[next_cell] = current
                     exploration_order.append(next_cell)
@@ -73,7 +77,7 @@ def greedy_bfs_search(maze_obj, start=None, goal=None, heuristic_method=manhatta
         path_to_goal[visited[cell]] = cell
         cell = visited[cell]
 
-    # Return the exploration order and the path to the goal
+    # Return the path to the goal and the path length
     return exploration_order, visited, path_to_goal, len(path_to_goal) + 1  # Include the goal cell
 
 # Function to update the Tkinter window with heuristic data
@@ -92,10 +96,10 @@ def update_info_window(path_lengths):
     table.pack(fill=tk.BOTH, expand=True)
     info_window.mainloop()
 
-# Main function to visualize the exploration paths
-def run_maze_with_all_exploration_paths():
+# Main function
+def run_maze_with_all_heuristics():
     m = maze()  # Adjust maze size for testing
-    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 2 ICA/Maze_2 for Directional_Weight.csv')  # Adjust maze file path
+    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 2 ICA/Maze_2 for Directional_Weight.csv') # Adjust maze file path
 
     goal_position = (1, 1)  # Example goal position
     start_position = (m.rows, m.cols)
@@ -107,33 +111,34 @@ def run_maze_with_all_exploration_paths():
         (chebyshev_heuristic, "Chebyshev", COLOR.blue)
     ]
 
-    # Create agents for each exploration path
+    path_lengths = {}
+
+    # Create agents for each heuristic
     agent_explore_manhattan = agent(m, footprints=True, shape='square', color=COLOR.red, filled=True)
     agent_explore_euclidean = agent(m, footprints=True, shape='square', color=COLOR.green, filled=True)
     agent_explore_chebyshev = agent(m, footprints=True, shape='square', color=COLOR.blue, filled=True)
 
-    # Trace exploration paths for each heuristic
+    # Trace paths for each heuristic
     for heuristic, name, color in heuristics:
-        # Run Greedy BFS search for each heuristic
-        exploration_order, visited_cells, path_to_goal, path_length = greedy_bfs_search(m, start=start_position, goal=goal_position, heuristic_method=heuristic)
+        # Run A* search for each heuristic
+        exploration_order, visited_cells, path_to_goal, path_length = A_star_search(m, start=start_position, goal=goal_position, heuristic_method=heuristic)
         
-        # Trace the exploration path (not the goal path) for this heuristic in its designated color
+        # Trace the optimal path (only) for this heuristic in its designated color
         if name == "Manhattan":
-            m.tracePath({agent_explore_manhattan: exploration_order}, delay=1)
+            m.tracePath({agent_explore_manhattan: path_to_goal}, delay=50)
         elif name == "Euclidean":
-            m.tracePath({agent_explore_euclidean: exploration_order}, delay=1)
+            m.tracePath({agent_explore_euclidean: path_to_goal}, delay=59)
         elif name == "Chebyshev":
-            m.tracePath({agent_explore_chebyshev: exploration_order}, delay=1)
+            m.tracePath({agent_explore_chebyshev: path_to_goal}, delay=50)
 
-    # Update Tkinter window with exploration path lengths for all heuristics
-    update_info_window({
-        "Manhattan": len(exploration_order),
-        "Euclidean": len(exploration_order),
-        "Chebyshev": len(exploration_order),
-    })
+        # Store the path length
+        path_lengths[name] = path_length
+
+    # Update Tkinter window with path lengths for all heuristics
+    update_info_window(path_lengths)
 
     m.run()
 
 # Run the main function
 if __name__ == '__main__':
-    run_maze_with_all_exploration_paths()
+    run_maze_with_all_heuristics()

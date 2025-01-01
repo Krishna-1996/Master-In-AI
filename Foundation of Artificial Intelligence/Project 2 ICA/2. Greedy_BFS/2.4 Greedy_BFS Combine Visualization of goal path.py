@@ -94,7 +94,7 @@ def display_info_window(path_lengths):
 if __name__ == '__main__':
     # Create the maze
     m = maze(50, 120)
-    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 2 ICA/My_Maze.csv')  # Update with correct path
+    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 2 ICA/Maze_1 for Heuristic_Function.csv')  # Update with correct path
 
     goal_position = (1, 1)  # Example goal position
 
