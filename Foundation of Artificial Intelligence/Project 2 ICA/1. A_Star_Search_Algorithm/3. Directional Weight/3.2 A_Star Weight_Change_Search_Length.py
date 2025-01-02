@@ -20,8 +20,7 @@ directional_weights = {
     'N': 10,  # Moving north costs
     'E': 10,  # Moving east costs
     'S': 10,  # Moving south costs
-    'W': 10,  # Moving west costs
-}
+    'W': 10, } # Moving west costs
 
 # Get next cell in the maze based on direction
 def get_next_cell(current, direction):

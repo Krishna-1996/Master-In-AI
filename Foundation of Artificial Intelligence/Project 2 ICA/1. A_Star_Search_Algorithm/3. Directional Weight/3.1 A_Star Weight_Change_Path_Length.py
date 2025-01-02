@@ -17,11 +17,9 @@ def chebyshev_heuristic(a, b):
 
 # Directional weights
 directional_weights = {
-    'N': 10,  # Moving north costs
-    'E': 10,  # Moving east costs
-    'S': 10,  # Moving south costs
-    'W': 10,  # Moving west costs
-}
+    'N': 10, 'E': 10,  # Moving north and east costs
+    'S': 10, 'W': 10,}  # Moving south and west costs
+
 
 # Get next cell in the maze based on direction
 def get_next_cell(current, direction):
@@ -108,9 +106,8 @@ def run_maze_with_all_heuristics():
     heuristics = [
         (manhattan_heuristic, "Manhattan", COLOR.red),
         (euclidean_heuristic, "Euclidean", COLOR.green),
-        (chebyshev_heuristic, "Chebyshev", COLOR.blue)
-    ]
-
+        (chebyshev_heuristic, "Chebyshev", COLOR.blue)]
+    
     path_lengths = {}
 
     # Create agents for each heuristic
@@ -142,3 +139,8 @@ def run_maze_with_all_heuristics():
 # Run the main function
 if __name__ == '__main__':
     run_maze_with_all_heuristics()
+
+
+# =====================================
+
+    

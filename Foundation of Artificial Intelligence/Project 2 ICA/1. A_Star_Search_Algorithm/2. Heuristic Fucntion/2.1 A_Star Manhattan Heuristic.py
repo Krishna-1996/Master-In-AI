@@ -1,9 +1,9 @@
+
 import heapq
-import math
 import time
 from pyamaze import maze, agent, COLOR, textLabel
 import tkinter as tk
-from tkinter import ttk  # For using the table-like grid in Tkinter
+from tkinter import ttk  
 
 # Manhattan Heuristic Function
 def manhattan_heuristic(a, b):
@@ -40,10 +40,8 @@ def A_star_search(maze_obj, start=None, goal=None, heuristic_method=manhattan_he
 
     while frontier:
         _, current = heapq.heappop(frontier)
-
         if current == goal:
             break
-
         for direction in 'ESNW':
             if maze_obj.maze_map[current][direction]:
                 next_cell = get_next_cell(current, direction)
@@ -114,7 +112,8 @@ if __name__ == '__main__':
     goal_position = (1, 1)  # Example goal position
 
     start_time = time.time()
-    exploration_order, visited_cells, path_to_goal = A_star_search(m, goal=goal_position, heuristic_method=manhattan_heuristic)
+    exploration_order, visited_cells, path_to_goal = A_star_search(m, 
+        goal=goal_position, heuristic_method=manhattan_heuristic)
     end_time = time.time()
 
     execution_time = end_time - start_time
@@ -137,3 +136,4 @@ if __name__ == '__main__':
     display_text_labels(m, "Manhattan", goal_position, path_length, search_length, execution_time)
 
     m.run()
+
