@@ -17,4 +17,4 @@ def load_maze(filename):
 def print_maze(maze):
     """Prints the maze to the console."""
     for row in maze:
-        print("".join(["#" if cell == 1 else "G" if cell == 2 else "S" if cell == 3 else "." for cell in row]))
+        print("".join(["#" if cell == 1 else "G" if cell == 2 else "S" if cell == 3 else "." if cell == 0 else "*" for cell in row]))
