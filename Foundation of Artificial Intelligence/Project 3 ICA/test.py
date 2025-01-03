@@ -57,18 +57,18 @@ def get_next_cell(current, direction):
         return (row - 1, col)
 
 # Create your maze
-m = maze(50, 120)
+m = maze(20, 50)  # Maze size 20x50
 m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/maze--2025-01-03--10-31-10.csv')
 
 # The obstacles will be added here. Each obstacle is a tuple (row, col)
 obstacles = set()
 
 # Pygame window setup
-window_width, window_height = 800, 600
+window_width, window_height = 1200, 400
 screen = pygame.display.set_mode((window_width, window_height))
 pygame.display.set_caption("Interactive Maze")
 
-# Scale the maze to fit within the Pygame window
+# Scale the maze to fit within the Pygame window (adjusted for non-square maze)
 cell_width = window_width // m.cols
 cell_height = window_height // m.rows
 
@@ -104,9 +104,10 @@ def place_obstacle():
     row = pos[1] // cell_height
     if (row, col) in obstacles:
         obstacles.remove((row, col))  # Remove obstacle
+        update_maze_with_obstacles()
     else:
         obstacles.add((row, col))  # Add obstacle
-    update_maze_with_obstacles()
+        update_maze_with_obstacles()
 
 # Update the maze with obstacles after placement
 def update_maze_with_obstacles():
@@ -118,8 +119,8 @@ def update_maze_with_obstacles():
 
 # Main function to run the A* algorithm and visualize the maze
 def run_experiment():
-    start_position = (m.rows-1, m.cols-1)
-    goal_position = (1, 1)
+    start_position = (m.rows - 1, m.cols - 1)  # Bottom-right corner
+    goal_position = (1, 1)  # Top-left corner
 
     # Run A* algorithm
     exploration_order, path_to_goal = A_star_search(m, start_position, goal_position)
@@ -143,10 +144,11 @@ while running:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             place_obstacle()
+        elif event.type == pygame.KEYDOWN:
+            # Run the A* search if the space bar is pressed
+            if event.key == pygame.K_SPACE:
+                run_experiment()
 
     draw_maze()  # Update the display
 
 pygame.quit()
-
-# After the user is done placing obstacles, we can run the experiment
-run_experiment()
