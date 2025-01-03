@@ -7,7 +7,7 @@ import sys
 WIDTH, HEIGHT = 70, 30  # Grid dimensions
 CELL_SIZE = 20  # Pixel size for each grid cell
 START = (15, 1)  # Starting point
-GOAL = (15, 70)  # Goal point
+GOAL = (15, 67)  # Goal point
 
 # Colors
 WHITE = (255, 255, 255)

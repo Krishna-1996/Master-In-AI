@@ -4,7 +4,7 @@ import random
 import csv
 
 def heuristic(a, b):
-    # Manhattan distance heuristic
+    """Manhattan distance heuristic"""
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
 def get_next_cell(current, direction):
@@ -48,8 +48,10 @@ def add_obstacles(maze_obj, obstacle_percentage=20):
     # Randomly select obstacle positions
     blocked_cells = random.sample(valid_cells, num_obstacles)
 
+    # Store obstacle locations for later use in visualization
+    obstacle_locations = []
+
     for (row, col) in blocked_cells:
-        # Check if the cell is valid and part of the maze
         if (row, col) in maze_obj.maze_map:
             # Randomly block directions (set E, W, N, S to 0 for obstacles)
             if random.choice([True, False]):
@@ -58,6 +60,27 @@ def add_obstacles(maze_obj, obstacle_percentage=20):
             if random.choice([True, False]):
                 maze_obj.maze_map[(row, col)]["N"] = 0
                 maze_obj.maze_map[(row, col)]["S"] = 0
+
+            # Store the location of the obstacle
+            obstacle_locations.append((row, col))
+
+    return obstacle_locations  # Return all the blocked cells
+
+def visualize_maze_with_obstacles(maze_obj, obstacle_locations):
+    """
+    Manually visualize the maze with obstacles.
+    Mark obstacles as 'X' and open cells as '.' in the printed grid.
+    """
+    maze_grid = [['.' for _ in range(maze_obj.cols)] for _ in range(maze_obj.rows)]  # Default grid
+
+    # Mark obstacles as 'X'
+    for (row, col) in obstacle_locations:
+        maze_grid[row][col] = 'X'
+
+    # Print the maze grid with obstacles
+    print("Maze Visualization with Obstacles:")
+    for row in maze_grid:
+        print(' '.join(row))
 
 def A_star_search(maze_obj, start=None, goal=None):
     if start is None:
@@ -122,7 +145,10 @@ if __name__ == '__main__':
     load_maze_from_csv('D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/normal Version/maze--2025-01-03--13-49-03.csv', m)
 
     # Dynamically add obstacles
-    add_obstacles(m, obstacle_percentage=15)  # Change obstacle percentage as needed
+    obstacle_locations = add_obstacles(m, obstacle_percentage=15)  # Change obstacle percentage as needed
+
+    # Visualize the maze with obstacles using simple text representation
+    visualize_maze_with_obstacles(m, obstacle_locations)
 
     goal_position = (1, 1)  # Example goal, change to any valid coordinate
 
