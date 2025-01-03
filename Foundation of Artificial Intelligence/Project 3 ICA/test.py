@@ -1,11 +1,38 @@
 import pygame
 from pyamaze import maze, agent, COLOR
 from queue import PriorityQueue
+import csv
 
 # Initialize pygame
 pygame.init()
 
-# A* Algorithm Implementation
+# Maze configuration
+window_width, window_height = 800, 600
+cell_width, cell_height = 40, 40  # Cell size adjusted for better visibility
+
+# Create the maze object
+m = maze(20, 50)  # Assuming maze is 20x50 (rows x columns)
+obstacles = set()
+
+# Create maze map from CSV data
+def load_maze_from_csv(file_path):
+    with open(file_path, newline='') as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            if row[0].startswith("("):  # To avoid header rows
+                coords = eval(row[0])  # Convert string to tuple (e.g., "(1, 1)" -> (1, 1))
+                E, W, N, S = map(int, row[1:])
+                if coords not in m.maze_map:  # Ensure the cell exists in the map
+                    m.maze_map[coords] = {'E': E, 'W': W, 'N': N, 'S': S}
+
+# Loading maze from CSV
+load_maze_from_csv('D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/maze--2025-01-03--10-31-10.csv')
+
+# Pygame window setup
+screen = pygame.display.set_mode((window_width, window_height))
+pygame.display.set_caption("Interactive Maze")
+
+# A* Algorithm for pathfinding
 def A_star_search(maze_obj, start, goal):
     def heuristic(a, b):
         return abs(a[0] - b[0]) + abs(a[1] - b[1])  # Manhattan Distance
@@ -26,7 +53,7 @@ def A_star_search(maze_obj, start, goal):
         exploration_order.append(current)
 
         for direction in 'ESNW':
-            if maze_obj.maze_map.get(current, {}).get(direction, False):
+            if maze_obj.maze_map[current][direction]:
                 next_cell = get_next_cell(current, direction)
                 tentative_g_score = g_score[current] + 1
 
@@ -44,7 +71,7 @@ def A_star_search(maze_obj, start, goal):
 
     return exploration_order, path_to_goal
 
-# Function to get the next cell based on direction
+# Get next cell based on direction
 def get_next_cell(current, direction):
     row, col = current
     if direction == 'E':  # Move East
@@ -56,73 +83,73 @@ def get_next_cell(current, direction):
     elif direction == 'N':  # Move North
         return (row - 1, col)
 
-# Create your maze
-m = maze(20, 50)  # Maze size 20x50
-m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/maze--2025-01-03--10-31-10.csv')
-
-# The obstacles will be added here. Each obstacle is a tuple (row, col)
-obstacles = set()
-
-# Pygame window setup
-window_width, window_height = 1200, 400
-screen = pygame.display.set_mode((window_width, window_height))
-pygame.display.set_caption("Interactive Maze")
-
-# Scale the maze to fit within the Pygame window (adjusted for non-square maze)
-cell_width = window_width // m.cols
-cell_height = window_height // m.rows
-
-# Function to draw the maze and obstacles in the pygame window
+# Draw the maze and obstacles
 def draw_maze():
     screen.fill((255, 255, 255))  # Clear screen with white background
 
     for row in range(m.rows):
         for col in range(m.cols):
-            # Get the coordinates for the cell in the window
             x = col * cell_width
             y = row * cell_height
+
+            # Draw obstacles in red
             if (row, col) in obstacles:
-                pygame.draw.rect(screen, (255, 0, 0), (x, y, cell_width, cell_height))  # Red for obstacles
-            # Check if the key exists in the maze map before accessing it
-            if (row, col) in m.maze_map:
-                # Walls can be checked with 'E', 'W', 'S', 'N' keys
-                if m.maze_map[(row, col)].get('E', False) == False:
+                pygame.draw.rect(screen, (255, 0, 0), (x, y, cell_width, cell_height))
+            else:
+                # Draw the walls of the maze
+                if not m.maze_map[(row + 1, col + 1)]['E']:  # No East wall
                     pygame.draw.line(screen, (0, 0, 0), (x + cell_width, y), (x + cell_width, y + cell_height), 2)
-                if m.maze_map[(row, col)].get('W', False) == False:
+                if not m.maze_map[(row + 1, col + 1)]['W']:  # No West wall
                     pygame.draw.line(screen, (0, 0, 0), (x, y), (x, y + cell_height), 2)
-                if m.maze_map[(row, col)].get('S', False) == False:
+                if not m.maze_map[(row + 1, col + 1)]['S']:  # No South wall
                     pygame.draw.line(screen, (0, 0, 0), (x, y + cell_height), (x + cell_width, y + cell_height), 2)
-                if m.maze_map[(row, col)].get('N', False) == False:
+                if not m.maze_map[(row + 1, col + 1)]['N']:  # No North wall
                     pygame.draw.line(screen, (0, 0, 0), (x, y), (x + cell_width, y), 2)
+
+    # Draw buttons (for reset and run algorithm)
+    pygame.draw.rect(screen, (0, 255, 0), (window_width - 150, window_height - 100, 130, 40))  # Run Algorithm
+    pygame.draw.rect(screen, (255, 255, 0), (window_width - 150, window_height - 150, 130, 40))  # Reset Obstacles
+    pygame.draw.rect(screen, (255, 0, 0), (window_width - 150, window_height - 200, 130, 40))  # Reset All
 
     pygame.display.flip()
 
-# Function to place/remove obstacles based on mouse clicks
+# Place or remove obstacles when clicked
 def place_obstacle():
     pos = pygame.mouse.get_pos()
     col = pos[0] // cell_width
     row = pos[1] // cell_height
     if (row, col) in obstacles:
         obstacles.remove((row, col))  # Remove obstacle
-        update_maze_with_obstacles()
     else:
         obstacles.add((row, col))  # Add obstacle
-        update_maze_with_obstacles()
+    update_maze_with_obstacles()
 
-# Update the maze with obstacles after placement
+# Update the maze with the new obstacles
 def update_maze_with_obstacles():
     for row, col in obstacles:
-        m.maze_map[(row, col)]['E'] = False
-        m.maze_map[(row, col)]['W'] = False
-        m.maze_map[(row, col)]['S'] = False
-        m.maze_map[(row, col)]['N'] = False
+        m.maze_map[(row + 1, col + 1)]['E'] = False
+        m.maze_map[(row + 1, col + 1)]['W'] = False
+        m.maze_map[(row + 1, col + 1)]['S'] = False
+        m.maze_map[(row + 1, col + 1)]['N'] = False
 
-# Main function to run the A* algorithm and visualize the maze
-def run_experiment():
-    start_position = (m.rows - 1, m.cols - 1)  # Bottom-right corner
-    goal_position = (1, 1)  # Top-left corner
+# Reset the maze and obstacles
+def reset_all():
+    global obstacles
+    obstacles = set()  # Clear obstacles
+    load_maze_from_csv('D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/maze--2025-01-03--10-31-10.csv')  # Reload the maze
+    update_maze_with_obstacles()  # Update maze walls after reset
 
-    # Run A* algorithm
+# Reset obstacles only
+def reset_obstacles():
+    global obstacles
+    obstacles = set()  # Remove obstacles from the set
+    update_maze_with_obstacles()  # Update maze walls after reset
+
+# Run the algorithm
+def run_algorithm():
+    start_position = (m.rows - 1, m.cols - 1)
+    goal_position = (1, 1)
+
     exploration_order, path_to_goal = A_star_search(m, start_position, goal_position)
 
     # Visualize the exploration process using pyamaze agents
@@ -136,19 +163,26 @@ def run_experiment():
     # Run the visualization
     m.run()
 
-# Pygame event loop to handle mouse clicks and display the maze
+# Main event loop for interaction
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            place_obstacle()
-        elif event.type == pygame.KEYDOWN:
-            # Run the A* search if the space bar is pressed
-            if event.key == pygame.K_SPACE:
-                run_experiment()
+            if event.pos[0] < window_width - 150:  # Click to place obstacles only within maze area
+                place_obstacle()
+            else:
+                # Handle button clicks
+                if window_width - 150 <= event.pos[0] <= window_width - 20:
+                    if window_height - 100 <= event.pos[1] <= window_height - 60:  # Run Algorithm
+                        run_algorithm()
+                    elif window_height - 150 <= event.pos[1] <= window_height - 110:  # Reset Obstacles
+                        reset_obstacles()
+                    elif window_height - 200 <= event.pos[1] <= window_height - 160:  # Reset All
+                        reset_all()
 
-    draw_maze()  # Update the display
+    draw_maze()  # Update display
 
+# Close Pygame
 pygame.quit()
