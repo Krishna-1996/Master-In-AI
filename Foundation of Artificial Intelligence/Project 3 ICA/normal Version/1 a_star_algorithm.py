@@ -35,10 +35,7 @@ def load_maze_from_csv(file_path, maze_obj):
             maze_obj.maze_map[coords] = {"E": E, "W": W, "N": N, "S": S}
 
 def add_obstacles(maze_obj, obstacle_percentage=20):
-    """
-    Adds obstacles to the maze by modifying the E, W, N, S values in the maze_map.
-    The `obstacle_percentage` determines the density of obstacles (percentage of blocked paths).
-    """
+    
     total_cells = maze_obj.rows * maze_obj.cols
     num_obstacles = int(total_cells * (obstacle_percentage / 100))
 
@@ -130,7 +127,7 @@ if __name__ == '__main__':
     load_maze_from_csv('D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/normal Version/maze--2025-01-03--13-49-03.csv', m)
 
     # Dynamically add obstacles
-    obstacle_locations = add_obstacles(m, obstacle_percentage=15)  # Change obstacle percentage as needed
+    obstacle_locations = add_obstacles(m, obstacle_percentage=25)  # Change obstacle percentage as needed
     
     goal_position = (1, 1)  # Example goal, change to any valid coordinate
 
