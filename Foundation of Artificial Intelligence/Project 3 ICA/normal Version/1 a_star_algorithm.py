@@ -66,21 +66,6 @@ def add_obstacles(maze_obj, obstacle_percentage=20):
 
     return obstacle_locations  # Return all the blocked cells
 
-def visualize_maze_with_obstacles(maze_obj, obstacle_locations):
-    """
-    Manually visualize the maze with obstacles.
-    Mark obstacles as 'X' and open cells as '.' in the printed grid.
-    """
-    maze_grid = [['.' for _ in range(maze_obj.cols)] for _ in range(maze_obj.rows)]  # Default grid
-
-    # Mark obstacles as 'X'
-    for (row, col) in obstacle_locations:
-        maze_grid[row][col] = 'X'
-
-    # Print the maze grid with obstacles
-    print("Maze Visualization with Obstacles:")
-    for row in maze_grid:
-        print(' '.join(row))
 
 def A_star_search(maze_obj, start=None, goal=None):
     if start is None:
@@ -146,10 +131,7 @@ if __name__ == '__main__':
 
     # Dynamically add obstacles
     obstacle_locations = add_obstacles(m, obstacle_percentage=15)  # Change obstacle percentage as needed
-
-    # Visualize the maze with obstacles using simple text representation
-    visualize_maze_with_obstacles(m, obstacle_locations)
-
+    
     goal_position = (1, 1)  # Example goal, change to any valid coordinate
 
     exploration_order, visited_cells, path_to_goal = A_star_search(m, goal=goal_position)
