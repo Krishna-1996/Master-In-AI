@@ -328,7 +328,7 @@ def game_loop():
                 elif event.key == pygame.K_SPACE:  # Press 'space' to run all algorithms
                     run_all_algorithms()
 
-        clock.tick(300)  # Control the frame rate
+        clock.tick(30)  # Control the frame rate
 
     pygame.quit()
     root.quit()
@@ -658,7 +658,7 @@ def game_loop():
     global running
     while running:
         handle_input()
-        draw_grid()  # This will keep the grid and obstacles updated
+        draw_grid()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
