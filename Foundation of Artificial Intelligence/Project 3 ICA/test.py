@@ -54,7 +54,8 @@ def get_next_cell(current, direction):
 
 # Create your maze
 m = maze(50, 120)
-m.CreateMaze()
+m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/maze--2025-01-03--10-31-10.csv')
+# D:\Masters Projects\Master-In-AI\Foundation of Artificial Intelligence\Project 3 ICA
 
 # The obstacles will be added here. Each obstacle is a tuple (row, col)
 obstacles = set()
