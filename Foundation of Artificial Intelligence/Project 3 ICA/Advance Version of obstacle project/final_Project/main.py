@@ -5,7 +5,7 @@ from greedy_bfs import run_algorithm as greedy_bfs
 
 def main():
     # Load the maze
-    maze_file = input("Enter the maze file to load: ")
+    maze_file = input(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/normal Version/maze--2025-01-03--13-49-03.csv')
     maze = maze_loader.load_maze(maze_file)
 
     # Set start and goal
