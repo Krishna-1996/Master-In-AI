@@ -1,5 +1,9 @@
-from pyamaze import maze, agent, COLOR, textLabel
+import pygame
+from pyamaze import maze, agent, COLOR
 from queue import PriorityQueue
+
+# Initialize pygame
+pygame.init()
 
 # A* Algorithm Implementation
 def A_star_search(maze_obj, start, goal):
@@ -20,12 +24,12 @@ def A_star_search(maze_obj, start, goal):
             break
 
         exploration_order.append(current)
-        
+
         for direction in 'ESNW':
-            if maze_obj.maze_map[current][direction]:
+            if maze_obj.maze_map.get(current, {}).get(direction, False):
                 next_cell = get_next_cell(current, direction)
                 tentative_g_score = g_score[current] + 1
-                
+
                 if next_cell not in g_score or tentative_g_score < g_score[next_cell]:
                     came_from[next_cell] = current
                     g_score[next_cell] = tentative_g_score
@@ -55,18 +59,53 @@ def get_next_cell(current, direction):
 # Create your maze
 m = maze(50, 120)
 m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/maze--2025-01-03--10-31-10.csv')
-# D:\Masters Projects\Master-In-AI\Foundation of Artificial Intelligence\Project 3 ICA
 
 # The obstacles will be added here. Each obstacle is a tuple (row, col)
 obstacles = set()
 
-# You can create a function that handles the maze clicking to place obstacles
-def place_obstacle(event):
-    row, col = event.cell
+# Pygame window setup
+window_width, window_height = 800, 600
+screen = pygame.display.set_mode((window_width, window_height))
+pygame.display.set_caption("Interactive Maze")
+
+# Scale the maze to fit within the Pygame window
+cell_width = window_width // m.cols
+cell_height = window_height // m.rows
+
+# Function to draw the maze and obstacles in the pygame window
+def draw_maze():
+    screen.fill((255, 255, 255))  # Clear screen with white background
+
+    for row in range(m.rows):
+        for col in range(m.cols):
+            # Get the coordinates for the cell in the window
+            x = col * cell_width
+            y = row * cell_height
+            if (row, col) in obstacles:
+                pygame.draw.rect(screen, (255, 0, 0), (x, y, cell_width, cell_height))  # Red for obstacles
+            # Check if the key exists in the maze map before accessing it
+            if (row, col) in m.maze_map:
+                # Walls can be checked with 'E', 'W', 'S', 'N' keys
+                if m.maze_map[(row, col)].get('E', False) == False:
+                    pygame.draw.line(screen, (0, 0, 0), (x + cell_width, y), (x + cell_width, y + cell_height), 2)
+                if m.maze_map[(row, col)].get('W', False) == False:
+                    pygame.draw.line(screen, (0, 0, 0), (x, y), (x, y + cell_height), 2)
+                if m.maze_map[(row, col)].get('S', False) == False:
+                    pygame.draw.line(screen, (0, 0, 0), (x, y + cell_height), (x + cell_width, y + cell_height), 2)
+                if m.maze_map[(row, col)].get('N', False) == False:
+                    pygame.draw.line(screen, (0, 0, 0), (x, y), (x + cell_width, y), 2)
+
+    pygame.display.flip()
+
+# Function to place/remove obstacles based on mouse clicks
+def place_obstacle():
+    pos = pygame.mouse.get_pos()
+    col = pos[0] // cell_width
+    row = pos[1] // cell_height
     if (row, col) in obstacles:
-        obstacles.remove((row, col))  # Remove the obstacle if clicked again
+        obstacles.remove((row, col))  # Remove obstacle
     else:
-        obstacles.add((row, col))  # Add an obstacle at this position
+        obstacles.add((row, col))  # Add obstacle
     update_maze_with_obstacles()
 
 # Update the maze with obstacles after placement
@@ -85,7 +124,7 @@ def run_experiment():
     # Run A* algorithm
     exploration_order, path_to_goal = A_star_search(m, start_position, goal_position)
 
-    # Visualize the exploration process
+    # Visualize the exploration process using pyamaze agents
     agent_exploration = agent(m, footprints=True, shape='square', color=COLOR.red, filled=True)
     agent_trace = agent(m, footprints=True, shape='square', color=COLOR.yellow, filled=True)
     agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)
@@ -96,8 +135,18 @@ def run_experiment():
     # Run the visualization
     m.run()
 
-# Attach the click event to place obstacles
-m.setEventCallback('click', place_obstacle)
+# Pygame event loop to handle mouse clicks and display the maze
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            place_obstacle()
 
-# Run the experiment
+    draw_maze()  # Update the display
+
+pygame.quit()
+
+# After the user is done placing obstacles, we can run the experiment
 run_experiment()
