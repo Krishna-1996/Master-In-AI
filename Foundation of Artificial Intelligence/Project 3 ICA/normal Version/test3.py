@@ -58,7 +58,6 @@ def add_obstacles(maze_obj, obstacle_percentage=20):
             if random.choice([True, False]):
                 maze_obj.maze_map[(row, col)]["N"] = 0
                 maze_obj.maze_map[(row, col)]["S"] = 0
-    maze_obj.grid
 
 def A_star_search(maze_obj, start=None, goal=None):
     if start is None:
@@ -110,18 +109,20 @@ def A_star_search(maze_obj, start=None, goal=None):
         cell = visited[cell]
 
     return exploration_order, visited, path_to_goal
-    
+
 
 # Main function for A* search
 if __name__ == '__main__':
-    m = maze(50, 100)  # Maze size 20x50
+    m = maze(50, 100)  # Maze size 50x100
+
+    # Load maze from CSV file and update maze_map
     m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/normal Version/maze--2025-01-03--13-49-03.csv')
 
     # Load maze from CSV file and update maze_map
     load_maze_from_csv('D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/normal Version/maze--2025-01-03--13-49-03.csv', m)
 
     # Dynamically add obstacles
-    add_obstacles(m, obstacle_percentage = 15)  # You can change the obstacle percentage
+    add_obstacles(m, obstacle_percentage=15)  # Change obstacle percentage as needed
 
     goal_position = (1, 1)  # Example goal, change to any valid coordinate
 
