@@ -63,7 +63,7 @@ def main():
     maze_map = load_maze_from_csv(original_csv_path)
     
     # Add random obstacles to the maze
-    maze_map_with_obstacles = add_obstacles(maze_map, obstacle_percentage=50)  # Change obstacle percentage as needed
+    maze_map_with_obstacles = add_obstacles(maze_map, obstacle_percentage=70)  # Change obstacle percentage as needed
     
     # Save the modified maze with obstacles to a new CSV
     save_maze_to_csv(maze_map_with_obstacles, modified_csv_path)
