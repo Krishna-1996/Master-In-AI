@@ -1,67 +1,85 @@
-import pandas as pd
-import numpy as np
+import csv
 import random
-import sys  # Import sys to use stdout.flush()
 
-# Load maze from maze.csv
-maze_file_path = 'D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/normal Version/maze--2025-01-03--13-49-03.csv'
-maze_df = pd.read_csv(maze_file_path, header=None, names=["cell", "E", "W", "N", "S"])
-maze_array = maze_df.values
+# Define the maze structure
+maze_structure = [
+    [(1, 1), 1, 0, 0, 0], [(2, 1), 1, 0, 0, 1], [(3, 1), 0, 0, 1, 1], [(4, 1), 1, 1, 1, 1], 
+    [(5, 1), 0, 0, 0, 1], [(6, 1), 1, 0, 1, 1], [(7, 1), 0, 0, 1, 1], [(8, 1), 0, 0, 1, 1], 
+    [(9, 1), 1, 0, 1, 0], [(10, 1), 1, 0, 0, 0], [(1, 2), 0, 1, 0, 1], [(2, 2), 0, 1, 1, 0], 
+    [(3, 2), 1, 0, 0, 1], [(4, 2), 1, 1, 1, 0], [(5, 2), 1, 0, 1, 1], [(6, 2), 0, 1, 1, 0], 
+    [(7, 2), 1, 0, 0, 0], [(8, 2), 1, 0, 0, 1], [(9, 2), 0, 1, 1, 1], [(10, 2), 1, 1, 1, 0], 
+    [(1, 3), 1, 0, 0, 1], [(2, 3), 0, 0, 1, 1], [(3, 3), 1, 1, 1, 0], [(4, 3), 1, 1, 1, 1], 
+    [(5, 3), 1, 1, 1, 1], [(6, 3), 1, 0, 1, 1], [(7, 3), 0, 1, 1, 0], [(8, 3), 1, 1, 0, 0], 
+    [(9, 3), 1, 0, 0, 1], [(10, 3), 1, 1, 1, 0], [(1, 4), 1, 1, 0, 1], [(2, 4), 1, 0, 1, 0], 
+    [(3, 4), 1, 1, 0, 1], [(4, 4), 1, 1, 1, 0], [(5, 4), 1, 1, 0, 0], [(6, 4), 1, 1, 0, 1], 
+    [(7, 4), 1, 0, 1, 1], [(8, 4), 1, 1, 1, 0], [(9, 4), 1, 1, 0, 0], [(10, 4), 1, 1, 0, 0], 
+    [(1, 5), 0, 1, 0, 0], [(2, 5), 1, 1, 0, 1], [(3, 5), 0, 1, 1, 0], [(4, 5), 1, 0, 0, 0], 
+    [(5, 5), 1, 1, 0, 0], [(6, 5), 1, 1, 0, 0], [(7, 5), 1, 1, 0, 0], [(8, 5), 0, 1, 0, 1], 
+    [(9, 5), 1, 1, 1, 0], [(10, 5), 1, 1, 0, 0], [(1, 6), 1, 0, 0, 1], [(2, 6), 0, 1, 1, 0], 
+    [(3, 6), 1, 0, 0, 1], [(4, 6), 0, 1, 1, 1], [(5, 6), 0, 1, 1, 1], [(6, 6), 1, 1, 1, 0], 
+    [(7, 6), 1, 1, 0, 1], [(8, 6), 1, 0, 1, 0], [(9, 6), 1, 1, 0, 1], [(10, 6), 1, 1, 1, 0], 
+    [(1, 7), 1, 1, 0, 1], [(2, 7), 0, 0, 1, 1], [(3, 7), 0, 1, 1, 1], [(4, 7), 1, 0, 1, 0], 
+    [(5, 7), 0, 0, 0, 1], [(6, 7), 0, 1, 1, 1], [(7, 7), 0, 1, 1, 0], [(8, 7), 1, 1, 0, 0], 
+    [(9, 7), 1, 1, 0, 0], [(10, 7), 1, 1, 0, 0], [(1, 8), 1, 1, 0, 1], [(2, 8), 1, 0, 1, 1], 
+    [(3, 8), 1, 0, 1, 1], [(4, 8), 1, 1, 1, 1], [(5, 8), 0, 0, 1, 1], [(6, 8), 1, 0, 1, 1], 
+    [(7, 8), 0, 0, 1, 1], [(8, 8), 1, 1, 1, 0], [(9, 8), 1, 1, 0, 1], [(10, 8), 0, 1, 1, 0], 
+    [(1, 9), 1, 1, 0, 0], [(2, 9), 1, 1, 0, 0], [(3, 9), 1, 1, 0, 0], [(4, 9), 0, 1, 0, 1], 
+    [(5, 9), 1, 0, 1, 1], [(6, 9), 0, 1, 1, 1], [(7, 9), 1, 0, 1, 0], [(8, 9), 0, 1, 0, 1], 
+    [(9, 9), 0, 1, 1, 1], [(10, 9), 1, 0, 1, 0], [(1, 10), 1, 1, 0, 0], [(2, 10), 1, 1, 0, 0], 
+    [(3, 10), 0, 1, 0, 1], [(4, 10), 1, 0, 1, 1], [(5, 10), 1, 1, 1, 0], [(6, 10), 1, 0, 0, 0], 
+    [(7, 10), 0, 1, 0, 1], [(8, 10), 1, 0, 1, 0], [(9, 10), 1, 0, 0, 1], [(10, 10), 1, 1, 1, 0], 
+    [(1, 11), 1, 1, 0, 0], [(2, 11), 1, 1, 0, 1], [(3, 11), 0, 0, 1, 1], [(4, 11), 1, 1, 1, 0], 
+    [(5, 11), 0, 1, 0, 0], [(6, 11), 1, 1, 0, 1], [(7, 11), 0, 0, 1, 1], [(8, 11), 0, 1, 1, 1], 
+    [(9, 11), 1, 1, 1, 0], [(10, 11), 1, 1, 0, 0], [(1, 12), 1, 1, 0, 0], [(2, 12), 0, 1, 0, 1], 
+    [(3, 12), 0, 0, 1, 0], [(4, 12), 1, 1, 0, 1], [(5, 12), 1, 0, 1, 0], [(6, 12), 0, 1, 0, 1], 
+    [(7, 12), 1, 0, 1, 1], [(8, 12), 1, 0, 1, 1], [(9, 12), 0, 1, 1, 1], [(10, 12), 1, 1, 1, 0], 
+    [(1, 13), 0, 1, 0, 1], [(2, 13), 1, 0, 1, 1], [(3, 13), 1, 0, 1, 1], [(4, 13), 0, 1, 1, 0], 
+    [(5, 13), 1, 1, 0, 0], [(6, 13), 1, 0, 0, 1], [(7, 13), 0, 1, 1, 0], [(8, 13), 0, 1, 0, 1], 
+    [(9, 13), 0, 0, 1, 1], [(10, 13), 1, 1, 1, 0], [(1, 14), 0, 0, 0, 1], [(2, 14), 1, 1, 1, 0], 
+    [(3, 14), 1, 1, 0, 1], [(4, 14), 1, 0, 1, 0], [(5, 14), 1, 1, 0, 1], [(6, 14), 1, 1, 1, 0], 
+    [(7, 14), 1, 0, 0, 1], [(8, 14), 0, 0, 1, 1], [(9, 14), 1, 0, 1, 0], [(10, 14), 1, 1, 0, 0], 
+    [(1, 15), 1, 0, 0, 1], [(2, 15), 0, 1, 1, 1], [(3, 15), 1, 1, 1, 0], [(4, 15), 0, 1, 0, 1], 
+    [(5, 15), 0, 1, 1, 0], [(6, 15), 0, 1, 0, 1], [(7, 15), 1, 1, 1, 0], [(8, 15), 1, 0, 0, 1], 
+    [(9, 15), 0, 1, 1, 0], [(10, 15), 1, 1, 0, 0], [(1, 16), 1, 1, 0, 0], [(2, 16), 1, 0, 0, 1], 
+    [(3, 16), 0, 1, 1, 1], [(4, 16), 1, 0, 1, 1], [(5, 16), 0, 0, 1, 1], [(6, 16), 0, 0, 1, 1], 
+    [(7, 16), 1, 1, 1, 1], [(8, 16), 1, 1, 1, 0], [(9, 16), 1, 0, 0, 1], [(10, 16), 1, 1, 1, 0], 
+    [(1, 17), 1, 1, 0, 1], [(2, 17), 1, 1, 1, 1], [(3, 17), 1, 0, 1, 1], [(4, 17), 0, 1, 1, 1], 
+    [(5, 17), 1, 0, 1, 1], [(6, 17), 1, 0, 1, 0], [(7, 17), 1, 1, 0, 0], [(8, 17), 0, 1, 0, 1], 
+    [(9, 17), 0, 1, 1, 0], [(10, 17), 1, 1, 0, 0], [(1, 18), 1, 1, 0, 0], [(2, 18), 1, 1, 0, 0], 
+    [(3, 18), 1, 1, 0, 0], [(4, 18), 1, 0, 0, 1], [(5, 18), 0, 1, 1, 0], [(6, 18), 0, 1, 0, 1], 
+    [(7, 18), 1, 1, 1, 1], [(8, 18), 1, 0, 1, 1], [(9, 18), 0, 0, 1, 1], [(10, 18), 0, 1, 1, 0], 
+    [(1, 19), 0, 1, 0, 1], [(2, 19), 1, 1, 1, 0], [(3, 19), 1, 1, 0, 0], [(4, 19), 1, 1, 0, 0], 
+    [(5, 19), 1, 0, 0, 1], [(6, 19), 1, 0, 1, 0], [(7, 19), 1, 1, 0, 0], [(8, 19), 0, 1, 0, 1], 
+    [(9, 19), 0, 0, 1, 1], [(10, 19), 1, 0, 1, 0], [(1, 20), 0, 0, 0, 1], [(2, 20), 0, 1, 1, 0], 
+    [(3, 20), 0, 1, 0, 1], [(4, 20), 0, 1, 1, 1], [(5, 20), 0, 1, 1, 0], [(6, 20), 0, 1, 0, 1], 
+    [(7, 20), 0, 1, 1, 1], [(8, 20), 0, 0, 1, 1], [(9, 20), 0, 0, 1, 1], [(10, 20), 0, 1, 1, 0]
+]
 
-# Dimensions of the maze
-rows, cols = maze_array.shape
-
-# Set seed for reproducibility
-random.seed(42)
-
-# Function to check if a 2x2 block can be placed at a given position
-def can_place_obstacle(x, y, maze, placed_obstacles):
-    for dx in range(2):
-        for dy in range(2):
-            if x + dx >= rows or y + dy >= cols or maze[x + dx, y + dy] != 0 or (x + dx, y + dy) in placed_obstacles:
-                return False
-    return True
-
-# Generate exactly 7 random obstacles as 2x2 blocks
-obstacles = set()
-total_obstacles = 7
-attempts = 0
-
-print("Progress: ", end="")
-
-while len(obstacles) < total_obstacles:
-    x = random.randint(0, rows - 2)
-    y = random.randint(0, cols - 2)
+# Helper function to create box-like structure
+def create_box(maze, width, height):
+    max_x = max_y = 20  # Dimensions of the grid
+    # Random starting point
+    start_x = random.randint(1, max_x - width - 1)
+    start_y = random.randint(1, max_y - height - 1)
     
-    if can_place_obstacle(x, y, maze_array, obstacles):
-        for dx in range(2):
-            for dy in range(2):
-                obstacles.add((x + dx, y + dy))
-        attempts += 1
+    # Coordinates of the box cells
+    for x in range(start_x, start_x + width):
+        for y in range(start_y, start_y + height):
+            index = x * 20 + y  # Mapping to 1D index from 2D coordinates
+            if 0 <= index < len(maze):
+                maze[index][1] = 1  # Set E (East) to 1 to form a wall
     
-    # Show progress
-    print(f"\rProgress: {len(obstacles)}/{total_obstacles} ({(len(obstacles) / total_obstacles * 100):.2f}%)", end="")
-    sys.stdout.flush()
+    return maze
 
-# Prepare the obstacles in the required format
-obstacle_list = []
-for (x, y) in obstacles:
-    cell = f"({x+1}, {y+1})"
-    E, W, N, S = 1, 1, 1, 1  # Default values for a 2x2 block
-    # Check for walls in the maze and adjust the E, W, N, S values accordingly
-    if x > 0 and maze_array[x-1, y] == 1:
-        W = 0
-    if y > 0 and maze_array[x, y-1] == 1:
-        N = 0
-    if x + 1 < rows and maze_array[x+1, y] == 1:
-        E = 0
-    if y + 1 < cols and maze_array[x, y+1] == 1:
-        S = 0
-    
-    obstacle_list.append([cell, E, W, N, S])
+# Generate 3 boxes
+for _ in range(3):
+    maze_structure = create_box(maze_structure, width=3, height=3)
 
-# Save obstacles to random_obstacles.csv
-obstacles_df = pd.DataFrame(obstacle_list, columns=["cell", "E", "W", "N", "S"])
-obstacles_df.to_csv('D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/normal Version/random_obstacles.csv', index=False)
+# Write to CSV
+output_file = 'modified_maze_3boxes.csv'
+with open(output_file, mode='w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(["cell", "E", "W", "N", "S"])
+    writer.writerows(maze_structure)
 
-print(f"\nRandom obstacles created and saved: {len(obstacles)}")
+output_file

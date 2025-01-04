@@ -47,7 +47,7 @@ def add_obstacles(maze_obj, obstacle_percentage=20):
 
     # Store obstacle locations for later use in visualization
     obstacle_locations = []
-
+    
     for (row, col) in blocked_cells:
         if (row, col) in maze_obj.maze_map:
             # Randomly block directions (set E, W, N, S to 0 for obstacles)
@@ -59,9 +59,11 @@ def add_obstacles(maze_obj, obstacle_percentage=20):
                 maze_obj.maze_map[(row, col)]["S"] = 0
 
             # Store the location of the obstacle
+            
             obstacle_locations.append((row, col))
+            
 
-    return obstacle_locations  # Return all the blocked cells
+    return obstacle_locations # Return all the blocked cells
 
 
 def A_star_search(maze_obj, start=None, goal=None):
@@ -121,14 +123,14 @@ if __name__ == '__main__':
     m = maze(50, 100)  # Maze size 50x100
 
     # Load maze from CSV file and update maze_map
-    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/normal Version/maze--2025-01-03--13-49-03.csv')
+    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/normal Version/Maze_1_90_loopPercent.csv')
 
     # Load maze from CSV file and update maze_map
-    load_maze_from_csv('D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/normal Version/maze--2025-01-03--13-49-03.csv', m)
+    load_maze_from_csv('D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/normal Version/Maze_1_90_loopPercent.csv', m)
 
     # Dynamically add obstacles
-    obstacle_locations = add_obstacles(m, obstacle_percentage=25)  # Change obstacle percentage as needed
-    
+    obstacle_locations = add_obstacles(m, obstacle_percentage=45)  # Change obstacle percentage as needed
+    # color_me = obstacle_locations(COLOR.blue)
     goal_position = (1, 1)  # Example goal, change to any valid coordinate
 
     exploration_order, visited_cells, path_to_goal = A_star_search(m, goal=goal_position)

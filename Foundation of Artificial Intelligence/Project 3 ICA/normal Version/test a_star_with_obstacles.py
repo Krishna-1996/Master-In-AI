@@ -1,94 +1,155 @@
-import pandas as pd
+from pyamaze import maze, agent, COLOR, textLabel
 import heapq
-import numpy as np
-
-# Load maze from maze.csv
-maze_file_path = 'D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/normal Version/maze--2025-01-03--13-49-03.csv'
-maze_df = pd.read_csv(maze_file_path, header=None, names=["cell", "E", "W", "N", "S"])
-maze_array = maze_df.values
-
-# Load obstacles from random_obstacles.csv
-obstacles_df = pd.read_csv('D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/normal Version/random_obstacles.csv')
-obstacles = set(map(tuple, obstacles_df.values))  # Convert to tuples for hashability
-
-# Dimensions of the maze
-rows, cols = maze_array.shape
+import random
+import csv
 
 def heuristic(a, b):
-    """ Manhattan distance as heuristic for A* """
+    """Manhattan distance heuristic"""
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
-def a_star(maze, start, goal, obstacles):
-    open_list = []
-    closed_set = set()
-    came_from = {}
-    g_score = {tuple(cell): float('inf') for cell in maze}
-    g_score[tuple(start)] = 0
-    f_score = {tuple(cell): float('inf') for cell in maze}
-    f_score[tuple(start)] = heuristic(start, goal)
-    
-    heapq.heappush(open_list, (f_score[tuple(start)], tuple(start)))
-    
-    while open_list:
-        _, current = heapq.heappop(open_list)
-        
-        if current == tuple(goal):
-            # Reconstruct path
-            path = []
-            while current in came_from:
-                path.append(current)
-                current = came_from[current]
-            path.append(tuple(start))
-            path.reverse()
-            return path
-        
-        closed_set.add(current)
-        
-        neighbors = get_neighbors(current, maze, obstacles)
-        
-        for neighbor in neighbors:
-            if neighbor in closed_set:
-                continue
+def get_next_cell(current, direction):
+    """Calculate the next cell based on the current cell and direction."""
+    x, y = current
+    if direction == 'E':  # Move east
+        return (x, y + 1)
+    elif direction == 'W':  # Move west
+        return (x, y - 1)
+    elif direction == 'N':  # Move north
+        return (x - 1, y)
+    elif direction == 'S':  # Move south
+        return (x + 1, y)
+    return current  # Return the current cell if direction is invalid
+
+def load_maze_from_csv(file_path, maze_obj):
+    """Load maze from a CSV file and update maze_obj's maze_map."""
+    with open(file_path, mode='r') as f:
+        reader = csv.reader(f)
+        next(reader)  # Skip the header
+
+        for row in reader:
+            # Extract the coordinates and direction info from the CSV row
+            coords = eval(row[0])  # Converts string to tuple (row, col)
+            E, W, N, S = map(int, row[1:])  # Convert direction values to integers
             
-            tentative_g_score = g_score[current] + 1
+            # Update the maze map
+            maze_obj.maze_map[coords] = {"E": E, "W": W, "N": N, "S": S}
+
+def add_obstacles(maze_obj, obstacle_percentage=20):
+    
+    total_cells = maze_obj.rows * maze_obj.cols
+    num_obstacles = int(total_cells * (obstacle_percentage / 100))
+
+    # Create a list of all valid cell positions
+    valid_cells = [(row, col) for row in range(maze_obj.rows) for col in range(maze_obj.cols)]
+
+    # Randomly select obstacle positions
+    blocked_cells = random.sample(valid_cells, num_obstacles)
+
+    # Store obstacle locations for later use in visualization
+    obstacle_locations = []
+    
+    for (row, col) in blocked_cells:
+        if (row, col) in maze_obj.maze_map:
+            # Randomly block directions (set E, W, N, S to 0 for obstacles)
+            if random.choice([True, False]):
+                maze_obj.maze_map[(row, col)]["E"] = 0
+                maze_obj.maze_map[(row, col)]["W"] = 0
+            if random.choice([True, False]):
+                maze_obj.maze_map[(row, col)]["N"] = 0
+                maze_obj.maze_map[(row, col)]["S"] = 0
+
+            # Store the location of the obstacle
             
-            if neighbor not in open_list or tentative_g_score < g_score[neighbor]:
-                came_from[neighbor] = current
-                g_score[neighbor] = tentative_g_score
-                f_score[neighbor] = g_score[neighbor] + heuristic(neighbor, goal)
-                heapq.heappush(open_list, (f_score[neighbor], neighbor))
-    
-    return None  # No path found
+            obstacle_locations.append((row, col))
+            
 
-def get_neighbors(node, maze, obstacles):
-    """ Get valid neighbors considering maze walls and obstacles """
-    x, y = node
-    neighbors = []
-    
-    # Directions: N, S, E, W
-    directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
-    
-    for dx, dy in directions:
-        nx, ny = x + dx, y + dy
-        if 0 <= nx < rows and 0 <= ny < cols and maze[nx, ny] == 0 and (nx, ny) not in obstacles:
-            neighbors.append((nx, ny))
-    
-    return neighbors
+    return obstacle_locations # Return all the blocked cells
 
-# Run the A* algorithm
-start = (2, 2)  # Example start position
-goal = (47, 95)  # Example goal position
 
-print("Maze:")
-print(maze_array)
-print("Obstacles:")
-print(obstacles)
-print("Start:", start)
-print("Goal:", goal)
+def A_star_search(maze_obj, start=None, goal=None):
+    if start is None:
+        start = (maze_obj.rows, maze_obj.cols)
 
-path = a_star(maze_array, start, goal, obstacles)
+    if goal is None:
+        goal = (maze_obj.rows // 2, maze_obj.cols // 2)
 
-if path:
-    print("Path found:", path)
-else:
-    print("No path found.")
+    if not (0 <= goal[0] < maze_obj.rows and 0 <= goal[1] < maze_obj.cols):
+        raise ValueError(f"Invalid goal position: {goal}. It must be within the bounds of the maze.")
+
+    # Min-heap priority queue
+    frontier = []
+    heapq.heappush(frontier, (0 + heuristic(start, goal), start))  # (f-cost, position)
+    visited = {}
+    exploration_order = []
+    explored = set([start])
+    g_costs = {start: 0}
+
+    while frontier:
+        _, current = heapq.heappop(frontier)
+
+        if current == goal:
+            break
+
+        for direction in 'ESNW':
+            # Check if the move is valid (i.e., the cell is not blocked)
+            if maze_obj.maze_map[current][direction] == 1:  # Only move if there is no obstacle
+                next_cell = get_next_cell(current, direction)
+                new_g_cost = g_costs[current] + 1  # +1 for each move (uniform cost)
+                
+                if next_cell not in explored or new_g_cost < g_costs.get(next_cell, float('inf')):
+                    g_costs[next_cell] = new_g_cost
+                    f_cost = new_g_cost + heuristic(next_cell, goal)
+                    heapq.heappush(frontier, (f_cost, next_cell))
+                    visited[next_cell] = current
+                    exploration_order.append(next_cell)
+                    explored.add(next_cell)
+
+    # Check if the goal is unreachable
+    if goal not in visited:
+        print("Goal is unreachable!")
+        return [], {}, {}
+
+    path_to_goal = {}
+    cell = goal
+    while cell != start:
+        path_to_goal[visited[cell]] = cell
+        cell = visited[cell]
+
+    return exploration_order, visited, path_to_goal
+
+
+# Main function for A* search
+if __name__ == '__main__':
+    m = maze(50, 100)  # Maze size 50x100
+
+    # Load maze from CSV file and update maze_map
+    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/normal Version/Maze_1_90_loopPercent.csv')
+
+    # Load maze from CSV file and update maze_map
+    load_maze_from_csv('D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/normal Version/Maze_1_90_loopPercent.csv', m)
+
+    # Dynamically add obstacles
+    obstacle_locations = add_obstacles(m, obstacle_percentage=45)  # Change obstacle percentage as needed
+    # color_me = obstacle_locations(COLOR.blue)
+    goal_position = (1, 1)  # Example goal, change to any valid coordinate
+
+    exploration_order, visited_cells, path_to_goal = A_star_search(m, goal=goal_position)
+
+    # If a path is found, trace it; otherwise, print message
+    if path_to_goal:
+        agent_astar = agent(m, footprints=True, shape='square', color=COLOR.red, filled=True)
+        agent_trace = agent(m, footprints=True, shape='square', color=COLOR.yellow, filled=True)
+        agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)
+
+        m.tracePath({agent_astar: exploration_order}, delay=1)
+        m.tracePath({agent_trace: path_to_goal}, delay=1)
+        m.tracePath({agent_goal: visited_cells}, delay=1)
+
+        textLabel(m, 'Goal Position', str(goal_position))
+        textLabel(m, 'A* Path Length', len(path_to_goal) + 1)
+        textLabel(m, 'A* Search Length', len(exploration_order))
+
+    else:
+        print("No path found to the goal!")
+
+    m.run()
