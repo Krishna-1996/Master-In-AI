@@ -1,13 +1,14 @@
+# %%
 import pandas as pd
 import numpy as np
 import random
-import sys  # Import sys to use stdout.flush()
-
+import sys
+# %%
 # Load maze from maze.csv
 maze_file_path = 'D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/normal Version/maze--2025-01-03--13-49-03.csv'
 maze_df = pd.read_csv(maze_file_path, header=None, names=["cell", "E", "W", "N", "S"])
 maze_array = maze_df.values
-
+# %%
 # Dimensions of the maze
 rows, cols = maze_array.shape
 
@@ -21,15 +22,16 @@ def can_place_obstacle(x, y, maze, placed_obstacles):
             if x + dx >= rows or y + dy >= cols or maze[x + dx, y + dy] != 0 or (x + dx, y + dy) in placed_obstacles:
                 return False
     return True
-
-# Generate exactly 7 random obstacles as 2x2 blocks
+# %%
+# Generate random obstacles as 2x2 blocks
 obstacles = set()
-total_obstacles = 7
+max_attempts = 10000  # Increased limit to avoid infinite loop
+total_obstacles = 100  # Total number of obstacles we want to generate
 attempts = 0
 
 print("Progress: ", end="")
-
-while len(obstacles) < total_obstacles:
+# %%
+while len(obstacles) < total_obstacles and attempts < max_attempts:  # 100 is the arbitrary number of obstacles
     x = random.randint(0, rows - 2)
     y = random.randint(0, cols - 2)
     
@@ -40,9 +42,10 @@ while len(obstacles) < total_obstacles:
         attempts += 1
     
     # Show progress
-    print(f"\rProgress: {len(obstacles)}/{total_obstacles} ({(len(obstacles) / total_obstacles * 100):.2f}%)", end="")
+    progress = len(obstacles) / total_obstacles * 100
+    sys.stdout.write(f"\rProgress: {len(obstacles)}/{total_obstacles} ({progress:.2f}%)")
     sys.stdout.flush()
-
+# %%
 # Prepare the obstacles in the required format
 obstacle_list = []
 for (x, y) in obstacles:
@@ -59,9 +62,9 @@ for (x, y) in obstacles:
         S = 0
     
     obstacle_list.append([cell, E, W, N, S])
-
+# %%
 # Save obstacles to random_obstacles.csv
 obstacles_df = pd.DataFrame(obstacle_list, columns=["cell", "E", "W", "N", "S"])
-obstacles_df.to_csv('D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/normal Version/random_obstacles.csv', index=False)
+obstacles_df.to_csv('D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/normal Version/random_obstacles2.csv', index=False)
 
 print(f"\nRandom obstacles created and saved: {len(obstacles)}")
