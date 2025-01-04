@@ -18,13 +18,17 @@ class MazeSolverApp(tk.Tk):
         super().__init__()
 
         self.title("Maze Solver")
-        self.geometry("400x300")
+        self.geometry("600x150")
 
         # Algorithm choice (default is BFS)
         self.algorithm = tk.StringVar(value="bfs")
 
         # Obstacle percentage choice (default is 0%)
         self.obstacle_percentage = tk.IntVar(value=0)
+
+        # Frame for the dropdowns and button (to place them on the same line)
+        self.dropdown_frame = tk.Frame(self)
+        self.dropdown_frame.pack(pady=20)
 
         # Dropdown for algorithm selection
         self.create_algorithm_selection()
@@ -37,26 +41,40 @@ class MazeSolverApp(tk.Tk):
 
     def create_algorithm_selection(self):
         """Create the dropdown for algorithm selection."""
-        label = tk.Label(self, text="Select Algorithm:")
-        label.pack(pady=10)
+        label = tk.Label(self.dropdown_frame, text="Select Algorithm:", font=("Arial", 10, "bold"))
+        label.grid(row=0, column=0, padx=10)
 
         algorithm_choices = ["BFS", "DFS", "A*", "Greedy BFS"]
-        algorithm_menu = tk.OptionMenu(self, self.algorithm, *algorithm_choices)
-        algorithm_menu.pack()
+        algorithm_menu = tk.OptionMenu(self.dropdown_frame, self.algorithm, *algorithm_choices)
+        algorithm_menu.grid(row=0, column=1, padx=10)
 
     def create_obstacle_selection(self):
         """Create the dropdown for obstacle percentage selection."""
-        label = tk.Label(self, text="Select Obstacle Percentage:")
-        label.pack(pady=10)
+        label = tk.Label(self.dropdown_frame, text="Select Obstacle Percentage:", font=("Arial", 10, "bold"))
+        label.grid(row=0, column=2, padx=10)
 
         obstacle_choices = [0, 10, 30, 50]
-        obstacle_menu = tk.OptionMenu(self, self.obstacle_percentage, *obstacle_choices)
-        obstacle_menu.pack()
+        obstacle_menu = tk.OptionMenu(self.dropdown_frame, self.obstacle_percentage, *obstacle_choices)
+        obstacle_menu.grid(row=0, column=3, padx=10)
 
     def create_run_button(self):
         """Create the 'Run' button to execute the algorithm."""
-        run_button = tk.Button(self, text="Run", command=self.run_algorithm)
-        run_button.pack(pady=20)
+        run_button = tk.Button(self.dropdown_frame, text="Run", command=self.run_algorithm, 
+                               font=("Arial", 12, "bold"), fg="white", bg="#4CAF50", relief="flat", width=10)
+        
+        # Add hover effect for the button
+        run_button.bind("<Enter>", lambda e: self.on_hover(run_button))
+        run_button.bind("<Leave>", lambda e: self.on_leave(run_button))
+        
+        run_button.grid(row=0, column=4, padx=10)
+
+    def on_hover(self, button):
+        """Change button color when the mouse hovers over it."""
+        button.config(bg="#45a049")
+
+    def on_leave(self, button):
+        """Reset button color when the mouse leaves it."""
+        button.config(bg="#4CAF50")
 
     def run_algorithm(self):
         """Run the selected algorithm on the maze."""
