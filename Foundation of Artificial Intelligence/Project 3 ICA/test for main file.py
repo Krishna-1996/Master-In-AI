@@ -120,7 +120,7 @@ def main_loop():
         
         # Step 1: Generate Maze with Obstacles
         maze_map = load_maze_from_csv(original_csv_path)
-        maze_map_with_obstacles = add_obstacles(maze_map, obstacle_percentage=70)
+        maze_map_with_obstacles = add_obstacles(maze_map, obstacle_percentage=5)
         save_maze_to_csv(maze_map_with_obstacles, modified_csv_path)
 
         # Step 2: Run BFS Search
