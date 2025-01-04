@@ -1,3 +1,6 @@
+ # ("D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/Advance Version of obstacle project/maze_csvs"
+
+
 import tkinter as tk
 from tkinter import messagebox
 from pyamaze import maze, agent, COLOR, textLabel
@@ -91,25 +94,22 @@ class MazeSolverApp(tk.Tk):
             else:
                 raise ValueError("Unknown algorithm choice!")
 
-            # If a path to goal is found, show it in the PYTHON MAZE WORLD window
+            # If a path to goal is found, show it
             if path_to_goal:
                 agent_bfs = agent(m, footprints=True, shape='square', color=COLOR.red, filled=True)
                 agent_trace = agent(m, footprints=True, shape='square', color=COLOR.yellow, filled=True)
                 agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)
-
                 m.tracePath({agent_bfs: exploration_order}, delay=1)
                 m.tracePath({agent_trace: path_to_goal}, delay=1)
                 m.tracePath({agent_goal: visited_cells}, delay=1)
-
                 textLabel(m, 'Goal Position', str(goal_position))
                 textLabel(m, f'{algorithm_choice.capitalize()} Path Length', len(path_to_goal) + 1)
                 textLabel(m, f'{algorithm_choice.capitalize()} Search Length', len(exploration_order))
 
-                # Run the maze visualization in the PYTHON MAZE WORLD window
-                m.run()
-
             else:
                 raise ValueError("No path found to the goal!")
+
+            m.run()
 
         except Exception as e:
             messagebox.showerror("Error", f"An error occurred: {str(e)}")

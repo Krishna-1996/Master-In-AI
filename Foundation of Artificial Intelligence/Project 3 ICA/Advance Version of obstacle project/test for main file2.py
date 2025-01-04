@@ -32,8 +32,8 @@ class MazeSolverApp(tk.Tk):
         # Dropdown for obstacle percentage selection
         self.create_obstacle_selection()
 
-        # Button to run the selected algorithm on the maze
-        self.create_run_button()
+        # Buttons to run the selected algorithm and reset the choices
+        self.create_buttons()
 
     def create_algorithm_selection(self):
         """Create the dropdown for algorithm selection."""
@@ -53,10 +53,31 @@ class MazeSolverApp(tk.Tk):
         obstacle_menu = tk.OptionMenu(self, self.obstacle_percentage, *obstacle_choices)
         obstacle_menu.pack()
 
-    def create_run_button(self):
-        """Create the 'Run' button to execute the algorithm."""
-        run_button = tk.Button(self, text="Run", command=self.run_algorithm)
-        run_button.pack(pady=20)
+    def create_buttons(self):
+        """Create the 'Run' and 'Reset' buttons."""
+        button_frame = tk.Frame(self)
+        button_frame.pack(pady=20)
+
+        # Run button
+        run_button = tk.Button(button_frame, text="Run", command=self.run_algorithm)
+        run_button.pack(side=tk.LEFT, padx=10)
+
+        # Reset button
+        reset_button = tk.Button(button_frame, text="Reset", command=self.reset_choices)
+        reset_button.pack(side=tk.LEFT, padx=10)
+
+    def reset_choices(self):
+        """Reset the selections to their default values and stop the current maze."""
+        # Reset the algorithm and obstacle percentage to default
+        self.algorithm.set("bfs")
+        self.obstacle_percentage.set(0)
+
+        # Close the current maze window (reset Python Maze World visualization)
+        self.quit()  # Close the current Tkinter window
+        
+        # Create a new Tkinter window to ensure it's a fresh start
+        app = MazeSolverApp()
+        app.mainloop()  # Start a new instance of the app
 
     def run_algorithm(self):
         """Run the selected algorithm on the maze."""
@@ -77,7 +98,7 @@ class MazeSolverApp(tk.Tk):
 
             # Dynamically import the algorithm based on user selection
             if algorithm_choice == "bfs":
-                algorithm_module = importlib.import_module('algorithms.BFS_Algorithm')  # Now looks for BFS_Algorithm in algorithms folder
+                algorithm_module = importlib.import_module('algorithms.BFS_Algorithm')
                 exploration_order, visited_cells, path_to_goal = algorithm_module.bfs_search(m, goal=goal_position)
             elif algorithm_choice == "dfs":
                 algorithm_module = importlib.import_module('algorithms.DFS_Algorithm')
@@ -113,7 +134,6 @@ class MazeSolverApp(tk.Tk):
 
         except Exception as e:
             messagebox.showerror("Error", f"An error occurred: {str(e)}")
-
 
 # Create and run the Tkinter app
 if __name__ == "__main__":
