@@ -1,28 +1,87 @@
+from pyamaze import maze, agent, COLOR, textLabel
 from collections import deque
+import csv
 
-def run_algorithm(maze, start, goal):
-    """Runs the BFS algorithm on the maze."""
-    rows, cols = len(maze), len(maze[0])
-    directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
-    queue = deque([start])
-    came_from = {start: None}
+def load_maze_from_csv(file_path, maze_obj):
+    with open(file_path, mode='r') as f:
+        reader = csv.reader(f)
+        next(reader)  # Skip header
+        for row in reader:
+            coords = eval(row[0])
+            E, W, N, S = map(int, row[1:])
+            maze_obj.maze_map[coords] = {"E": E, "W": W, "N": N, "S": S}
 
-    while queue:
-        current = queue.popleft()
+def add_obstacles(maze_obj, obstacle_percentage=20):
+    total_cells = maze_obj.rows * maze_obj.cols
+    num_obstacles = int(total_cells * (obstacle_percentage / 100))
+    valid_cells = [(row, col) for row in range(maze_obj.rows) for col in range(maze_obj.cols)]
+    blocked_cells = random.sample(valid_cells, num_obstacles)
+    obstacle_locations = []
+    
+    for (row, col) in blocked_cells:
+        if (row, col) in maze_obj.maze_map:
+            if random.choice([True, False]):
+                maze_obj.maze_map[(row, col)]["E"] = 0
+                maze_obj.maze_map[(row, col)]["W"] = 0
+            if random.choice([True, False]):
+                maze_obj.maze_map[(row, col)]["N"] = 0
+                maze_obj.maze_map[(row, col)]["S"] = 0
+            obstacle_locations.append((row, col))
+    return obstacle_locations
 
+def BFS_search(maze_obj, start=None, goal=None):
+    if start is None:
+        start = (maze_obj.rows, maze_obj.cols)
+    if goal is None:
+        goal = (maze_obj.rows // 2, maze_obj.cols // 2)
+    if not (0 <= goal[0] < maze_obj.rows and 0 <= goal[1] < maze_obj.cols):
+        raise ValueError(f"Invalid goal position: {goal}. It must be within the bounds of the maze.")
+    
+    frontier = deque([start])
+    visited = {}
+    exploration_order = [start]
+    explored = set([start])
+    
+    while frontier:
+        current = frontier.popleft()
         if current == goal:
-            path = []
-            while current:
-                path.append(current)
-                current = came_from[current]
-            path.reverse()
-            return path
+            break
+        for direction in 'ESNW':
+            if maze_obj.maze_map[current][direction] == 1:
+                next_cell = get_next_cell(current, direction)
+                if next_cell not in explored:
+                    frontier.append(next_cell)
+                    visited[next_cell] = current
+                    exploration_order.append(next_cell)
+                    explored.add(next_cell)
+    
+    if goal not in visited:
+        print("Goal is unreachable!")
+        return [], {}, {}
+    
+    path_to_goal = {}
+    cell = goal
+    while cell != start:
+        path_to_goal[visited[cell]] = cell
+        cell = visited[cell]
+    return exploration_order, visited, path_to_goal
 
-        for dx, dy in directions:
-            neighbor = (current[0] + dx, current[1] + dy)
-            if (0 <= neighbor[0] < rows and 0 <= neighbor[1] < cols and
-                    maze[neighbor[0]][neighbor[1]] != 1 and neighbor not in came_from):
-                queue.append(neighbor)
-                came_from[neighbor] = current
-
-    return None  # No path found
+if __name__ == '__main__':
+    m = maze(50, 100)
+    m.CreateMaze(loadMaze='maze.csv')
+    goal_position = (1, 1)
+    exploration_order, visited_cells, path_to_goal = BFS_search(m, goal=goal_position)
+    
+    if path_to_goal:
+        agent_bfs = agent(m, footprints=True, shape='square', color=COLOR.red, filled=True)
+        agent_trace = agent(m, footprints=True, shape='square', color=COLOR.yellow, filled=True)
+        agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)
+        m.tracePath({agent_bfs: exploration_order}, delay=1)
+        m.tracePath({agent_trace: path_to_goal}, delay=1)
+        m.tracePath({agent_goal: visited_cells}, delay=1)
+        textLabel(m, 'Goal Position', str(goal_position))
+        textLabel(m, 'BFS Path Length', len(path_to_goal) + 1)
+        textLabel(m, 'BFS Search Length', len(exploration_order))
+    else:
+        print("No path found to the goal!")
+    m.run()

@@ -1,39 +1,31 @@
-import maze_loader
-from a_star import run_algorithm as a_star
-from bfs import run_algorithm as bfs
-from greedy_bfs import run_algorithm as greedy_bfs
+from a_star import A_star_search
+from bfs import BFS_search
+from greedy_bfs import greedy_bfs
 
-def main():
-    # Load the maze
-    maze_file = input(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/normal Version/maze--2025-01-03--13-49-03.csv')
-    maze = maze_loader.load_maze(maze_file)
-
-    # Set start and goal
-    start = tuple(map(int, input("Enter start position (row, col): ").split(',')))
-    goal = tuple(map(int, input("Enter goal position (row, col): ").split(',')))
-
-    # Choose the algorithm
-    print("Choose the algorithm: 1) A* 2) BFS 3) Greedy BFS")
-    choice = int(input("Enter your choice: "))
+if __name__ == '__main__':
+    goal_position = (1, 1)
     
-    if choice == 1:
-        path = a_star(maze, start, goal)
-    elif choice == 2:
-        path = bfs(maze, start, goal)
-    elif choice == 3:
-        path = greedy_bfs(maze, start, goal)
-    else:
-        print("Invalid choice!")
-        return
-
-    # Show results
-    if path:
-        for x, y in path:
-            if maze[x][y] == 0:  # Don't overwrite start/goal
-                maze[x][y] = 4  # Mark path
-        maze_loader.print_maze(maze)
-    else:
-        print("No path found!")
-
-if __name__ == "__main__":
-    main()
+    # Load maze and obstacles from the saved CSV
+    obstacle_file = 'obstacles.csv'
+    
+    # A* Algorithm
+    print("Running A* Algorithm")
+    exploration_order_astar, visited_cells_astar, path_to_goal_astar = A_star_search(maze_file='maze.csv', goal=goal_position)
+    
+    # BFS Algorithm
+    print("Running BFS Algorithm")
+    exploration_order_bfs, visited_cells_bfs, path_to_goal_bfs = BFS_search(maze_file='maze.csv', goal=goal_position)
+    
+    # Greedy BFS Algorithm
+    print("Running Greedy BFS Algorithm")
+    exploration_order_greedy, visited_cells_greedy, path_to_goal_greedy = greedy_bfs(maze_file='maze.csv', goal=goal_position)
+    
+    # Display results for comparison
+    print("\nA* Results:")
+    print(f"Path length: {len(path_to_goal_astar)}")
+    
+    print("\nBFS Results:")
+    print(f"Path length: {len(path_to_goal_bfs)}")
+    
+    print("\nGreedy BFS Results:")
+    print(f"Path length: {len(path_to_goal_greedy)}")
