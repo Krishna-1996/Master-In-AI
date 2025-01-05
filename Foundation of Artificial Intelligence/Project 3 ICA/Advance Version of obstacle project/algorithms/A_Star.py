@@ -96,7 +96,10 @@ if __name__ == '__main__':
     if path_to_goal:
         agent_astar = agent(m, footprints=True, shape='square', color=COLOR.red, filled=True)
         agent_trace = agent(m, footprints=True, shape='square', color=COLOR.yellow, filled=True)
-        agent_goal = agent(m, goal_position[0], goal_position[1], footprints=True, color=COLOR.green, shape='square', filled=True)
+        agent_goal = agent(m, goal_position[0], goal_position[1], 
+                           footprints=True, color=COLOR.green, shape='square', filled=True)
+        
+        
         m.tracePath({agent_astar: exploration_order}, delay=1)
         m.tracePath({agent_trace: path_to_goal}, delay=1)
         m.tracePath({agent_goal: visited_cells}, delay=1)
