@@ -99,13 +99,18 @@ if __name__ == '__main__':
         agent_goal = agent(m, goal_position[0], goal_position[1], 
                            footprints=True, color=COLOR.green, shape='square', filled=True)
         
-        
+
         m.tracePath({agent_astar: exploration_order}, delay=1)
         m.tracePath({agent_trace: path_to_goal}, delay=1)
         m.tracePath({agent_goal: visited_cells}, delay=1)
+
+
+
         textLabel(m, 'Goal Position', str(goal_position))
         textLabel(m, 'A* Path Length', len(path_to_goal) + 1)
         textLabel(m, 'A* Search Length', len(exploration_order))
+
+        
     else:
         print("No path found to the goal!")
     m.run()
