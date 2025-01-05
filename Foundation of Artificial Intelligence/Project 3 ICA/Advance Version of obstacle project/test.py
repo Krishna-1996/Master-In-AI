@@ -1,8 +1,18 @@
-from pyamaze import maze
+def dfs_search(maze_obj, start=None, goal=None):
+    """Depth-First Search algorithm."""
+    start = (50, 100) # Default start position
+    goal = (1,1 ) # Default goal position
 
-my_Maze = maze(50, 100)
-my_Maze.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/Advance Version of obstacle project/Maze_1_90_loopPercent.csv')
 
 
-# Display the maze
-my_Maze.run()
+# Heuristic function to calculate Manhattan distance between two points
+def heuristic(a, b):
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+
+
+
+
+
+
+
