@@ -21,7 +21,7 @@ class MazeSolverApp(tk.Tk):
         self.geometry("600x150")
 
         # Algorithm choice (default is BFS)
-        self.algorithm = tk.StringVar(value="bfs")
+        self.algorithm = tk.StringVar(value="BFS")
 
         # Obstacle percentage choice (default is 0%)
         self.obstacle_percentage = tk.IntVar(value=0)
