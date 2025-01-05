@@ -97,7 +97,7 @@ def update_info_window(path_lengths):
 # Main function
 def run_maze_with_all_heuristics():
     m = maze()  # Adjust maze size for testing
-    m.CreateMaze(loadMaze='D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 2 ICA/Maze_2 for Directional_Weight.csv') # Adjust maze file path
+    m.CreateMaze(loadMaze='...///Maze_2 for Directional_Weight.csv') # Adjust maze file path
 
     goal_position = (1, 1)  # Example goal position
     start_position = (m.rows, m.cols)
