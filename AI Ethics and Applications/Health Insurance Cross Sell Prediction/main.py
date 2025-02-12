@@ -50,14 +50,14 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix
 
-# Initialize and train the logistic regression model
+# Initialize and train the Logistic Regression model
 model = LogisticRegression()
 model.fit(X_train, y_train)
 
-# Make predictions
+# Make predictions on the test set
 y_pred = model.predict(X_test)
 
-# Evaluate the model using various metrics
+# Evaluate the model with various metrics
 accuracy = accuracy_score(y_test, y_pred)
 precision = precision_score(y_test, y_pred)
 recall = recall_score(y_test, y_pred)
@@ -72,23 +72,24 @@ print(f"ROC-AUC: {roc_auc}")
 
 
 
-# %%
-# Add the 'sex' column to the test set for fairness evaluation
-X_test['sex'] = X_test['sex']
 
-# Get predictions for the test set
-y_pred_test = model.predict(X_test.drop(columns=['sex']))
+# %%
+# Add 'Gender' to the test set for fairness evaluation
+X_test['Gender'] = X_test['Gender']
+
+# Get the predicted values for the test set
+y_pred_test = model.predict(X_test.drop(columns=['Gender']))
 
 # Create a DataFrame to hold the results
 results = pd.DataFrame({
     'actual': y_test,
     'predicted': y_pred_test,
-    'sex': X_test['sex']
+    'Gender': X_test['Gender']
 })
 
-# Separate the results by sex
-male_results = results[results['sex'] == 0]  # Assuming 0 is male
-female_results = results[results['sex'] == 1]  # Assuming 1 is female
+# Split results by gender
+male_results = results[results['Gender'] == 0]  # Male = 0
+female_results = results[results['Gender'] == 1]  # Female = 1
 
 # Calculate accuracy for each group
 male_accuracy = accuracy_score(male_results['actual'], male_results['predicted'])
@@ -102,7 +103,7 @@ female_positive_rate = female_results['predicted'].mean()
 male_tpr = recall_score(male_results['actual'], male_results['predicted'])
 female_tpr = recall_score(female_results['actual'], female_results['predicted'])
 
-# Output the fairness metrics
+# Output fairness metrics
 print(f"Male Accuracy: {male_accuracy}")
 print(f"Female Accuracy: {female_accuracy}")
 print(f"Difference in Accuracy: {male_accuracy - female_accuracy}")
