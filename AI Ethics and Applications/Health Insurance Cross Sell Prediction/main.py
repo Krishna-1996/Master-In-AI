@@ -72,8 +72,7 @@ print("Confusion Matrix:")
 print(conf_matrix)
 
 # %%
-Step 6: Visualizations
-
+# Step 6: Visualizations
 # 1. ROC Curve
 fpr, tpr, thresholds = roc_curve(y_test, model.predict_proba(X_test)[:, 1])
 plt.figure(figsize=(8, 6))
