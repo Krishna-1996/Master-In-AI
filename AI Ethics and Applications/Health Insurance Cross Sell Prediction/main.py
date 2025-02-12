@@ -18,7 +18,7 @@ df = df.dropna()
 
 # Encode categorical features (e.g., 'sex', 'region code')
 label_encoder = LabelEncoder()
-df['sex'] = label_encoder.fit_transform(df['sex'])
+df['sex'] = label_encoder.fit_transform(df['Gender'])
 
 # Feature engineering (example: scale numerical features)
 scaler = StandardScaler()
