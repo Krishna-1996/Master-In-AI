@@ -42,8 +42,7 @@ y = df['Response']  # 'Response' is the target variable (0 or 1)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
 # %%
-Step 4: Initialize and Train Logistic Regression Model
-# Initialize and train the Logistic Regression model
+# Step 4: Initialize and Train Logistic Regression Model
 model = LogisticRegression(max_iter=1000)
 model.fit(X_train, y_train)
 
