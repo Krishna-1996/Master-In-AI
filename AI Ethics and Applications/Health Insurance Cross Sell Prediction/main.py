@@ -7,7 +7,7 @@ from sklearn.metrics import accuracy_score, recall_score
 
 # Load dataset (replace with your dataset)
 df = pd.read_csv('D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/Health Insurance Main Dataset.csv')
-# D:\Masters Projects\Master-In-AI\AI Ethics and Applications\Health Insurance Cross Sell Prediction
+
 print(df.head(5))
 # Encode categorical variables
 label_encoder = LabelEncoder()
@@ -33,8 +33,9 @@ y = df['Response']  # 'Response' is the target variable (0 or 1)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
 # Initialize and train the Logistic Regression model
-model = LogisticRegression()
+model = LogisticRegression(max_iter=1000)
 model.fit(X_train, y_train)
+
 
 # Make predictions on the test set
 y_pred = model.predict(X_test)
