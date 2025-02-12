@@ -48,8 +48,7 @@ model = LogisticRegression(max_iter=1000)
 model.fit(X_train, y_train)
 
 # %%
-Step 5: Make Predictions and Evaluate Performance
-# Make predictions on the test set
+# Step 5: Make Predictions and Evaluate Performance
 y_pred = model.predict(X_test)
 
 # Evaluate the model with various metrics
