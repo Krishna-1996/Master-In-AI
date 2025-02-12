@@ -161,18 +161,4 @@ comparison_table = pd.DataFrame({
 print(comparison_table)
 
 # %%
-Step 10: Discuss Limitations and Trade-offs
-# Provide analysis on the limitations of fairness metrics
-print("""
-Fairness Evaluation Discussion:
 
-1. **Accuracy:** While accuracy is a useful metric, it can be misleading in imbalanced datasets, as the model could have high accuracy by simply predicting the majority class. This does not necessarily indicate fairness.
-
-2. **Demographic Parity (Positive Rate):** A disparity in positive prediction rates between genders might indicate bias toward one group. However, this metric doesn't account for potential differences in base rates between groups.
-
-3. **Equal Opportunity (True Positive Rate):** This metric evaluates whether both groups have equal chances of being correctly classified as positive. However, achieving equal opportunity does not guarantee overall fairness, as trade-offs may exist with other metrics.
-
-4. **ROC AUC:** The ROC AUC score provides a better measure of the model's ability to distinguish between classes across various thresholds, providing a more comprehensive evaluation beyond just accuracy.
-
-In real-world applications, there's often a trade-off between these fairness metrics. For instance, improving accuracy may negatively affect demographic parity or equal opportunity, and vice versa. A careful balance should be sought depending on the specific fairness objectives of the application.
-""")
