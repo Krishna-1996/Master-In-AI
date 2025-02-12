@@ -10,23 +10,33 @@ df = pd.read_csv('D:/Masters Projects/Master-In-AI/AI Ethics and Applications/He
 print(df.head(5))
 
 # %%
-# Check for missing values
-df.isnull().sum()
+#  Check for missing values
+print(df.isnull().sum())
 
-# Handle missing values (for simplicity, we will drop rows with missing data)
+# Drop rows with missing values for simplicity (or handle appropriately)
 df = df.dropna()
 
-# Encode categorical features (e.g., 'sex', 'region code')
+# Encode categorical variables
 label_encoder = LabelEncoder()
-df['sex'] = label_encoder.fit_transform(df['Gender'])
 
-# Feature engineering (example: scale numerical features)
+# Encode 'Gender' (Male = 0, Female = 1)
+df['Gender'] = label_encoder.fit_transform(df['Gender'])
+
+# Encode 'Vehicle_Age' (Convert '> 2 Years', '1-2 Year', '< 1 Year' to numerical values)
+df['Vehicle_Age'] = df['Vehicle_Age'].map({'< 1 Year': 0, '1-2 Year': 1, '> 2 Years': 2})
+
+# Encode 'Vehicle_Damage' (Yes = 1, No = 0)
+df['Vehicle_Damage'] = df['Vehicle_Damage'].map({'Yes': 1, 'No': 0})
+
+# We don't need to encode 'Region_Code' or 'Policy_Sales_Channel' directly; they will be used as is.
+# However, we may want to scale 'Age', 'Annual_Premium', etc.
+
 scaler = StandardScaler()
-df[['age', 'annual_premium', 'policy_sales_channel']] = scaler.fit_transform(df[['age', 'annual_premium', 'policy_sales_channel']])
+df[['Age', 'Annual_Premium', 'Vintage']] = scaler.fit_transform(df[['Age', 'Annual_Premium', 'Vintage']])
 
-# Split dataset into features (X) and target variable (y)
-X = df.drop(columns=['response'])  # Assuming 'response' is the target variable
-y = df['response']
+# Split into features (X) and target (y)
+X = df.drop(columns=['id', 'Response'])  # Drop 'id' and 'Response' columns
+y = df['Response']  # 'Response' is the target variable (0 or 1)
 
 
 
