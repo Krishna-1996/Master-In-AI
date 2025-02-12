@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 
 # Load dataset (replace with your dataset)
-df = pd.read_csv('health_insurance_cross_sell.csv')
+df = pd.read_csv('D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction.csv')
 
 # Check for missing values
 df.isnull().sum()
