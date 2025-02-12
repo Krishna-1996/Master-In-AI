@@ -107,8 +107,7 @@ for feature in features:
     plt.show()
 
 # %%
-Step 7: Fairness Evaluation Based on Gender
-# Get predicted values for the test set
+# Step 7: Fairness Evaluation Based on Gender
 y_pred_test = model.predict(X_test)
 
 # Create a DataFrame to hold the results, including 'Gender'
