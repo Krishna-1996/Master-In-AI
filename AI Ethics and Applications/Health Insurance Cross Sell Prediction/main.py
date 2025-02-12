@@ -148,8 +148,7 @@ print(f"Female True Positive Rate (Equal Opportunity): {female_tpr}")
 print(f"Difference in True Positive Rate: {male_tpr - female_tpr}")
 
 # %%
-Step 9: Tabular Comparison of Metrics
-# Create a comparison table for performance and fairness metrics
+# Step 9: Create a comparison table for performance and fairness metrics
 comparison_table = pd.DataFrame({
     'Metric': ['Accuracy', 'Recall', 'Precision', 'F1 Score', 'ROC AUC', 'Male Accuracy', 'Female Accuracy', 
                'Male Positive Rate (Demographic Parity)', 'Female Positive Rate (Demographic Parity)', 
