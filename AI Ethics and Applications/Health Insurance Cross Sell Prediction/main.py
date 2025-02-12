@@ -6,7 +6,9 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 
 # Load dataset (replace with your dataset)
 df = pd.read_csv('D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Main Dataset.csv')
+print(df.head(5))
 
+# %%
 # Check for missing values
 df.isnull().sum()
 
