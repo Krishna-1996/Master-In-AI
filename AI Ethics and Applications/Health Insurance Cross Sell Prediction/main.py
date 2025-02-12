@@ -121,8 +121,7 @@ male_results = results[results['Gender'] == 0]  # Male = 0
 female_results = results[results['Gender'] == 1]  # Female = 1
 
 # %%
-Step 8: Evaluate Fairness Metrics
-# Calculate accuracy for each group
+# Step 8: Calculate accuracy for each group
 male_accuracy = accuracy_score(male_results['actual'], male_results['predicted'])
 female_accuracy = accuracy_score(female_results['actual'], female_results['predicted'])
 
