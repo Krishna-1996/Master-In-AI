@@ -10,10 +10,8 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.metrics import accuracy_score, recall_score, confusion_matrix, precision_score, f1_score, roc_auc_score, roc_curve
 
 # %%
-Step 2: Load and Preprocess Dataset
-# Load dataset (replace with your dataset)
+# Step 2: Load and Preprocess Dataset
 df = pd.read_csv('D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/Health Insurance Main Dataset.csv')
-
 print(df.head(5))
 
 # Encode categorical variables
