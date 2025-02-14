@@ -175,3 +175,5 @@ for feature in numerical_features:
     plt.ylabel('Frequency')
     plt.grid(True)
     plt.show()
+
+# %%
