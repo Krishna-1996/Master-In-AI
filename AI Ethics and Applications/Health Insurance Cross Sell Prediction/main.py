@@ -13,7 +13,7 @@ from sklearn.metrics import accuracy_score, recall_score, confusion_matrix, prec
 # Step 2: Load and Preprocess Dataset
 df = pd.read_csv('D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/Health Insurance Main Dataset.csv')
 print(df.head(5))
-
+df =  df.drop('id')
 # Encode categorical variables
 label_encoder = LabelEncoder()
 
@@ -156,6 +156,7 @@ print(comparison_table)
 
 # Step 10: Check Imbalance for Categorical Features
 categorical_features = ['Gender', 'Vehicle_Age', 'Vehicle_Damage']  # Add more categorical features if needed
+# Gender	Age	Driving_License	Region_Code	Previously_Insured	Vehicle_Age	Vehicle_Damage	Annual_Premium	Policy_Sales_Channel	Vintage	Response
 
 # Print the class distribution for each categorical feature
 for feature in categorical_features:
