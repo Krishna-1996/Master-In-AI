@@ -40,7 +40,8 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_
 
 # %%
 # Step 4: Initialize and Train Logistic Regression Model
-model = LogisticRegression(max_iter=1000)
+model = LogisticRegression(max_iter=1000, class_weight='balanced')
+
 model.fit(X_train, y_train)
 
 # %%
@@ -153,3 +154,24 @@ print(comparison_table)
 
 # %%
 
+# Step 10: Check Imbalance for Categorical Features
+categorical_features = ['Gender', 'Vehicle_Age', 'Vehicle_Damage']  # Add more categorical features if needed
+
+# Print the class distribution for each categorical feature
+for feature in categorical_features:
+    print(f"Class Distribution for {feature}:")
+    print(df[feature].value_counts(normalize=True))  # Normalize to get percentage
+    print("\n")
+
+# Step 11: Visualize Distribution for Numerical Features
+numerical_features = ['Age', 'Annual_Premium', 'Vintage']  # Add more numerical features if needed
+
+# Plot histograms for numerical features to check for balance
+for feature in numerical_features:
+    plt.figure(figsize=(8, 6))
+    sns.histplot(df[feature], kde=True, bins=30, color='skyblue')
+    plt.title(f'Distribution of {feature}')
+    plt.xlabel(feature)
+    plt.ylabel('Frequency')
+    plt.grid(True)
+    plt.show()
