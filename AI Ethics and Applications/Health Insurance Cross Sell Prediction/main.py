@@ -215,4 +215,3 @@ unique_values_df = pd.DataFrame(list(unique_values_summary.items()), columns=['F
 print(unique_values_df)
 
 # %%
-data2 = data.iloc[0:500, :]
