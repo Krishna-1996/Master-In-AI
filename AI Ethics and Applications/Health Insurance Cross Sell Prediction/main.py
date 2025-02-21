@@ -12,7 +12,8 @@ from sklearn.metrics import accuracy_score, recall_score, confusion_matrix, prec
 # %%
 # Step 2: Load and Preprocess Dataset
 df = pd.read_csv('D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/Health Insurance Main Dataset.csv')
-print(df.head(5))
+'''print(df.head(5))'''
+
 # Encode categorical variables
 label_encoder = LabelEncoder()
 
@@ -29,6 +30,7 @@ df['Vehicle_Damage'] = df['Vehicle_Damage'].map({'Yes': 1, 'No': 0})
 scaler = StandardScaler()
 df[['Age', 'Annual_Premium', 'Vintage']] = scaler.fit_transform(df[['Age', 'Annual_Premium', 'Vintage']])
 
+df.to_csv("Test2.csv")
 # %%
 # Step 3: Split Data into Features (X) and Target (y)
 X = df.drop(columns=['id', 'Response'])  # Drop 'id' and 'Response' columns
@@ -177,3 +179,28 @@ for feature in numerical_features:
     plt.show()
 
 # %%
+# Step: Get the number of unique values in each feature (column) in the dataset
+
+# Loop through each feature (column) and display the unique values and their counts
+# Step: Get the number of unique values in each feature and display in tabular format
+
+# Create a dictionary to store the results
+unique_values_summary = {}
+
+# Loop through each feature (column)
+for column in df.columns:
+    # Count the unique values in the column
+    unique_counts = df[column].value_counts()
+    
+    # If more than 10 unique values, just store 'More than 10'
+    if len(unique_counts) > 10:
+        unique_values_summary[column] = 'More than 10'
+    else:
+        unique_values_summary[column] = unique_counts
+
+# Convert the summary to a DataFrame for better visualization in tabular form
+unique_values_df = pd.DataFrame(list(unique_values_summary.items()), columns=['Feature', 'Unique Values Count'])
+print(unique_values_df)
+
+# %%
+data2 = data.iloc[0:500, :]
