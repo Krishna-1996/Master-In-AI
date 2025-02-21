@@ -29,7 +29,8 @@ df['Vehicle_Damage'] = df['Vehicle_Damage'].map({'Yes': 1, 'No': 0})
 scaler = StandardScaler()
 df[['Age', 'Annual_Premium', 'Vintage']] = scaler.fit_transform(df[['Age', 'Annual_Premium', 'Vintage']])
 
-# %% Step 3: Split Data into Features (X) and Target (y)
+# %% 
+# Step 3: Split Data into Features (X) and Target (y)
 X = df.drop(columns=['id', 'Response'])  # Drop 'id' and 'Response' columns
 y = df['Response']  # 'Response' is the target variable (0 or 1)
 
