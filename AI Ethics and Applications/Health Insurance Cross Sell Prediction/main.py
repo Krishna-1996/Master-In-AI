@@ -133,7 +133,7 @@ print(comparison_table)
 
 # %% 
 # Step 10: Check Imbalance for Categorical Features
-categorical_features = ['Gender', 'Vehicle_Age', 'Vehicle_Damage']  # Add more categorical features if needed
+categorical_features = ['Gender', 'Vehicle_Age', 'Vehicle_Damage', 'Response']  # Add more categorical features if needed
 
 # Print the class distribution for each categorical feature
 for feature in categorical_features:
