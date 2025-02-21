@@ -119,7 +119,8 @@ print(f"Male True Positive Rate (Equal Opportunity): {male_tpr}")
 print(f"Female True Positive Rate (Equal Opportunity): {female_tpr}")
 print(f"Difference in True Positive Rate: {male_tpr - female_tpr}")
 
-# %% Step 9: Create a comparison table for performance and fairness metrics
+# %% 
+# Step 9: Create a comparison table for performance and fairness metrics
 comparison_table = pd.DataFrame({
     'Metric': ['Accuracy', 'Recall', 'Precision', 'F1 Score', 'ROC AUC', 'Male Accuracy', 'Female Accuracy', 
                'Male Positive Rate (Demographic Parity)', 'Female Positive Rate (Demographic Parity)', 
@@ -130,7 +131,8 @@ comparison_table = pd.DataFrame({
 
 print(comparison_table)
 
-# %% Step 10: Check Imbalance for Categorical Features
+# %% 
+# Step 10: Check Imbalance for Categorical Features
 categorical_features = ['Gender', 'Vehicle_Age', 'Vehicle_Damage']  # Add more categorical features if needed
 
 # Print the class distribution for each categorical feature
