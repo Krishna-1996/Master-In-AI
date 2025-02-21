@@ -37,11 +37,13 @@ y = df['Response']  # 'Response' is the target variable (0 or 1)
 # Split the data (70% for training, 30% for testing)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
-# %% Step 4: Initialize and Train Support Vector Machine (SVM) Model
+# %% 
+# Step 4: Initialize and Train Support Vector Machine (SVM) Model
 model = SVC(kernel='linear', class_weight='balanced', random_state=42)  # Linear kernel for simplicity
 model.fit(X_train, y_train)
 
-# %% Step 5: Make Predictions and Evaluate Performance
+# %% 
+# Step 5: Make Predictions and Evaluate Performance
 y_pred = model.predict(X_test)
 
 # Evaluate the model with various metrics
