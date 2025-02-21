@@ -31,6 +31,22 @@ scaler = StandardScaler()
 df[['Age', 'Annual_Premium', 'Vintage']] = scaler.fit_transform(df[['Age', 'Annual_Premium', 'Vintage']])
 
 df.to_csv("Test2.csv")
+
+# %%
+import pandas as pd
+
+# Create the DataFrame with your data
+data = ('Test2.csv')
+
+df = pd.DataFrame(data)
+
+# Get unique values and their counts for each column
+unique_values = {col: df[col].nunique() for col in df.columns}
+
+# Print the results
+for col, count in unique_values.items():
+    print(f"Column '{col}' has {count} unique values.")
+
 # %%
 # Step 3: Split Data into Features (X) and Target (y)
 X = df.drop(columns=['id', 'Response'])  # Drop 'id' and 'Response' columns
