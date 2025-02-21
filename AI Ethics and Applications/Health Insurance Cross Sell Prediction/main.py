@@ -141,6 +141,7 @@ for feature in categorical_features:
     print(df[feature].value_counts(normalize=True))  # Normalize to get percentage
     print("\n")
 
+# Visualization
 # Step 11: Visualize Distribution for Numerical Features
 numerical_features = ['Age', 'Annual_Premium', 'Vintage']  # Add more numerical features if needed
 
