@@ -1,19 +1,15 @@
-# %%
-# Step 1: Import Libraries
+# %% Step 1: Import Libraries
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC  # Support Vector Machine (SVM) for binary classification
 from sklearn.preprocessing import StandardScaler, LabelEncoder
-from sklearn.metrics import accuracy_score, recall_score, confusion_matrix, precision_score, f1_score, roc_auc_score, roc_curve
+from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score, roc_auc_score, confusion_matrix, roc_curve
 
-# %%
-# Step 2: Load and Preprocess Dataset
+# %% Step 2: Load and Preprocess Dataset
 df = pd.read_csv('D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/Health Insurance Main Dataset - Copy.csv')
-
-'''print(df.head(5))'''
 
 # Encode categorical variables
 label_encoder = LabelEncoder()
@@ -31,36 +27,18 @@ df['Vehicle_Damage'] = df['Vehicle_Damage'].map({'Yes': 1, 'No': 0})
 scaler = StandardScaler()
 df[['Age', 'Annual_Premium', 'Vintage']] = scaler.fit_transform(df[['Age', 'Annual_Premium', 'Vintage']])
 
-df.to_csv("Test2.csv")
-
-# %%
-# Get unique values and their counts for each column
-print("main file ")
-unique_values = {col: df[col].nunique() for col in df.columns}
-
-# Convert the dictionary to a pandas DataFrame for tabular representation
-unique_values_df = pd.DataFrame(list(unique_values.items()), columns=['Column', 'Unique Values Count'])
-
-# Display the result
-print(unique_values_df)
-
-
-# %%
-# Step 3: Split Data into Features (X) and Target (y)
+# %% Step 3: Split Data into Features (X) and Target (y)
 X = df.drop(columns=['id', 'Response'])  # Drop 'id' and 'Response' columns
 y = df['Response']  # 'Response' is the target variable (0 or 1)
 
 # Split the data (70% for training, 30% for testing)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
-# %%
-# Step 4: Initialize and Train Logistic Regression Model
-model = LogisticRegression(max_iter=1000, class_weight='balanced')
-
+# %% Step 4: Initialize and Train Support Vector Machine (SVM) Model
+model = SVC(kernel='linear', class_weight='balanced', random_state=42)  # Linear kernel for simplicity
 model.fit(X_train, y_train)
 
-# %%
-# Step 5: Make Predictions and Evaluate Performance
+# %% Step 5: Make Predictions and Evaluate Performance
 y_pred = model.predict(X_test)
 
 # Evaluate the model with various metrics
@@ -68,7 +46,7 @@ accuracy = accuracy_score(y_test, y_pred)
 recall = recall_score(y_test, y_pred)
 precision = precision_score(y_test, y_pred)
 f1 = f1_score(y_test, y_pred)
-roc_auc = roc_auc_score(y_test, model.predict_proba(X_test)[:, 1])
+roc_auc = roc_auc_score(y_test, model.decision_function(X_test))  # Use decision function for SVM AUC
 
 # Print evaluation metrics
 print(f"Accuracy: {accuracy}")
@@ -82,10 +60,9 @@ conf_matrix = confusion_matrix(y_test, y_pred)
 print("Confusion Matrix:")
 print(conf_matrix)
 
-# %%
-# Step 6: Visualizations
+# %% Step 6: Visualizations
 # 1. ROC Curve
-fpr, tpr, thresholds = roc_curve(y_test, model.predict_proba(X_test)[:, 1])
+fpr, tpr, thresholds = roc_curve(y_test, model.decision_function(X_test))
 plt.figure(figsize=(8, 6))
 plt.plot(fpr, tpr, color='blue', label=f'ROC Curve (AUC = {roc_auc:.2f})')
 plt.plot([0, 1], [0, 1], linestyle='--', color='gray')
@@ -96,28 +73,7 @@ plt.legend(loc='lower right')
 plt.grid(True)
 plt.show()
 
-# 2. Confusion Matrix Heatmap
-plt.figure(figsize=(6, 5))
-sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', cbar=False, xticklabels=['No', 'Yes'], yticklabels=['No', 'Yes'])
-plt.title('Confusion Matrix')
-plt.xlabel('Predicted')
-plt.ylabel('Actual')
-plt.show()
-
-# 3. Confusion Matrix for Each Feature
-# Plot confusion matrix for each feature with the target feature
-features = ['Age', 'Annual_Premium', 'Vintage', 'Vehicle_Age', 'Vehicle_Damage', 'Gender']
-for feature in features:
-    feature_matrix = confusion_matrix(y_test, model.predict(X_test[feature].values.reshape(-1, 1)))
-    plt.figure(figsize=(6, 5))
-    sns.heatmap(feature_matrix, annot=True, fmt='d', cmap='Blues', cbar=False, xticklabels=['No', 'Yes'], yticklabels=['No', 'Yes'])
-    plt.title(f'Confusion Matrix for {feature}')
-    plt.xlabel('Predicted')
-    plt.ylabel('Actual')
-    plt.show()
-
-# %%
-# Step 7: Fairness Evaluation Based on Gender
+# %% Step 7: Fairness Evaluation Based on Gender
 y_pred_test = model.predict(X_test)
 
 # Create a DataFrame to hold the results, including 'Gender'
@@ -129,8 +85,8 @@ results['predicted'] = y_pred_test
 male_results = results[results['Gender'] == 0]  # Male = 0
 female_results = results[results['Gender'] == 1]  # Female = 1
 
-# %%
-# Step 8: Calculate accuracy for each group
+# %% Step 8: Fairness Metrics Calculations
+# Accuracy for each group
 male_accuracy = accuracy_score(male_results['actual'], male_results['predicted'])
 female_accuracy = accuracy_score(female_results['actual'], female_results['predicted'])
 
@@ -155,8 +111,7 @@ print(f"Male True Positive Rate (Equal Opportunity): {male_tpr}")
 print(f"Female True Positive Rate (Equal Opportunity): {female_tpr}")
 print(f"Difference in True Positive Rate: {male_tpr - female_tpr}")
 
-# %%
-# Step 9: Create a comparison table for performance and fairness metrics
+# %% Step 9: Create a comparison table for performance and fairness metrics
 comparison_table = pd.DataFrame({
     'Metric': ['Accuracy', 'Recall', 'Precision', 'F1 Score', 'ROC AUC', 'Male Accuracy', 'Female Accuracy', 
                'Male Positive Rate (Demographic Parity)', 'Female Positive Rate (Demographic Parity)', 
@@ -167,11 +122,8 @@ comparison_table = pd.DataFrame({
 
 print(comparison_table)
 
-# %%
-
-# Step 10: Check Imbalance for Categorical Features
+# %% Step 10: Check Imbalance for Categorical Features
 categorical_features = ['Gender', 'Vehicle_Age', 'Vehicle_Damage']  # Add more categorical features if needed
-# Gender	Age	Driving_License	Region_Code	Previously_Insured	Vehicle_Age	Vehicle_Damage	Annual_Premium	Policy_Sales_Channel	Vintage	Response
 
 # Print the class distribution for each categorical feature
 for feature in categorical_features:
@@ -191,29 +143,3 @@ for feature in numerical_features:
     plt.ylabel('Frequency')
     plt.grid(True)
     plt.show()
-
-# %%
-# Step: Get the number of unique values in each feature (column) in the dataset
-
-# Loop through each feature (column) and display the unique values and their counts
-# Step: Get the number of unique values in each feature and display in tabular format
-
-# Create a dictionary to store the results
-unique_values_summary = {}
-
-# Loop through each feature (column)
-for column in df.columns:
-    # Count the unique values in the column
-    unique_counts = df[column].value_counts()
-    
-    # If more than 10 unique values, just store 'More than 10'
-    if len(unique_counts) > 10:
-        unique_values_summary[column] = 'More than 10'
-    else:
-        unique_values_summary[column] = unique_counts
-
-# Convert the summary to a DataFrame for better visualization in tabular form
-unique_values_df = pd.DataFrame(list(unique_values_summary.items()), columns=['Feature', 'Unique Values Count'])
-print(unique_values_df)
-
-# %%
