@@ -1,0 +1,18 @@
+Unique Value,Feature Name,Count,Percentage
+unique_info = [],def get_unique_values(df):,1,5.88235294117647
+for column in df.columns:,def get_unique_values(df):,1,5.88235294117647
+# Get value counts for each column,def get_unique_values(df):,1,5.88235294117647
+value_counts = df[column].value_counts(),def get_unique_values(df):,1,5.88235294117647
+# Add the counts and percentages for each unique value,def get_unique_values(df):,1,5.88235294117647
+"for value, count in value_counts.items():",def get_unique_values(df):,1,5.88235294117647
+percentage = (count / len(df)) * 100,def get_unique_values(df):,1,5.88235294117647
+"unique_info.append([value, column, count, percentage])",def get_unique_values(df):,1,5.88235294117647
+# Create a DataFrame to display the results,def get_unique_values(df):,1,5.88235294117647
+"unique_df = pd.DataFrame(unique_info, columns=['Unique Value', 'Feature Name', 'Count', 'Percentage'])",def get_unique_values(df):,1,5.88235294117647
+return unique_df,def get_unique_values(df):,1,5.88235294117647
+# Get the unique values for each feature,def get_unique_values(df):,1,5.88235294117647
+result_df = get_unique_values(df),def get_unique_values(df):,1,5.88235294117647
+# Save the result to a CSV file,def get_unique_values(df):,1,5.88235294117647
+"result_df.to_csv('unique_values_summary.csv', index=False)",def get_unique_values(df):,1,5.88235294117647
+"# Optionally, display the result",def get_unique_values(df):,1,5.88235294117647
+print(result_df),def get_unique_values(df):,1,5.88235294117647
