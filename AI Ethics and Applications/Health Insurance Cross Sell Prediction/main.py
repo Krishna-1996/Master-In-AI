@@ -12,7 +12,6 @@ from sklearn.metrics import accuracy_score, recall_score, confusion_matrix, prec
 # %%
 # Step 2: Load and Preprocess Dataset
 df = pd.read_csv('D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/Health Insurance Main Dataset.csv')
-df1 = pd.read_csv('D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/Health Insurance Main Dataset - Copy.csv')
 
 '''print(df.head(5))'''
 
@@ -36,6 +35,7 @@ df.to_csv("Test2.csv")
 
 # %%
 # Get unique values and their counts for each column
+print("main file ")
 unique_values = {col: df[col].nunique() for col in df.columns}
 
 # Convert the dictionary to a pandas DataFrame for tabular representation
@@ -43,6 +43,16 @@ unique_values_df = pd.DataFrame(list(unique_values.items()), columns=['Column', 
 
 # Display the result
 print(unique_values_df)
+
+df1 = pd.read_csv('D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/Health Insurance Main Dataset - Copy.csv')
+print("main file copy")
+unique_values1 = {col: df1[col].nunique() for col in df1.columns}
+
+# Convert the dictionary to a pandas DataFrame for tabular representation
+unique_values_df1 = pd.DataFrame(list(unique_values1.items()), columns=['Column', 'Unique Values Count'])
+
+# Display the result
+print(unique_values_df1)
 
 
 # %%
