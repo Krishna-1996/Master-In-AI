@@ -65,7 +65,8 @@ conf_matrix = confusion_matrix(y_test, y_pred)
 print("Confusion Matrix:")
 print(conf_matrix)
 
-# %% Step 6: Visualizations
+# %% 
+# Step 6: Visualizations
 # 1. ROC Curve
 fpr, tpr, thresholds = roc_curve(y_test, model.decision_function(X_test))
 plt.figure(figsize=(8, 6))
@@ -78,7 +79,8 @@ plt.legend(loc='lower right')
 plt.grid(True)
 plt.show()
 
-# %% Step 7: Fairness Evaluation Based on Gender
+# %% 
+# Step 7: Fairness Evaluation Based on Gender
 y_pred_test = model.predict(X_test)
 
 # Create a DataFrame to hold the results, including 'Gender'
@@ -90,7 +92,8 @@ results['predicted'] = y_pred_test
 male_results = results[results['Gender'] == 0]  # Male = 0
 female_results = results[results['Gender'] == 1]  # Female = 1
 
-# %% Step 8: Fairness Metrics Calculations
+# %% 
+# Step 8: Fairness Metrics Calculations
 # Accuracy for each group
 male_accuracy = accuracy_score(male_results['actual'], male_results['predicted'])
 female_accuracy = accuracy_score(female_results['actual'], female_results['predicted'])
