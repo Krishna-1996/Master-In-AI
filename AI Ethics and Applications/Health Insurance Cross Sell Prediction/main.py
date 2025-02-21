@@ -44,16 +44,6 @@ unique_values_df = pd.DataFrame(list(unique_values.items()), columns=['Column', 
 # Display the result
 print(unique_values_df)
 
-df1 = pd.read_csv('D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/Health Insurance Main Dataset - Copy.csv')
-print("main file copy")
-unique_values1 = {col: df1[col].nunique() for col in df1.columns}
-
-# Convert the dictionary to a pandas DataFrame for tabular representation
-unique_values_df1 = pd.DataFrame(list(unique_values1.items()), columns=['Column', 'Unique Values Count'])
-
-# Display the result
-print(unique_values_df1)
-
 
 # %%
 # Step 3: Split Data into Features (X) and Target (y)
