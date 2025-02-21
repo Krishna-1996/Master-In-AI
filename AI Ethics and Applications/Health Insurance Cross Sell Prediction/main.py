@@ -1,4 +1,5 @@
-# %% Step 1: Import Libraries
+# %% 
+# Step 1: Import Libraries
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,7 +9,8 @@ from sklearn.svm import SVC  # Support Vector Machine (SVM) for binary classific
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score, roc_auc_score, confusion_matrix, roc_curve
 
-# %% Step 2: Load and Preprocess Dataset
+# %% 
+# Step 2: Load and Preprocess Dataset
 df = pd.read_csv('D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/Health Insurance Main Dataset - Copy.csv')
 
 # Encode categorical variables
