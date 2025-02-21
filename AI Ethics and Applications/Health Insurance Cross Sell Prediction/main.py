@@ -12,6 +12,8 @@ from sklearn.metrics import accuracy_score, recall_score, confusion_matrix, prec
 # %%
 # Step 2: Load and Preprocess Dataset
 df = pd.read_csv('D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/Health Insurance Main Dataset.csv')
+df1 = pd.read_csv('D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/Health Insurance Main Dataset - Copy.csv')
+
 '''print(df.head(5))'''
 
 # Encode categorical variables
