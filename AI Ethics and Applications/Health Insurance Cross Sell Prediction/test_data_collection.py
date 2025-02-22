@@ -103,18 +103,7 @@ def explain_with_lime(X_train, y_train, X_test, instance_index=0):
     return exp
 
 # %%
-# Step No: 8 - Explain the Model Using SHAP
-def explain_with_shap(X_train, X_test, svm_model):
-    explainer = shap.KernelExplainer(svm_model.predict_proba, X_train)
-    shap_values = explainer.shap_values(X_test)
-    
-    # Visualize SHAP summary plot
-    visualize_shap_summary(shap_values, X_test)
-    
-    return shap_values
-
-# %%
-# Step No: 9 - Main Execution Flow
+# Step No: 8 - Main Execution Flow
 def main():
     # Load and preprocess data
     file_path = "D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/Data_Creation.xlsx"
@@ -133,11 +122,10 @@ def main():
     print("\nExplaining with LIME (for instance 0):")
     exp = explain_with_lime(X_train_scaled, y_train, X_test_scaled, instance_index=0)
     
-    # Explain model predictions using SHAP
-    print("\nExplaining with SHAP:")
-    shap_values = explain_with_shap(X_train_scaled, X_test_scaled, svm_model)
-
+    
 # %%
 # Execute the main function
 if __name__ == "__main__":
     main()
+
+# %%
