@@ -174,4 +174,3 @@ print(f"Recall for Male: {recall_male}")
 print(f"Recall for Female: {recall_female}")
 
 # %%
-A
