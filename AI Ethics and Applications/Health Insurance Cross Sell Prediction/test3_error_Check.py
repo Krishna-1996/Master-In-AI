@@ -2,8 +2,6 @@
 # Step No: 1 - Import Necessary Libraries
 import pandas as pd
 import numpy as np
-import lime
-import lime.lime_tabular
 import matplotlib.pyplot as plt
 from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
@@ -16,11 +14,6 @@ def load_and_preprocess_data(file_path):
     data = pd.read_excel(file_path)
     X = pd.get_dummies(data.drop(columns=['Response']), drop_first=True)
     y = data['Response']
-    
-    # Check if 'Gender' column exists
-    if 'Gender' not in X.columns:
-        raise ValueError("'Gender' column not found in the dataset.")
-    
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
@@ -60,12 +53,13 @@ def evaluate_model(svm_model, X_test, y_test, data, X):
             plt.text(j, i, format(cm[i, j], 'd'),
                      horizontalalignment="center",
                      verticalalignment="center",
-                     fontsize=16,  color="white" if cm[i, j] > thresh else "black")
+                     fontsize=16, color="white" if cm[i, j] > thresh else "black")
     
     plt.tight_layout()
     plt.show()
-    
+
     # Segment the data by gender using the original X DataFrame (before scaling)
+    # Filter rows based on gender in the original dataset
     male_indices = X.loc[X_test.index, 'Gender'] == 'Male'
     female_indices = X.loc[X_test.index, 'Gender'] == 'Female'
 
