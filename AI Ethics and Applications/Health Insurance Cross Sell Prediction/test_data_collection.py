@@ -152,18 +152,9 @@ def visualize_lime_explanation(exp):
     plt.title("LIME Explanation")
     plt.show()
 
-# %% 
-# Step No: 6 - Visualize the SHAP Summary Plot
-def visualize_shap_summary(shap_values, X_test):
-    """
-    Visualizes the SHAP summary plot for the model.
-    """
-    shap.summary_plot(shap_values[1], X_test)
-    plt.title("SHAP Summary Plot")
-    plt.show()
 
 # %% 
-# Step No: 7 - Explain the Model Using LIME
+# Step No: 6 - Explain the Model Using LIME
 def explain_with_lime(X_train, y_train, X_test, instance_index=0):
     explainer = lime.lime_tabular.LimeTabularExplainer(X_train, training_labels=y_train, mode='classification')
     exp = explainer.explain_instance(X_test[instance_index], svm_model.predict_proba)
@@ -174,7 +165,7 @@ def explain_with_lime(X_train, y_train, X_test, instance_index=0):
     return exp
 
 # %% 
-# Step No: 8 - Main Execution Flow
+# Step No: 7 - Main Execution Flow
 def main():
     # Load and preprocess data
     file_path = "D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/Data_Creation.xlsx"
@@ -193,11 +184,9 @@ def main():
     print("\nExplaining with LIME (for instance 0):")
     exp = explain_with_lime(X_train_scaled, y_train, X_test_scaled, instance_index=0)
     
-    # Explain model predictions using SHAP
-    print("\nExplaining with SHAP:")
-    shap_values = explain_with_shap(X_train_scaled, X_test_scaled, svm_model)
-
 # %% 
 # Step 9: Execute the main function
 if __name__ == "__main__":
     main()
+
+# %%
