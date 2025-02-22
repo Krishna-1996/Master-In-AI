@@ -13,6 +13,15 @@ from sklearn.metrics import accuracy_score, confusion_matrix, classification_rep
 # %% 
 # Step No: 2 - Load and Preprocess the Data
 def load_and_preprocess_data(file_path):
+    """
+    Loads and preprocesses the dataset.
+    
+    Args:
+    file_path (str): The file path to the dataset
+    
+    Returns:
+    X_train_scaled, X_test_scaled, y_train, y_test, data: Processed training and testing data, and original data
+    """
     # Load the dataset
     data = pd.read_excel(file_path)
     
@@ -76,8 +85,8 @@ def evaluate_model(svm_model, X_test, y_test, data):
     plt.show()
     
     # Segment the data by gender (assuming 'Gender' column exists in your data)
-    male_indices = data['Gender'] == 'Male'  # Replace 'Gender' with the actual column name
-    female_indices = data['Gender'] == 'Female'  # Replace 'Gender' with the actual column name
+    male_indices = data.loc[X_test.index, 'Gender'] == 'Male'  # Get male indices from the original data
+    female_indices = data.loc[X_test.index, 'Gender'] == 'Female'  # Get female indices from the original data
 
     # Male Data and Predictions
     X_test_male = X_test[male_indices]
