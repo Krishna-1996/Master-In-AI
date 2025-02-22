@@ -1,65 +1,55 @@
 # %%
-# Step 0: Import Necessary Libraries and Dataset
-# df = pd.read_excel('D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/Data_Creation.xlsx')
+Step 1: Import necessary libraries
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, roc_auc_score
+from sklearn.preprocessing import StandardScaler
+import lime
+import lime.lime_tabular
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
-from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import roc_auc_score
 
-# Load dataset
+# %%
+Step 2: Load dataset
 data = pd.read_excel("D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/Data_Creation.xlsx")
 
 # %%
-# Step 1: Preprocessing
-# Convert categorical features to numeric
-label_encoder = LabelEncoder()
-
-# Encode Gender (Female = 0, Male = 1)
-data['Gender'] = label_encoder.fit_transform(data['Gender'])
-
-# Encode other categorical features (e.g., Vehicle_Age, Vehicle_Damage)
-data['Vehicle_Age'] = label_encoder.fit_transform(data['Vehicle_Age'])
-data['Vehicle_Damage'] = label_encoder.fit_transform(data['Vehicle_Damage'])
-
-# %%
-# Step 2: Prepare features and target
+Step 3: Preprocess and split the dataset
 X = data.drop(columns=['Response'])
 y = data['Response']
 
-# %%
-# Step 3: Split data into training and testing
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # %%
-# Step 4: Train Random Forest model
-model = RandomForestClassifier(n_estimators=100, random_state=42)
-model.fit(X_train, y_train)
+Step 4: Standardize the features
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
 
 # %%
-# Step 5: Predictions
-y_pred = model.predict(X_test)
+Step 5: Train the SVM model
+svm_model = SVC(probability=True, random_state=42)
+svm_model.fit(X_train_scaled, y_train)
 
 # %%
-# Step 6: Evaluate model
+Step 6: Make predictions
+y_pred = svm_model.predict(X_test_scaled)
+
+# %%
+Step 7: Evaluate the model performance
 accuracy = accuracy_score(y_test, y_pred)
-roc_auc = roc_auc_score(y_test, model.predict_proba(X_test)[:, 1])
+roc_auc = roc_auc_score(y_test, svm_model.predict_proba(X_test_scaled)[:, 1])
+
 print(f"Accuracy: {accuracy}")
 print(f"AUC: {roc_auc}")
 print(classification_report(y_test, y_pred))
 
 # %%
-# Step 7: Split predictions based on Gender
-# Add predictions to the original dataset (test set)
+Step 8: Fairness Evaluation based on Gender
 X_test['Gender'] = data.loc[X_test.index, 'Gender']
 X_test['Predicted_Response'] = y_pred
 X_test['True_Response'] = y_test
 
-# Evaluate fairness by splitting on Gender
 grouped = X_test.groupby('Gender')
-
-# For each gender group, calculate metrics (Accuracy, Demographic Parity, Equal Opportunity)
 gender_metrics = {}
 
 for gender, group in grouped:
@@ -73,7 +63,6 @@ for gender, group in grouped:
         "True Positive Rate": true_positive_rate
     }
 
-# Display fairness metrics for each gender
 for gender, metrics in gender_metrics.items():
     print(f"Metrics for Gender {gender}:")
     print(f"Accuracy: {metrics['Accuracy']}")
@@ -82,7 +71,8 @@ for gender, metrics in gender_metrics.items():
     print()
 
 # %%
-# Step 8: Conclusion
-# If there is a significant difference in these metrics between genders, the model may be biased.
-
-# %%
+Step 9: Using LIME for explanation (local interpretability)
+explainer = lime.lime_tabular.LimeTabularExplainer(X_train_scaled, training_labels=y_train, mode='classification')
+i = 10  # Pick any instance from test set
+exp = explainer.explain_instance(X_test_scaled[i], svm_model.predict_proba)
+exp.show_in_notebook()  # This shows the explanation for the chosen instance
