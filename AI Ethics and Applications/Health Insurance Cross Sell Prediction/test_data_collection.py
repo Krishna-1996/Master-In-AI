@@ -13,7 +13,7 @@ Step 2: Load dataset
 data = pd.read_excel("D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/Data_Creation.xlsx")
 
 # %%
-Step 3: Preprocess and split the dataset
+# Step 3: Preprocess and split the dataset
 X = data.drop(columns=['Response'])
 y = data['Response']
 
