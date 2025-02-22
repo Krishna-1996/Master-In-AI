@@ -115,7 +115,7 @@ def evaluate_model(svm_model, X_test, y_test, data, X_test_scaled):
     plt.tight_layout()
     plt.show()
 
-    return accuracy, auc, class_report, cm_male, cm_female, cm
+    accuracy, auc, class_report, cm_male, cm_female, cm = evaluate_model(svm_model, X_test_scaled, y_test, X, X_test_scaled)
 
 # %% 
 # Step No: 5 - Fairness Evaluation
