@@ -9,22 +9,11 @@ from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, roc_auc_score
-import seaborn as sns
-import os
 
 # %% 
 # Step No: 2 - Load and Preprocess the Data
 def load_and_preprocess_data(file_path):
-    if not os.path.exists(file_path):
-        raise FileNotFoundError(f"The file at {file_path} does not exist.")
-    
-    # Load the dataset
     data = pd.read_excel(file_path)
-    
-    # Check if the 'Response' column exists
-    if 'Response' not in data.columns:
-        raise ValueError("'Response' column not found in the dataset.")
-    
     X = pd.get_dummies(data.drop(columns=['Response']), drop_first=True)
     y = data['Response']
     
