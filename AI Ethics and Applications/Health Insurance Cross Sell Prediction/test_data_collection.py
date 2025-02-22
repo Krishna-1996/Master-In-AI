@@ -1,90 +1,143 @@
 # %%
-# Step 1: Import necessary libraries
-from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, roc_auc_score
-from sklearn.preprocessing import StandardScaler
+# Step No: 1 - Import Necessary Libraries
+import pandas as pd
+import numpy as np
 import lime
 import lime.lime_tabular
-import pandas as pd
+import shap
+import matplotlib.pyplot as plt
+from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, roc_auc_score
 
 # %%
-# Step 2: Load dataset
-data = pd.read_excel("D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/Data_Creation.xlsx")
+# Step No: 2 - Load and Preprocess the Data
+def load_and_preprocess_data(file_path):
+    """
+    Loads and preprocesses the dataset.
+    
+    Args:
+    file_path (str): The file path to the dataset
+    
+    Returns:
+    X_train_scaled, X_test_scaled, y_train, y_test: Processed training and testing data
+    """
+    # Load the dataset
+    data = pd.read_excel(file_path)
+    
+    # Feature and target variables
+    X = pd.get_dummies(data.drop(columns=['Response']), drop_first=True)
+    y = data['Response']
+    
+    # Split dataset into train and test sets
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    
+    # Standardize features
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X_train)
+    X_test_scaled = scaler.transform(X_test)
+    
+    return X_train_scaled, X_test_scaled, y_train, y_test, data
 
 # %%
-# Step 3: Preprocess and split the dataset
-# Ensure that any categorical columns are encoded numerically (e.g., 'Gender')
-
-# One-hot encode categorical columns (like 'Gender')
-X = pd.get_dummies(data.drop(columns=['Response']), drop_first=True)
-
-# Target variable
-y = data['Response']
-
-# Split the dataset into train and test sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Step No: 3 - Train the SVM Model
+def train_svm_model(X_train, y_train):
+    svm_model = SVC(probability=True, random_state=42)
+    svm_model.fit(X_train, y_train)
+    return svm_model
 
 # %%
-# Step 4: Standardize the features
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
+# Step No: 4 - Evaluate Model Performance
+def evaluate_model(svm_model, X_test, y_test):
+    y_pred = svm_model.predict(X_test)
+    accuracy = accuracy_score(y_test, y_pred)
+    auc = roc_auc_score(y_test, svm_model.predict_proba(X_test)[:, 1])
+    class_report = classification_report(y_test, y_pred)
+    
+    # Confusion Matrix Visualization
+    cm = confusion_matrix(y_test, y_pred)
+    plt.figure(figsize=(6, 6))
+    plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
+    plt.title("Confusion Matrix")
+    plt.colorbar()
+    tick_marks = np.arange(2)
+    plt.xticks(tick_marks, ['No', 'Yes'], rotation=45)
+    plt.yticks(tick_marks, ['No', 'Yes'])
+    plt.xlabel('Predicted label')
+    plt.ylabel('True label')
+    plt.tight_layout()
+    plt.show()
+
+    return accuracy, auc, class_report
 
 # %%
-# Step 5: Train the SVM model
-svm_model = SVC(probability=True, random_state=42)
-svm_model.fit(X_train_scaled, y_train)
+# Step No: 5 - Visualize the LIME Explanation
+def visualize_lime_explanation(exp):
+    """
+    Visualizes the LIME explanation using a bar chart to show feature importance.
+    """
+    exp.as_pyplot_figure()
+    plt.title("LIME Explanation")
+    plt.show()
 
 # %%
-# Step 6: Make predictions
-y_pred = svm_model.predict(X_test_scaled)
+# Step No: 6 - Visualize the SHAP Summary Plot
+def visualize_shap_summary(shap_values, X_test):
+    """
+    Visualizes the SHAP summary plot for the model.
+    """
+    shap.summary_plot(shap_values[1], X_test)
+    plt.title("SHAP Summary Plot")
+    plt.show()
 
 # %%
-# Step 7: Evaluate the model performance
-accuracy = accuracy_score(y_test, y_pred)
-roc_auc = roc_auc_score(y_test, svm_model.predict_proba(X_test_scaled)[:, 1])
-
-print(f"Accuracy: {accuracy}")
-print(f"AUC: {roc_auc}")
-print(classification_report(y_test, y_pred))
-
-# %%
-# Step 8: Fairness Evaluation based on Gender
-# Gender column is already one-hot encoded, we will use the 'Gender_Male' column (adjust if necessary)
-X_test['Predicted_Response'] = y_pred
-X_test['True_Response'] = y_test
-
-# We assume that 'Gender_Male' is a column in X_test after one-hot encoding.
-# If 'Gender' was encoded as 'Gender_Male' and 'Gender_Female', use 'Gender_Male' here.
-grouped = X_test.groupby('Gender_Male')  # Adjust based on your encoding columns
-gender_metrics = {}
-
-for gender, group in grouped:
-    group_accuracy = accuracy_score(group['True_Response'], group['Predicted_Response'])
-    demographic_parity = group['Predicted_Response'].mean()
-    cm = confusion_matrix(group['True_Response'], group['Predicted_Response'])
-    true_positive_rate = cm[1, 1] / (cm[1, 0] + cm[1, 1]) if (cm[1, 0] + cm[1, 1]) != 0 else 0
-    gender_metrics[gender] = {
-        "Accuracy": group_accuracy,
-        "Demographic Parity": demographic_parity,
-        "True Positive Rate": true_positive_rate
-    }
-
-for gender, metrics in gender_metrics.items():
-    print(f"Metrics for Gender {gender}:")
-    print(f"Accuracy: {metrics['Accuracy']}")
-    print(f"Demographic Parity: {metrics['Demographic Parity']}")
-    print(f"True Positive Rate: {metrics['True Positive Rate']}")
-    print()
-print(X_test.columns)
-print(data['Gender'].value_counts())
+# Step No: 7 - Explain the Model Using LIME
+def explain_with_lime(X_train, y_train, X_test, instance_index=0):
+    explainer = lime.lime_tabular.LimeTabularExplainer(X_train, training_labels=y_train, mode='classification')
+    exp = explainer.explain_instance(X_test[instance_index], svm_model.predict_proba)
+    
+    # Visualize the explanation
+    visualize_lime_explanation(exp)
+    
+    return exp
 
 # %%
-# Step 9: Using LIME for explanation (local interpretability)
-explainer = lime.lime_tabular.LimeTabularExplainer(X_train_scaled, training_labels=y_train, mode='classification')
-i = 10  # Pick any instance from test set
-exp = explainer.explain_instance(X_test_scaled[i], svm_model.predict_proba)
-exp.show_in_notebook()  # This shows the explanation for the chosen instance
+# Step No: 8 - Explain the Model Using SHAP
+def explain_with_shap(X_train, X_test, svm_model):
+    explainer = shap.KernelExplainer(svm_model.predict_proba, X_train)
+    shap_values = explainer.shap_values(X_test)
+    
+    # Visualize SHAP summary plot
+    visualize_shap_summary(shap_values, X_test)
+    
+    return shap_values
 
 # %%
+# Step No: 9 - Main Execution Flow
+def main():
+    # Load and preprocess data
+    file_path = "D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/Data_Creation.xlsx"
+    X_train_scaled, X_test_scaled, y_train, y_test, data = load_and_preprocess_data(file_path)
+    
+    # Train the SVM model
+    svm_model = train_svm_model(X_train_scaled, y_train)
+    
+    # Evaluate model performance
+    accuracy, auc, class_report = evaluate_model(svm_model, X_test_scaled, y_test)
+    print(f"Accuracy: {accuracy}")
+    print(f"AUC: {auc}")
+    print(f"Classification Report:\n{class_report}")
+    
+    # Explain model predictions using LIME
+    print("\nExplaining with LIME (for instance 0):")
+    exp = explain_with_lime(X_train_scaled, y_train, X_test_scaled, instance_index=0)
+    
+    # Explain model predictions using SHAP
+    print("\nExplaining with SHAP:")
+    shap_values = explain_with_shap(X_train_scaled, X_test_scaled, svm_model)
+
+# %%
+# Execute the main function
+if __name__ == "__main__":
+    main()
