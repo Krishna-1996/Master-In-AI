@@ -208,3 +208,9 @@ if __name__ == "__main__":
     main()
 
 # %%
+accuracy_male = accuracy_score(y_test_male, y_pred_male)
+accuracy_female = accuracy_score(y_test_female, y_pred_female)
+print(f"Accuracy for Male: {accuracy_male}")
+print(f"Accuracy for Female: {accuracy_female}")
+
+# %%
