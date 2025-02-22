@@ -78,7 +78,8 @@ for gender, metrics in gender_metrics.items():
     print(f"True Positive Rate: {metrics['True Positive Rate']}")
     print()
 print(X_test.columns)
-print(df[3])
+print(data['Gender'].value_counts())
+
 # %%
 # Step 9: Using LIME for explanation (local interpretability)
 explainer = lime.lime_tabular.LimeTabularExplainer(X_train_scaled, training_labels=y_train, mode='classification')
