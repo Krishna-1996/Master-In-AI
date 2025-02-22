@@ -32,7 +32,7 @@ def train_svm_model(X_train, y_train):
 
 # %% 
 # Step No: 4 - Evaluate Model Performance
-def evaluate_model(svm_model, X_test, y_test, data, X_test_scaled):
+def evaluate_model(svm_model, X_test, y_test, data, X):
     y_pred = svm_model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
     auc = roc_auc_score(y_test, svm_model.predict_proba(X_test)[:, 1])
@@ -66,7 +66,7 @@ def evaluate_model(svm_model, X_test, y_test, data, X_test_scaled):
     female_indices = X.loc[X_test.index, 'Gender'] == 'Female'
 
     # Male Data and Predictions
-    X_test_male = X_test_scaled[male_indices]
+    X_test_male = X_test[male_indices]
     y_test_male = y_test[male_indices]
     y_pred_male = y_pred[male_indices]
     
@@ -91,7 +91,7 @@ def evaluate_model(svm_model, X_test, y_test, data, X_test_scaled):
     plt.show()
 
     # Female Data and Predictions
-    X_test_female = X_test_scaled[female_indices]
+    X_test_female = X_test[female_indices]
     y_test_female = y_test[female_indices]
     y_pred_female = y_pred[female_indices]
     
@@ -115,8 +115,7 @@ def evaluate_model(svm_model, X_test, y_test, data, X_test_scaled):
     plt.tight_layout()
     plt.show()
 
-    accuracy, auc, class_report, cm_male, cm_female, cm = evaluate_model(svm_model, X_test_scaled, y_test, X, X_test_scaled)
-
+    return accuracy, auc, class_report, cm_male, cm_female, cm
 # %% 
 # Step No: 5 - Fairness Evaluation
 def fairness_metrics(cm_male, cm_female, cm):
@@ -168,7 +167,7 @@ def main():
     svm_model = train_svm_model(X_train_scaled, y_train)
     
     # Evaluate model performance
-    accuracy, auc, class_report, cm_male, cm_female, cm = evaluate_model(svm_model, X_test_scaled, y_test, data, X_test_scaled)
+    accuracy, auc, class_report, cm_male, cm_female, cm = evaluate_model(svm_model, X_test_scaled, y_test, data, X)
     print(f"Accuracy: {accuracy}")
     print(f"AUC: {auc}")
     print(f"Classification Report:\n{class_report}")
@@ -183,5 +182,3 @@ def main():
 # Execute the main function
 if __name__ == "__main__":
     main()
-
-# %%
