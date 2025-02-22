@@ -61,9 +61,9 @@ def evaluate_model(svm_model, X_test, y_test, data, X_test_scaled):
     plt.tight_layout()
     plt.show()
     
-    # Segment the data by gender (assuming 'Gender' column exists in your data)
-    male_indices = data.loc[X_test.index, 'Gender'] == 'Male'
-    female_indices = data.loc[X_test.index, 'Gender'] == 'Female'
+    # Segment the data by gender using the original X_test DataFrame (before scaling)
+    male_indices = X.loc[X_test.index, 'Gender'] == 'Male'
+    female_indices = X.loc[X_test.index, 'Gender'] == 'Female'
 
     # Male Data and Predictions
     X_test_male = X_test_scaled[male_indices]
