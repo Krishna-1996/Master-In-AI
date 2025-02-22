@@ -9,38 +9,19 @@ from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, roc_auc_score
+import seaborn as sns
 
 # %% 
 # Step No: 2 - Load and Preprocess the Data
 def load_and_preprocess_data(file_path):
-    """
-    Loads and preprocesses the dataset.
-    
-    Args:
-    file_path (str): The file path to the dataset
-    
-    Returns:
-    X_train_scaled, X_test_scaled, y_train, y_test, data, X_test_indices: Processed training and testing data, and original data, plus the indices of the test data
-    """
-    # Load the dataset
     data = pd.read_excel(file_path)
-    
-    # Feature and target variables
     X = pd.get_dummies(data.drop(columns=['Response']), drop_first=True)
     y = data['Response']
-    
-    # Split dataset into train and test sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    
-    # Get indices of test data
-    X_test_indices = X_test.index
-    
-    # Standardize features
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
-    
-    return X_train_scaled, X_test_scaled, y_train, y_test, data, X_test_indices
+    return X_train_scaled, X_test_scaled, y_train, y_test, data
 
 # %% 
 # Step No: 3 - Train the SVM Model
@@ -51,66 +32,56 @@ def train_svm_model(X_train, y_train):
 
 # %% 
 # Step No: 4 - Evaluate Model Performance
-def evaluate_model(svm_model, X_test, y_test, data, X_test_indices):
+def evaluate_model(svm_model, X_test, y_test, data):
     y_pred = svm_model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
     auc = roc_auc_score(y_test, svm_model.predict_proba(X_test)[:, 1])
     class_report = classification_report(y_test, y_pred)
-    
-    # Confusion Matrix for overall
     cm = confusion_matrix(y_test, y_pred)
     
-    # Plot the overall confusion matrix
+    # Plot confusion matrix for overall
     plt.figure(figsize=(6, 6))
     plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
     plt.title("Overall Confusion Matrix")
     plt.colorbar()
-    
-    # Labels for the axes
     tick_marks = np.arange(2)
     plt.xticks(tick_marks, ['No', 'Yes'], rotation=45, fontsize=12)
     plt.yticks(tick_marks, ['No', 'Yes'], fontsize=12)
     plt.xlabel('Predicted label', fontsize=14)
     plt.ylabel('True label', fontsize=14)
     
-    # Annotate each cell with the numeric value
     thresh = cm.max() / 2.0
     for i in range(cm.shape[0]):
         for j in range(cm.shape[1]):
             plt.text(j, i, format(cm[i, j], 'd'),
                      horizontalalignment="center",
                      verticalalignment="center",
-                     fontsize=16,  # Increase font size for better readability
-                     color="white" if cm[i, j] > thresh else "black")
+                     fontsize=16,  color="white" if cm[i, j] > thresh else "black")
     
-    # Display the plot for overall confusion matrix
     plt.tight_layout()
     plt.show()
     
     # Segment the data by gender (assuming 'Gender' column exists in your data)
-    male_indices = data.loc[X_test_indices, 'Gender'] == 'Male'  # Use the indices from the test set
-    female_indices = data.loc[X_test_indices, 'Gender'] == 'Female'  # Use the indices from the test set
+    male_indices = data.loc[X_test.index, 'Gender'] == 'Male'
+    female_indices = data.loc[X_test.index, 'Gender'] == 'Female'
 
     # Male Data and Predictions
     X_test_male = X_test[male_indices]
     y_test_male = y_test[male_indices]
     y_pred_male = y_pred[male_indices]
     
-    # Confusion Matrix for Male
     cm_male = confusion_matrix(y_test_male, y_pred_male)
     plt.figure(figsize=(6, 6))
     plt.imshow(cm_male, interpolation='nearest', cmap=plt.cm.Blues)
     plt.title("Confusion Matrix for Male")
     plt.colorbar()
     
-    # Annotate the confusion matrix for Male
     for i in range(cm_male.shape[0]):
         for j in range(cm_male.shape[1]):
             plt.text(j, i, format(cm_male[i, j], 'd'),
                      horizontalalignment="center",
                      verticalalignment="center",
-                     fontsize=16,  # Increase font size for better readability
-                     color="white" if cm_male[i, j] > cm_male.max() / 2.0 else "black")
+                     fontsize=16, color="white" if cm_male[i, j] > cm_male.max() / 2.0 else "black")
     
     plt.xticks(tick_marks, ['No', 'Yes'], rotation=45, fontsize=12)
     plt.yticks(tick_marks, ['No', 'Yes'], fontsize=12)
@@ -119,32 +90,23 @@ def evaluate_model(svm_model, X_test, y_test, data, X_test_indices):
     plt.tight_layout()
     plt.show()
 
-    # Calculate precision and recall for Male
-    male_precision = cm_male[1, 1] / (cm_male[1, 1] + cm_male[0, 1])
-    male_recall = cm_male[1, 1] / (cm_male[1, 1] + cm_male[1, 0])
-    print(f"Male Precision: {male_precision:.2f}")
-    print(f"Male Recall: {male_recall:.2f}")
-    
     # Female Data and Predictions
     X_test_female = X_test[female_indices]
     y_test_female = y_test[female_indices]
     y_pred_female = y_pred[female_indices]
     
-    # Confusion Matrix for Female
     cm_female = confusion_matrix(y_test_female, y_pred_female)
     plt.figure(figsize=(6, 6))
     plt.imshow(cm_female, interpolation='nearest', cmap=plt.cm.Blues)
     plt.title("Confusion Matrix for Female")
     plt.colorbar()
     
-    # Annotate the confusion matrix for Female
     for i in range(cm_female.shape[0]):
         for j in range(cm_female.shape[1]):
             plt.text(j, i, format(cm_female[i, j], 'd'),
                      horizontalalignment="center",
                      verticalalignment="center",
-                     fontsize=16,  # Increase font size for better readability
-                     color="white" if cm_female[i, j] > cm_female.max() / 2.0 else "black")
+                     fontsize=16, color="white" if cm_female[i, j] > cm_female.max() / 2.0 else "black")
     
     plt.xticks(tick_marks, ['No', 'Yes'], rotation=45, fontsize=12)
     plt.yticks(tick_marks, ['No', 'Yes'], fontsize=12)
@@ -152,65 +114,72 @@ def evaluate_model(svm_model, X_test, y_test, data, X_test_indices):
     plt.ylabel('True label', fontsize=14)
     plt.tight_layout()
     plt.show()
-    
-    # Calculate precision and recall for Female
-    female_precision = cm_female[1, 1] / (cm_female[1, 1] + cm_female[0, 1])
-    female_recall = cm_female[1, 1] / (cm_female[1, 1] + cm_female[1, 0])
-    print(f"Female Precision: {female_precision:.2f}")
-    print(f"Female Recall: {female_recall:.2f}")
-    
-    return accuracy, auc, class_report
+
+    return accuracy, auc, class_report, cm_male, cm_female, cm
 
 # %% 
-# Step No: 5 - Visualize the LIME Explanation
-def visualize_lime_explanation(exp):
-    """
-    Visualizes the LIME explanation using a bar chart to show feature importance.
-    """
-    exp.as_pyplot_figure()
-    plt.title("LIME Explanation")
+# Step No: 5 - Fairness Evaluation
+def fairness_metrics(cm_male, cm_female, cm):
+    # Calculate Equal Accuracy
+    accuracy_male = cm_male[1, 1] + cm_male[0, 0] / cm_male.sum()
+    accuracy_female = cm_female[1, 1] + cm_female[0, 0] / cm_female.sum()
+    print(f"Accuracy for Male: {accuracy_male}")
+    print(f"Accuracy for Female: {accuracy_female}")
+    
+    # Calculate Demographic Parity (Proportion of positive predictions)
+    positive_male = cm_male[1, 1] / cm_male.sum()
+    positive_female = cm_female[1, 1] / cm_female.sum()
+    print(f"Proportion of positive predictions for Male: {positive_male}")
+    print(f"Proportion of positive predictions for Female: {positive_female}")
+    
+    # Calculate Equal Opportunity (True Positive Rate)
+    tpr_male = cm_male[1, 1] / (cm_male[1, 1] + cm_male[1, 0])
+    tpr_female = cm_female[1, 1] / (cm_female[1, 1] + cm_female[1, 0])
+    print(f"True Positive Rate for Male: {tpr_male}")
+    print(f"True Positive Rate for Female: {tpr_female}")
+
+# %% 
+# Step No: 6 - Visualize Comparison and Insights
+def visualize_comparisons(cm_male, cm_female, cm):
+    # Bar plot for confusion matrix comparison
+    cm_values = {'Male': cm_male.ravel(), 'Female': cm_female.ravel(), 'Overall': cm.ravel()}
+    cm_df = pd.DataFrame(cm_values, columns=['TP', 'FP', 'FN', 'TN'])
+    cm_df.plot(kind='bar', figsize=(10, 6))
+    plt.title("Confusion Matrix Comparison (Male vs Female vs Overall)")
+    plt.xticks([0], ['Confusion Matrix Values'], rotation=0)
+    plt.ylabel('Count', fontsize=12)
+    plt.tight_layout()
     plt.show()
 
-# %% 
-# Step No: 6 - Explain the Model Using LIME
-def explain_with_lime(X_train, y_train, X_test, svm_model, instance_index=0):
-    explainer = lime.lime_tabular.LimeTabularExplainer(X_train, training_labels=y_train, mode='classification')
-    exp = explainer.explain_instance(X_test[instance_index], svm_model.predict_proba)
-    
-    # Visualize the explanation
-    visualize_lime_explanation(exp)
-    
-    return exp
+    # Print the confusion matrix results in tabular form
+    print(f"\nConfusion Matrix Results:\n{'='*30}")
+    print(f"Overall Confusion Matrix:\n{cm}")
+    print(f"Male Confusion Matrix:\n{cm_male}")
+    print(f"Female Confusion Matrix:\n{cm_female}")
 
 # %% 
 # Step No: 7 - Main Execution Flow
 def main():
     # Load and preprocess data
     file_path = "D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/Data_Creation.xlsx"
-    X_train_scaled, X_test_scaled, y_train, y_test, data, X_test_indices = load_and_preprocess_data(file_path)
+    X_train_scaled, X_test_scaled, y_train, y_test, data = load_and_preprocess_data(file_path)
     
     # Train the SVM model
     svm_model = train_svm_model(X_train_scaled, y_train)
     
-    # Evaluate model performance (Pass data argument here)
-    accuracy, auc, class_report = evaluate_model(svm_model, X_test_scaled, y_test, data, X_test_indices)
+    # Evaluate model performance
+    accuracy, auc, class_report, cm_male, cm_female, cm = evaluate_model(svm_model, X_test_scaled, y_test, data)
     print(f"Accuracy: {accuracy}")
     print(f"AUC: {auc}")
     print(f"Classification Report:\n{class_report}")
     
-    # Explain model predictions using LIME
-    print("\nExplaining with LIME (for instance 0):")
-    exp = explain_with_lime(X_train_scaled, y_train, X_test_scaled, svm_model, instance_index=0)
+    # Fairness Evaluation
+    fairness_metrics(cm_male, cm_female, cm)
+    
+    # Visualize comparison and confusion matrix results
+    visualize_comparisons(cm_male, cm_female, cm)
 
 # %% 
-# Step 8: Execute the main function
+# Execute the main function
 if __name__ == "__main__":
     main()
-
-# %%
-accuracy_male = accuracy_score(y_test_male, y_pred_male)
-accuracy_female = accuracy_score(y_test_female, y_pred_female)
-print(f"Accuracy for Male: {accuracy_male}")
-print(f"Accuracy for Female: {accuracy_female}")
-
-# %%
