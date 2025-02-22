@@ -48,7 +48,6 @@ def train_svm_model(X_train, y_train):
     return svm_model
 
 # %%
-# %%
 # Step No: 4 - Evaluate Model Performance
 def evaluate_model(svm_model, X_test, y_test, data):
     y_pred = svm_model.predict(X_test)
@@ -86,7 +85,7 @@ def evaluate_model(svm_model, X_test, y_test, data):
     plt.tight_layout()
     plt.show()
     
-    # Filter data by gender (assuming 'Gender' column exists in your data)
+    # Segment the data by gender (assuming 'Gender' column exists in your data)
     male_indices = data['Gender'] == 'Male'  # Replace 'Gender' with the actual column name
     female_indices = data['Gender'] == 'Female'  # Replace 'Gender' with the actual column name
 
@@ -190,27 +189,6 @@ def main():
     # Train the SVM model
     svm_model = train_svm_model(X_train_scaled, y_train)
     
-    # Evaluate model performance
-    accuracy, auc, class_report = evaluate_model(svm_model, X_test_scaled, y_test)
-    print(f"Accuracy: {accuracy}")
-    print(f"AUC: {auc}")
-    print(f"Classification Report:\n{class_report}")
-    
-    # Explain model predictions using LIME
-    print("\nExplaining with LIME (for instance 0):")
-    exp = explain_with_lime(X_train_scaled, y_train, X_test_scaled, instance_index=0)
-    
-    
-# %%
-# Step No: 9 - Main Execution Flow
-def main():
-    # Load and preprocess data
-    file_path = "D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/Data_Creation.xlsx"
-    X_train_scaled, X_test_scaled, y_train, y_test, data = load_and_preprocess_data(file_path)
-    
-    # Train the SVM model
-    svm_model = train_svm_model(X_train_scaled, y_train)
-    
     # Evaluate model performance (Pass data argument here)
     accuracy, auc, class_report = evaluate_model(svm_model, X_test_scaled, y_test, data)
     print(f"Accuracy: {accuracy}")
@@ -226,7 +204,7 @@ def main():
     shap_values = explain_with_shap(X_train_scaled, X_test_scaled, svm_model)
 
 # %%
-# Execute the main function
+# Step 9: Execute the main function
 if __name__ == "__main__":
     main()
 
