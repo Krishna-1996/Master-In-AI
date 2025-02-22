@@ -14,14 +14,15 @@ data = pd.read_excel("D:/Masters Projects/Master-In-AI/AI Ethics and Application
 
 # %%
 # Step 3: Preprocess and split the dataset
-X = data.drop(columns=['Response'])
-y = data['Response']
+# Ensure that any categorical columns are encoded numerically (e.g., 'Gender')
+
 # One-hot encode categorical columns (like 'Gender')
 X = pd.get_dummies(data.drop(columns=['Response']), drop_first=True)
 
 # Target variable
 y = data['Response']
 
+# Split the dataset into train and test sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # %%
@@ -81,3 +82,17 @@ explainer = lime.lime_tabular.LimeTabularExplainer(X_train_scaled, training_labe
 i = 10  # Pick any instance from test set
 exp = explainer.explain_instance(X_test_scaled[i], svm_model.predict_proba)
 exp.show_in_notebook()  # This shows the explanation for the chosen instance
+
+# %%
+import shap
+
+# Create a SHAP explainer
+explainer = shap.KernelExplainer(svm_model.predict_proba, X_train_scaled)
+
+# Calculate SHAP values
+shap_values = explainer.shap_values(X_test_scaled)
+
+# Plot SHAP summary plot (to visualize feature importance)
+shap.summary_plot(shap_values[1], X_test)  # Plot for class '1'
+
+# %%
