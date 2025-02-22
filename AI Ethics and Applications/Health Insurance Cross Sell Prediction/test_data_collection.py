@@ -185,7 +185,7 @@ def main():
     exp = explain_with_lime(X_train_scaled, y_train, X_test_scaled, instance_index=0)
     
 # %% 
-# Step 9: Execute the main function
+# Step 8: Execute the main function
 if __name__ == "__main__":
     main()
 
