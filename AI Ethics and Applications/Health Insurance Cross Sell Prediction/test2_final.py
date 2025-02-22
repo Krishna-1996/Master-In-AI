@@ -61,7 +61,7 @@ def evaluate_model(svm_model, X_test, y_test, data, X):
     plt.tight_layout()
     plt.show()
     
-    # Segment the data by gender using the original X_test DataFrame (before scaling)
+    # Segment the data by gender using the original X DataFrame (before scaling)
     male_indices = X.loc[X_test.index, 'Gender'] == 'Male'
     female_indices = X.loc[X_test.index, 'Gender'] == 'Female'
 
@@ -116,6 +116,7 @@ def evaluate_model(svm_model, X_test, y_test, data, X):
     plt.show()
 
     return accuracy, auc, class_report, cm_male, cm_female, cm
+
 # %% 
 # Step No: 5 - Fairness Evaluation
 def fairness_metrics(cm_male, cm_female, cm):
@@ -182,3 +183,5 @@ def main():
 # Execute the main function
 if __name__ == "__main__":
     main()
+
+# %%
