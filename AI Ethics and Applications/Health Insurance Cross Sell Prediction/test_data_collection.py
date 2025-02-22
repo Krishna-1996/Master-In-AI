@@ -44,7 +44,7 @@ print(f"AUC: {roc_auc}")
 print(classification_report(y_test, y_pred))
 
 # %%
-Step 8: Fairness Evaluation based on Gender
+# Step 8: Fairness Evaluation based on Gender
 X_test['Gender'] = data.loc[X_test.index, 'Gender']
 X_test['Predicted_Response'] = y_pred
 X_test['True_Response'] = y_test
@@ -71,7 +71,7 @@ for gender, metrics in gender_metrics.items():
     print()
 
 # %%
-Step 9: Using LIME for explanation (local interpretability)
+# Step 9: Using LIME for explanation (local interpretability)
 explainer = lime.lime_tabular.LimeTabularExplainer(X_train_scaled, training_labels=y_train, mode='classification')
 i = 10  # Pick any instance from test set
 exp = explainer.explain_instance(X_test_scaled[i], svm_model.predict_proba)
