@@ -59,7 +59,7 @@ def evaluate_model(svm_model, X_test, y_test, data, X):
     plt.show()
 
     # Segment the data by gender using the original X DataFrame (before scaling)
-    # Filter rows based on gender in the original dataset
+    # Get the indices of male and female in the original X DataFrame, matching with X_test
     male_indices = X.loc[X_test.index, 'Gender'] == 'Male'
     female_indices = X.loc[X_test.index, 'Gender'] == 'Female'
 
