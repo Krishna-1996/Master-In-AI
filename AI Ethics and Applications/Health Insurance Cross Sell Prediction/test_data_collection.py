@@ -1,5 +1,5 @@
 # %%
-Step 1: Import necessary libraries
+#Step 1: Import necessary libraries
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, roc_auc_score
 from sklearn.preprocessing import StandardScaler
@@ -9,7 +9,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 # %%
-Step 2: Load dataset
+# Step 2: Load dataset
 data = pd.read_excel("D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/Data_Creation.xlsx")
 
 # %%
