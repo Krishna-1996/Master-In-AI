@@ -1,4 +1,4 @@
-# %%
+# %% 
 # Step No: 1 - Import Necessary Libraries
 import pandas as pd
 import numpy as np
@@ -21,7 +21,7 @@ def load_and_preprocess_data(file_path):
     file_path (str): The file path to the dataset
     
     Returns:
-    X_train_scaled, X_test_scaled, y_train, y_test, data: Processed training and testing data, and original data
+    X_train_scaled, X_test_scaled, y_train, y_test, data, X_test_original: Processed training and testing data, and original data
     """
     # Load the dataset
     data = pd.read_excel(file_path)
@@ -33,22 +33,26 @@ def load_and_preprocess_data(file_path):
     # Split dataset into train and test sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     
+    # Store original X_test (before scaling)
+    X_test_original = X_test.copy()
+    
     # Standardize features
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
     
-    return X_train_scaled, X_test_scaled, y_train, y_test, data
+    return X_train_scaled, X_test_scaled, y_train, y_test, data, X_test_original
 
-# %%
+# %% 
 # Step No: 3 - Train the SVM Model
 def train_svm_model(X_train, y_train):
     svm_model = SVC(probability=True, random_state=42)
     svm_model.fit(X_train, y_train)
     return svm_model
-# %%
+
+# %% 
 # Step No: 4 - Evaluate Model Performance
-def evaluate_model(svm_model, X_test, y_test, data):
+def evaluate_model(svm_model, X_test, y_test, data, X_test_original):
     y_pred = svm_model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
     auc = roc_auc_score(y_test, svm_model.predict_proba(X_test)[:, 1])
@@ -85,8 +89,8 @@ def evaluate_model(svm_model, X_test, y_test, data):
     plt.show()
     
     # Segment the data by gender (assuming 'Gender' column exists in your data)
-    male_indices = data.loc[X_test.index, 'Gender'] == 'Male'  # Filter using X_test's indices
-    female_indices = data.loc[X_test.index, 'Gender'] == 'Female'  # Filter using X_test's indices
+    male_indices = data.loc[X_test_original.index, 'Gender'] == 'Male'  # Filter using X_test_original's indices
+    female_indices = data.loc[X_test_original.index, 'Gender'] == 'Female'  # Filter using X_test_original's indices
 
     # Male Data and Predictions
     X_test_male = X_test[male_indices]
@@ -146,8 +150,7 @@ def evaluate_model(svm_model, X_test, y_test, data):
     
     return accuracy, auc, class_report
 
-
-# %%
+# %% 
 # Step No: 5 - Visualize the LIME Explanation
 def visualize_lime_explanation(exp):
     """
@@ -157,7 +160,7 @@ def visualize_lime_explanation(exp):
     plt.title("LIME Explanation")
     plt.show()
 
-# %%
+# %% 
 # Step No: 6 - Visualize the SHAP Summary Plot
 def visualize_shap_summary(shap_values, X_test):
     """
@@ -167,7 +170,7 @@ def visualize_shap_summary(shap_values, X_test):
     plt.title("SHAP Summary Plot")
     plt.show()
 
-# %%
+# %% 
 # Step No: 7 - Explain the Model Using LIME
 def explain_with_lime(X_train, y_train, X_test, instance_index=0):
     explainer = lime.lime_tabular.LimeTabularExplainer(X_train, training_labels=y_train, mode='classification')
@@ -178,18 +181,18 @@ def explain_with_lime(X_train, y_train, X_test, instance_index=0):
     
     return exp
 
-# %%
+# %% 
 # Step No: 8 - Main Execution Flow
 def main():
     # Load and preprocess data
     file_path = "D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/Data_Creation.xlsx"
-    X_train_scaled, X_test_scaled, y_train, y_test, data = load_and_preprocess_data(file_path)
+    X_train_scaled, X_test_scaled, y_train, y_test, data, X_test_original = load_and_preprocess_data(file_path)
     
     # Train the SVM model
     svm_model = train_svm_model(X_train_scaled, y_train)
     
     # Evaluate model performance (Pass data argument here)
-    accuracy, auc, class_report = evaluate_model(svm_model, X_test_scaled, y_test, data)
+    accuracy, auc, class_report = evaluate_model(svm_model, X_test_scaled, y_test, data, X_test_original)
     print(f"Accuracy: {accuracy}")
     print(f"AUC: {auc}")
     print(f"Classification Report:\n{class_report}")
@@ -202,9 +205,7 @@ def main():
     print("\nExplaining with SHAP:")
     shap_values = explain_with_shap(X_train_scaled, X_test_scaled, svm_model)
 
-# %%
+# %% 
 # Step 9: Execute the main function
 if __name__ == "__main__":
     main()
-
-# %%
