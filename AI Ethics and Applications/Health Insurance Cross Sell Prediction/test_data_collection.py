@@ -26,16 +26,16 @@ X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
 # %%
-Step 5: Train the SVM model
+# Step 5: Train the SVM model
 svm_model = SVC(probability=True, random_state=42)
 svm_model.fit(X_train_scaled, y_train)
 
 # %%
-Step 6: Make predictions
+# Step 6: Make predictions
 y_pred = svm_model.predict(X_test_scaled)
 
 # %%
-Step 7: Evaluate the model performance
+# Step 7: Evaluate the model performance
 accuracy = accuracy_score(y_test, y_pred)
 roc_auc = roc_auc_score(y_test, svm_model.predict_proba(X_test_scaled)[:, 1])
 
