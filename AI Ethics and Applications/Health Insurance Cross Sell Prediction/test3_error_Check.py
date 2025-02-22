@@ -1,4 +1,4 @@
-# %% 
+# %%
 # Step No: 1 - Import Necessary Libraries
 import pandas as pd
 import numpy as np
@@ -12,13 +12,23 @@ from sklearn.metrics import accuracy_score, confusion_matrix, classification_rep
 # Step No: 2 - Load and Preprocess the Data
 def load_and_preprocess_data(file_path):
     data = pd.read_excel(file_path)
-    X = pd.get_dummies(data.drop(columns=['Response']), drop_first=True)
+    
+    # Store the Gender column separately before scaling
+    gender = data['Gender']
+    
+    # Drop 'Gender' column and other non-feature columns to prepare for scaling
+    X = pd.get_dummies(data.drop(columns=['Response', 'Gender']), drop_first=True)
     y = data['Response']
+    
+    # Split data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    
+    # Apply StandardScaler only to the features
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
-    return X_train_scaled, X_test_scaled, y_train, y_test, X, data
+    
+    return X_train_scaled, X_test_scaled, y_train, y_test, gender, data
 
 # %% 
 # Step No: 3 - Train the SVM Model
@@ -29,7 +39,7 @@ def train_svm_model(X_train, y_train):
 
 # %% 
 # Step No: 4 - Evaluate Model Performance
-def evaluate_model(svm_model, X_test, y_test, data, X):
+def evaluate_model(svm_model, X_test, y_test, gender, data):
     y_pred = svm_model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
     auc = roc_auc_score(y_test, svm_model.predict_proba(X_test)[:, 1])
@@ -58,10 +68,9 @@ def evaluate_model(svm_model, X_test, y_test, data, X):
     plt.tight_layout()
     plt.show()
 
-    # Segment the data by gender using the original X DataFrame (before scaling)
-    # Get the indices of male and female in the original X DataFrame, matching with X_test
-    male_indices = X.loc[X_test.index, 'Gender'] == 'Male'
-    female_indices = X.loc[X_test.index, 'Gender'] == 'Female'
+    # Segregate the data by gender
+    male_indices = gender[X_test.index] == 'Male'
+    female_indices = gender[X_test.index] == 'Female'
 
     # Male Data and Predictions
     X_test_male = X_test[male_indices]
@@ -116,7 +125,7 @@ def evaluate_model(svm_model, X_test, y_test, data, X):
     return accuracy, auc, class_report, cm_male, cm_female, cm
 
 # %% 
-# Step No: 5 - Fairness Evaluation
+# Step No: 5 - Fairness Metrics (Equal Opportunity and Demographic Parity)
 def fairness_metrics(cm_male, cm_female, cm):
     # Calculate Equal Accuracy
     accuracy_male = (cm_male[1, 1] + cm_male[0, 0]) / cm_male.sum()
@@ -137,7 +146,7 @@ def fairness_metrics(cm_male, cm_female, cm):
     print(f"True Positive Rate for Female: {tpr_female}")
 
 # %% 
-# Step No: 6 - Visualize Comparison and Insights
+# Step No: 6 - Visualize Comparisons and Insights
 def visualize_comparisons(cm_male, cm_female, cm):
     # Bar plot for confusion matrix comparison
     cm_values = {'Male': cm_male.ravel(), 'Female': cm_female.ravel(), 'Overall': cm.ravel()}
@@ -160,13 +169,13 @@ def visualize_comparisons(cm_male, cm_female, cm):
 def main():
     # Load and preprocess data
     file_path = "D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/Data_Creation.xlsx"
-    X_train_scaled, X_test_scaled, y_train, y_test, X, data = load_and_preprocess_data(file_path)
+    X_train_scaled, X_test_scaled, y_train, y_test, gender, data = load_and_preprocess_data(file_path)
     
     # Train the SVM model
     svm_model = train_svm_model(X_train_scaled, y_train)
     
     # Evaluate model performance
-    accuracy, auc, class_report, cm_male, cm_female, cm = evaluate_model(svm_model, X_test_scaled, y_test, data, X)
+    accuracy, auc, class_report, cm_male, cm_female, cm = evaluate_model(svm_model, X_test_scaled, y_test, gender, data)
     print(f"Accuracy: {accuracy}")
     print(f"AUC: {auc}")
     print(f"Classification Report:\n{class_report}")
