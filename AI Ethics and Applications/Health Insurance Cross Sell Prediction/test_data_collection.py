@@ -16,6 +16,11 @@ data = pd.read_excel("D:/Masters Projects/Master-In-AI/AI Ethics and Application
 # Step 3: Preprocess and split the dataset
 X = data.drop(columns=['Response'])
 y = data['Response']
+# One-hot encode categorical columns (like 'Gender')
+X = pd.get_dummies(data.drop(columns=['Response']), drop_first=True)
+
+# Target variable
+y = data['Response']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
