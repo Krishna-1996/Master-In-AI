@@ -49,19 +49,19 @@ def train_svm_model(X_train, y_train):
 
 # %%
 # Step No: 4 - Evaluate Model Performance
-def evaluate_model(svm_model, X_test, y_test):
+def evaluate_model(svm_model, X_test, y_test, data):
     y_pred = svm_model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
     auc = roc_auc_score(y_test, svm_model.predict_proba(X_test)[:, 1])
     class_report = classification_report(y_test, y_pred)
     
-    # Confusion Matrix
+    # Confusion Matrix for overall
     cm = confusion_matrix(y_test, y_pred)
     
-    # Plot the confusion matrix
+    # Plot the overall confusion matrix
     plt.figure(figsize=(6, 6))
     plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
-    plt.title("Confusion Matrix")
+    plt.title("Overall Confusion Matrix")
     plt.colorbar()
     
     # Labels for the axes
@@ -81,11 +81,72 @@ def evaluate_model(svm_model, X_test, y_test):
                      fontsize=16,  # Increase font size for better readability
                      color="white" if cm[i, j] > thresh else "black")
     
-    # Display the plot
+    # Display the plot for overall confusion matrix
     plt.tight_layout()
     plt.show()
+    
+    # Segment the data by gender (assuming 'Gender' column exists in your data)
+    male_indices = data['Gender'] == 'Male'  # Replace 'Gender' with the actual column name
+    female_indices = data['Gender'] == 'Female'  # Replace 'Gender' with the actual column name
 
+    # Male Data and Predictions
+    X_test_male = X_test[male_indices]
+    y_test_male = y_test[male_indices]
+    y_pred_male = y_pred[male_indices]
+    
+    # Confusion Matrix for Male
+    cm_male = confusion_matrix(y_test_male, y_pred_male)
+    plt.figure(figsize=(6, 6))
+    plt.imshow(cm_male, interpolation='nearest', cmap=plt.cm.Blues)
+    plt.title("Confusion Matrix for Male")
+    plt.colorbar()
+    
+    # Annotate the confusion matrix for Male
+    for i in range(cm_male.shape[0]):
+        for j in range(cm_male.shape[1]):
+            plt.text(j, i, format(cm_male[i, j], 'd'),
+                     horizontalalignment="center",
+                     verticalalignment="center",
+                     fontsize=16,  # Increase font size for better readability
+                     color="white" if cm_male[i, j] > cm_male.max() / 2.0 else "black")
+    
+    plt.xticks(tick_marks, ['No', 'Yes'], rotation=45, fontsize=12)
+    plt.yticks(tick_marks, ['No', 'Yes'], fontsize=12)
+    plt.xlabel('Predicted label', fontsize=14)
+    plt.ylabel('True label', fontsize=14)
+    plt.tight_layout()
+    plt.show()
+    
+    # Female Data and Predictions
+    X_test_female = X_test[female_indices]
+    y_test_female = y_test[female_indices]
+    y_pred_female = y_pred[female_indices]
+    
+    # Confusion Matrix for Female
+    cm_female = confusion_matrix(y_test_female, y_pred_female)
+    plt.figure(figsize=(6, 6))
+    plt.imshow(cm_female, interpolation='nearest', cmap=plt.cm.Blues)
+    plt.title("Confusion Matrix for Female")
+    plt.colorbar()
+    
+    # Annotate the confusion matrix for Female
+    for i in range(cm_female.shape[0]):
+        for j in range(cm_female.shape[1]):
+            plt.text(j, i, format(cm_female[i, j], 'd'),
+                     horizontalalignment="center",
+                     verticalalignment="center",
+                     fontsize=16,  # Increase font size for better readability
+                     color="white" if cm_female[i, j] > cm_female.max() / 2.0 else "black")
+    
+    plt.xticks(tick_marks, ['No', 'Yes'], rotation=45, fontsize=12)
+    plt.yticks(tick_marks, ['No', 'Yes'], fontsize=12)
+    plt.xlabel('Predicted label', fontsize=14)
+    plt.ylabel('True label', fontsize=14)
+    plt.tight_layout()
+    plt.show()
+    
     return accuracy, auc, class_report
+
 
 
 # %%
