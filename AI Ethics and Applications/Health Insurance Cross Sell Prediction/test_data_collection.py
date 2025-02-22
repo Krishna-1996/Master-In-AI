@@ -13,15 +13,6 @@ from sklearn.metrics import accuracy_score, confusion_matrix, classification_rep
 # %% 
 # Step No: 2 - Load and Preprocess the Data
 def load_and_preprocess_data(file_path):
-    """
-    Loads and preprocesses the dataset.
-    
-    Args:
-    file_path (str): The file path to the dataset
-    
-    Returns:
-    X_train_scaled, X_test_scaled, y_train, y_test, data: Processed training and testing data, and original data
-    """
     # Load the dataset
     data = pd.read_excel(file_path)
     
