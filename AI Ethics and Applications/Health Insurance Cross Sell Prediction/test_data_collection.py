@@ -1,5 +1,5 @@
 # %%
-#Step 1: Import necessary libraries
+# Step 1: Import necessary libraries
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, roc_auc_score
 from sklearn.preprocessing import StandardScaler
