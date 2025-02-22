@@ -86,3 +86,5 @@ explainer = lime.lime_tabular.LimeTabularExplainer(X_train_scaled, training_labe
 i = 10  # Pick any instance from test set
 exp = explainer.explain_instance(X_test_scaled[i], svm_model.predict_proba)
 exp.show_in_notebook()  # This shows the explanation for the chosen instance
+
+# %%
