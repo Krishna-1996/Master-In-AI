@@ -51,11 +51,13 @@ print(classification_report(y_test, y_pred))
 
 # %%
 # Step 8: Fairness Evaluation based on Gender
-X_test['Gender'] = data.loc[X_test.index, 'Gender']
+# Gender column is already one-hot encoded, we will use the 'Gender_Male' column (adjust if necessary)
 X_test['Predicted_Response'] = y_pred
 X_test['True_Response'] = y_test
 
-grouped = X_test.groupby('Gender')
+# We assume that 'Gender_Male' is a column in X_test after one-hot encoding.
+# If 'Gender' was encoded as 'Gender_Male' and 'Gender_Female', use 'Gender_Male' here.
+grouped = X_test.groupby('Gender_Male')  # Adjust based on your encoding columns
 gender_metrics = {}
 
 for gender, group in grouped:
@@ -82,17 +84,3 @@ explainer = lime.lime_tabular.LimeTabularExplainer(X_train_scaled, training_labe
 i = 10  # Pick any instance from test set
 exp = explainer.explain_instance(X_test_scaled[i], svm_model.predict_proba)
 exp.show_in_notebook()  # This shows the explanation for the chosen instance
-
-# %%
-import shap
-
-# Create a SHAP explainer
-explainer = shap.KernelExplainer(svm_model.predict_proba, X_train_scaled)
-
-# Calculate SHAP values
-shap_values = explainer.shap_values(X_test_scaled)
-
-# Plot SHAP summary plot (to visualize feature importance)
-shap.summary_plot(shap_values[1], X_test)  # Plot for class '1'
-
-# %%
