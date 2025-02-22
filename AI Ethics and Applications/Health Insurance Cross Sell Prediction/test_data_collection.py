@@ -48,6 +48,7 @@ def train_svm_model(X_train, y_train):
     return svm_model
 
 # %%
+# %%
 # Step No: 4 - Evaluate Model Performance
 def evaluate_model(svm_model, X_test, y_test, data):
     y_pred = svm_model.predict(X_test)
@@ -85,7 +86,7 @@ def evaluate_model(svm_model, X_test, y_test, data):
     plt.tight_layout()
     plt.show()
     
-    # Segment the data by gender (assuming 'Gender' column exists in your data)
+    # Filter data by gender (assuming 'Gender' column exists in your data)
     male_indices = data['Gender'] == 'Male'  # Replace 'Gender' with the actual column name
     female_indices = data['Gender'] == 'Female'  # Replace 'Gender' with the actual column name
 
@@ -146,7 +147,6 @@ def evaluate_model(svm_model, X_test, y_test, data):
     plt.show()
     
     return accuracy, auc, class_report
-
 
 
 # %%
