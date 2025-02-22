@@ -1,5 +1,5 @@
 # %%
-# Step 0: Import Necessary Libraries
+# Step 0: Import Necessary Libraries and Dataset
 # df = pd.read_excel('D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/Data_Creation.xlsx')
 import pandas as pd
 from sklearn.model_selection import train_test_split
