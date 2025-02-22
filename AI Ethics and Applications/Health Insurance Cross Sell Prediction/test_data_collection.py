@@ -55,21 +55,38 @@ def evaluate_model(svm_model, X_test, y_test):
     auc = roc_auc_score(y_test, svm_model.predict_proba(X_test)[:, 1])
     class_report = classification_report(y_test, y_pred)
     
-    # Confusion Matrix Visualization
+    # Confusion Matrix
     cm = confusion_matrix(y_test, y_pred)
+    
+    # Plot the confusion matrix
     plt.figure(figsize=(6, 6))
     plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
     plt.title("Confusion Matrix")
     plt.colorbar()
+    
+    # Labels for the axes
     tick_marks = np.arange(2)
-    plt.xticks(tick_marks, ['No', 'Yes'], rotation=45)
-    plt.yticks(tick_marks, ['No', 'Yes'])
-    plt.xlabel('Predicted label')
-    plt.ylabel('True label')
+    plt.xticks(tick_marks, ['No', 'Yes'], rotation=45, fontsize=12)
+    plt.yticks(tick_marks, ['No', 'Yes'], fontsize=12)
+    plt.xlabel('Predicted label', fontsize=14)
+    plt.ylabel('True label', fontsize=14)
+    
+    # Annotate each cell with the numeric value
+    thresh = cm.max() / 2.0
+    for i in range(cm.shape[0]):
+        for j in range(cm.shape[1]):
+            plt.text(j, i, format(cm[i, j], 'd'),
+                     horizontalalignment="center",
+                     verticalalignment="center",
+                     fontsize=16,  # Increase font size for better readability
+                     color="white" if cm[i, j] > thresh else "black")
+    
+    # Display the plot
     plt.tight_layout()
     plt.show()
 
     return accuracy, auc, class_report
+
 
 # %%
 # Step No: 5 - Visualize the LIME Explanation
