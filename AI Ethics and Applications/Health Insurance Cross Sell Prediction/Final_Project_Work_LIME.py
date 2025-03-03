@@ -192,7 +192,7 @@ data_with_predictions['True/False'] = np.where(y_test == data_with_predictions['
 
 # Save the dataframe with predictions to CSV
 # D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction
-output_path = r'D:/Machine_Learning_Projects/Health_Insurance_Cross_Sell_Predictions/predictions_output.csv'
+output_path = r'D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction/predictions_output.csv'
 data_with_predictions.to_csv(output_path, index=False)
 print(f"Predictions saved to: {output_path}")
 
