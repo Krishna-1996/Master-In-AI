@@ -224,7 +224,7 @@ if 0 <= index_to_check < len(X_test):
     prediction_correct = "Correct" if actual_value == predicted_value else "Incorrect"
     
     # Display the chosen instance details
-    print(f"/nChosen Instance {index_to_check + 1}:")
+    print(f"Chosen Instance {index_to_check + 1}:")
     print(f"Actual Value: {actual_value}")
     print(f"Predicted Value: {predicted_value}")
     print(f"Prediction: {prediction_correct}")
