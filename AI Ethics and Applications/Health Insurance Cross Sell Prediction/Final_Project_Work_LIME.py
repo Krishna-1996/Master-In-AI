@@ -241,3 +241,5 @@ if 0 <= index_to_check < len(X_test):
     explanation.show_in_notebook(show_table=True, show_all=False)
 else:
     print("Invalid index. Please enter a valid index from the test data.")
+
+# %%
