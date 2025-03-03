@@ -40,7 +40,7 @@ cm = confusion_matrix(y_test, y_pred)
 # Print evaluation metrics
 print(f"Accuracy: {accuracy}")
 print(f"AUC: {auc}")
-print(f"Classification Report:\n{class_report}")
+print(f"Classification Report:/n{class_report}")
 
 # Plot the overall confusion matrix
 plt.figure(figsize=(6, 6))
@@ -148,10 +148,10 @@ plt.tight_layout()
 plt.show()
 
 # Print the confusion matrix results in tabular form for reference
-print(f"\nConfusion Matrix Results:\n{'='*30}")
-print(f"Overall Confusion Matrix:\n{cm}")
-print(f"Male Confusion Matrix:\n{cm_male}")
-print(f"Female Confusion Matrix:\n{cm_female}")
+print(f"/nConfusion Matrix Results:/n{'='*30}")
+print(f"Overall Confusion Matrix:/n{cm}")
+print(f"Male Confusion Matrix:/n{cm_male}")
+print(f"Female Confusion Matrix:/n{cm_female}")
 
 # %%
 # Step 7: Fairness Evaluation Based on Gender
@@ -191,7 +191,7 @@ data_with_predictions['predict_value'] = svm_model.predict(X_test_scaled)
 data_with_predictions['True/False'] = np.where(y_test == data_with_predictions['predict_value'], True, False)
 
 # Save the dataframe with predictions to CSV
-# D:\Masters Projects\Master-In-AI\AI Ethics and Applications\Health Insurance Cross Sell Prediction
+# D:/Masters Projects/Master-In-AI/AI Ethics and Applications/Health Insurance Cross Sell Prediction
 output_path = r'D:/Machine_Learning_Projects/Health_Insurance_Cross_Sell_Predictions/predictions_output.csv'
 data_with_predictions.to_csv(output_path, index=False)
 print(f"Predictions saved to: {output_path}")
@@ -224,7 +224,7 @@ if 0 <= index_to_check < len(X_test):
     prediction_correct = "Correct" if actual_value == predicted_value else "Incorrect"
     
     # Display the chosen instance details
-    print(f"\nChosen Instance {index_to_check + 1}:")
+    print(f"/nChosen Instance {index_to_check + 1}:")
     print(f"Actual Value: {actual_value}")
     print(f"Predicted Value: {predicted_value}")
     print(f"Prediction: {prediction_correct}")
@@ -234,7 +234,7 @@ if 0 <= index_to_check < len(X_test):
     
     # Get the LIME explanation in tabular format
     explanation_df = pd.DataFrame(explanation.as_list(), columns=["Feature", "Importance"])
-    print("\nLIME Explanation (Tabular Form):")
+    print("/nLIME Explanation (Tabular Form):")
     print(explanation_df)
     
     # Plot the LIME explanation (color chart)
