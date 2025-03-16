@@ -243,3 +243,10 @@ else:
     print("Invalid index. Please enter a valid index from the test data.")
 
 # %%
+# Step No: 10 - Visualize LIME Explanation in a Graphical Way
+# Get the graphical plot of the LIME explanation
+fig = explanation.as_pyplot_figure()
+
+# Display the plot
+plt.tight_layout()
+plt.show()
