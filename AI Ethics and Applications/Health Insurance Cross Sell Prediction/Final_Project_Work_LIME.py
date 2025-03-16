@@ -234,7 +234,7 @@ if 0 <= index_to_check < len(X_test):
     
     # Get the LIME explanation in tabular format
     explanation_df = pd.DataFrame(explanation.as_list(), columns=["Feature", "Importance"])
-    print("/nLIME Explanation (Tabular Form):")
+    print("LIME Explanation (Tabular Form):")
     print(explanation_df)
     
     # Plot the LIME explanation (color chart)
