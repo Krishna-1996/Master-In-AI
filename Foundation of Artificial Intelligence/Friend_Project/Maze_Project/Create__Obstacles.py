@@ -8,7 +8,15 @@ OBSTACLE_PERCENTAGES = [0, 10, 20]
 def generate_obstacles(maze_obj, percentage):
     total_cells = ROWS * COLS
     num_obstacles = int(total_cells * (percentage / 100))
-    all_cells = [(r, c) for r in range(1, ROWS+1) for c in range(1, COLS+1)]
+    
+    # Define the rectangle boundaries
+    min_row, max_row = 3, 67
+    min_col, max_col = 3, 117
+    
+    # Create list of cells within the rectangle
+    all_cells = [(r, c) for r in range(min_row, max_row + 1) for c in range(min_col, max_col + 1)]
+    
+    # Randomly sample cells for obstacles
     obstacle_cells = random.sample(all_cells, num_obstacles)
 
     for (r, c) in obstacle_cells:
