@@ -28,7 +28,7 @@ class MazeSolverApp(tk.Tk):
 
         # Initialize the GUI window
         self.title("Maze Solver")
-        self.geometry("700x150")  # Set window size
+        self.geometry("1920x1280")  # Set window size
 
         # Default algorithm choice (BFS)
         self.algorithm = tk.StringVar(value="BFS")
