@@ -68,7 +68,7 @@ class MazeSolverApp(tk.Tk):
         label = tk.Label(self.dropdown_frame, text="Select Obstacle Percentage:", font=("Arial", 10, "bold"))
         label.grid(row=0, column=2, padx=10)
 
-        obstacle_choices = [0, 10, 20, 40]
+        obstacle_choices = [0, 10, 20, 30]
         obstacle_menu = tk.OptionMenu(self.dropdown_frame, self.obstacle_percentage, *obstacle_choices)
         obstacle_menu.grid(row=0, column=3, padx=10)
 
