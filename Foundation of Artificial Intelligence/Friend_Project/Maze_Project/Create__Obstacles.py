@@ -3,7 +3,7 @@ import random
 from pyamaze import maze
 
 ROWS, COLS = 70, 120
-OBSTACLE_PERCENTAGES = [0, 10, 30, 50]
+OBSTACLE_PERCENTAGES = [0, 10, 30]
 
 def generate_obstacles(maze_obj, percentage):
     total_cells = ROWS * COLS
@@ -27,7 +27,7 @@ def save_maze_to_csv(maze_obj, filename):
 if __name__ == "__main__":
     for percentage in OBSTACLE_PERCENTAGES:
         m = maze(ROWS, COLS)
-        m.CreateMaze(loopPercent=70)
+        m.CreateMaze(loopPercent=80)
         generate_obstacles(m, percentage)
         filename = f"mazes/Obstacles_Design_{percentage}p.csv"
         save_maze_to_csv(m, filename)
