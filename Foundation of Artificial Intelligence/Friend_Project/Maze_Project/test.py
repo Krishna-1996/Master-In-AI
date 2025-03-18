@@ -29,6 +29,6 @@ if __name__ == "__main__":
         m = maze(ROWS, COLS)
         m.CreateMaze(loopPercent=60)
         generate_obstacles(m, percentage)
-        filename = f"mazes/Obstacles_{percentage}p.csv"
+        filename = f"mazes/Obstacles_Design_1_{percentage}p.csv"
         save_maze_to_csv(m, filename)
         print(f"Saved: {filename}")
