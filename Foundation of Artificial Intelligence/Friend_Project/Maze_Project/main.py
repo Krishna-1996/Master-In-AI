@@ -8,7 +8,7 @@ import os
 obstacle_files = {
     0: "Obstacles_Design_0p.csv",
     10: "Obstacles_Design_10p.csv",
-    30: "Obstacles_Design_20p.csv"
+    20: "Obstacles_Design_20p.csv"
 }
 
 # Predefined goal positions
@@ -67,7 +67,7 @@ class MazeSolverApp(tk.Tk):
         label = tk.Label(self.dropdown_frame, text="Select Obstacle Percentage:", font=("Arial", 10, "bold"))
         label.grid(row=0, column=2, padx=10)
 
-        obstacle_choices = [0, 10, 30, 50]
+        obstacle_choices = [0, 10, 20]
         obstacle_menu = tk.OptionMenu(self.dropdown_frame, self.obstacle_percentage, *obstacle_choices)
         obstacle_menu.grid(row=0, column=3, padx=10)
 
