@@ -3,7 +3,7 @@ import random
 from pyamaze import maze
 
 ROWS, COLS = 70, 120
-OBSTACLE_PERCENTAGES = [0, 10, 30]
+OBSTACLE_PERCENTAGES = [0, 10, 20]
 
 def generate_obstacles(maze_obj, percentage):
     total_cells = ROWS * COLS

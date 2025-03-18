@@ -8,7 +8,7 @@ import os
 obstacle_files = {
     0: "Obstacles_Design_0p.csv",
     10: "Obstacles_Design_10p.csv",
-    30: "Obstacles_Design_30p.csv"
+    30: "Obstacles_Design_20p.csv"
 }
 
 # Predefined goal positions
