@@ -112,7 +112,7 @@ class MazeSolverApp(tk.Tk):
 
         try:
             # Load the maze
-            m = maze(50, 100)
+            m = maze(70, 120)
             m.CreateMaze(loadMaze=csv_file_path)
 
             # Dynamically import the algorithm based on user selection
