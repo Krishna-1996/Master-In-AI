@@ -6,10 +6,10 @@ import os
 
 # Mapping obstacle percentage to CSV file names
 obstacle_files = {
-    0: "Obstacles_Design_1_0p.csv",
-    10: "Obstacles_Design_2_10p.csv",
-    30: "Obstacles_Design_3_30p.csv",
-    50: "Obstacles_Design_4_50p.csv"
+    0: "Obstacles_Design_0p.csv",
+    10: "Obstacles_Design_10p.csv",
+    30: "Obstacles_Design_30p.csv",
+    50: "Obstacles_Design_50p.csv"
 }
 
 # Predefined goal positions
