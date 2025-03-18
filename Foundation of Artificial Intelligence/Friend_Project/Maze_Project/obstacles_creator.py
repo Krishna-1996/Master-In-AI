@@ -1,78 +1,77 @@
-import csv
 import random
+import csv
+import os
 
-def load_maze_from_csv(file_path):
-    """Load the maze from the main CSV file."""
-    maze_map = {}
-    with open(file_path, mode='r') as f:
-        reader = csv.reader(f)
-        next(reader)  # Skip the header
+# Maze dimensions
+ROWS = 60
+COLS = 100
+
+# Output directory
+OUTPUT_DIR = "mazes"
+if not os.path.exists(OUTPUT_DIR):
+    os.makedirs(OUTPUT_DIR)
+
+def generate_maze(obstacle_percentage):
+    """
+    Generates a maze with the given obstacle percentage.
+    
+    :param obstacle_percentage: Percentage of walls to add (0%, 10%, 30%, 50%).
+    :return: A maze dictionary where each cell has walls (N, S, E, W).
+    """
+    maze = {}
+
+    for r in range(ROWS):
+        for c in range(COLS):
+            maze[(r, c)] = {'N': 1, 'S': 1, 'E': 1, 'W': 1}
+
+    # Create an open path (default: all walls intact)
+    for r in range(ROWS):
+        for c in range(COLS):
+            if r < ROWS - 1:  # Link South
+                maze[(r, c)]['S'] = 0
+                maze[(r+1, c)]['N'] = 0
+            if c < COLS - 1:  # Link East
+                maze[(r, c)]['E'] = 0
+                maze[(r, c+1)]['W'] = 0
+
+    # Add obstacles randomly
+    total_cells = ROWS * COLS
+    obstacle_count = int((obstacle_percentage / 100) * total_cells)
+    
+    obstacle_cells = random.sample(list(maze.keys()), obstacle_count)
+
+    for cell in obstacle_cells:
+        direction = random.choice(['N', 'S', 'E', 'W'])
+        maze[cell][direction] = 1  # Add a wall in one random direction
+
+    return maze
+
+def save_maze_to_csv(maze, filename):
+    """
+    Saves the generated maze into a CSV file.
+
+    :param maze: The dictionary representing the maze.
+    :param filename: The filename to save the maze as CSV.
+    """
+    filepath = os.path.join(OUTPUT_DIR, filename)
+
+    with open(filepath, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["Row", "Column", "E", "W", "N", "S"])
         
-        for row in reader:
-            coords = eval(row[0])  # Convert string to tuple (row, col)
-            E, W, N, S = map(int, row[1:])  # Convert direction values to integers
-            maze_map[coords] = {"E": E, "W": W, "N": N, "S": S}
-    
-    return maze_map
+        for (r, c), walls in maze.items():
+            writer.writerow([r, c, walls['E'], walls['W'], walls['N'], walls['S']])
 
+    print(f"Saved maze to {filepath}")
 
-def add_obstacles(maze_map, obstacle_percentage=20):
-    """Add random obstacles to the maze."""
-    total_cells = len(maze_map)
-    num_obstacles = int(total_cells * (obstacle_percentage / 100))
-    
-    # Randomly select obstacle positions
-    blocked_cells = random.sample(list(maze_map.keys()), num_obstacles)
-    
-    for (row, col) in blocked_cells:
-        # Randomly block directions (E, W, N, S) for obstacles
-        if random.choice([True, False]):
-            maze_map[(row, col)]["E"] = 0
-            maze_map[(row, col)]["W"] = 0
-        if random.choice([True, False]):
-            maze_map[(row, col)]["N"] = 0
-            maze_map[(row, col)]["S"] = 0
-    
-    return maze_map
+def generate_all_mazes():
+    """
+    Generates all four maze files (0%, 10%, 30%, 50% obstacles).
+    """
+    for percentage in [0, 10, 30, 50]:
+        maze = generate_maze(percentage)
+        filename = f"maze_{percentage}p.csv"
+        save_maze_to_csv(maze, filename)
 
-
-def save_maze_to_csv(maze_map, file_path):
-    """Save the maze (with obstacles) to a CSV file."""
-    with open(file_path, mode='w', newline='') as f:
-        writer = csv.writer(f)
-        
-        # Write header
-        writer.writerow(['cell', 'E', 'W', 'N', 'S'])
-        
-        # Write maze data with obstacles
-        for (row, col), directions in maze_map.items():
-            E = directions.get('E', 1)  # Default to 1 (open) if not specified
-            W = directions.get('W', 1)  # Default to 1 (open) if not specified
-            N = directions.get('N', 1)  # Default to 1 (open) if not specified
-            S = directions.get('S', 1)  # Default to 1 (open) if not specified
-            writer.writerow([(row, col), E, W, N, S])
-    print(f"Maze with obstacles saved to {file_path}")
-
-
-def main():
-    # Paths to the original and modified maze CSV files
-    original_csv_path = 'D:/Masters Projects/Master-In-AI/Foundation of Artificial Intelligence/Project 3 ICA/Advance Version of obstacle project/Maze_1_90_loopPercent.csv'
-    # D:\Masters Projects\Master-In-AI\Foundation of Artificial Intelligence\Project 3 ICA\Advance Version of obstacle project
-    modified_csv_path = 'maze_with_obstacles.csv'
-    
-    # Load the original maze CSV
-    maze_map = load_maze_from_csv(original_csv_path)
-    
-    # Add random obstacles to the maze
-    maze_map_with_obstacles = add_obstacles(maze_map, obstacle_percentage=50)  # Change obstacle percentage as needed
-    
-    # Save the modified maze with obstacles to a new CSV
-    save_maze_to_csv(maze_map_with_obstacles, modified_csv_path)
-
-
-if __name__ == '__main__':
-    main()
-
-
-
-
+if __name__ == "__main__":
+    generate_all_mazes()
