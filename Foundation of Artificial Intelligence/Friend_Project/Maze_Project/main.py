@@ -12,7 +12,14 @@ obstacle_files = {
     50: "Obstacles_Design_50p.csv"
 }
 
-
+# Predefined goal positions
+goal_positions = {
+    "Top Left": (1, 1),
+    "Top Right": (1, 99),
+    "Bottom Left": (49, 1),
+    "Bottom Right": (49, 99),
+    "Center": (25, 50)
+}
 
 # Main class for the GUI
 class MazeSolverApp(tk.Tk):
