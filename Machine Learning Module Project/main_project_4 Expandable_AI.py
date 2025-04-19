@@ -4,7 +4,7 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 
 # 1.1 Load the dataset
-file_path = r'D:\Machine_Learning_Projects\5. Student Level Prediction Using Machine Learning\Student Level Prediction Using Machine Learning - Copy.csv'
+file_path = r'D:\Masters Projects\Master-In-AI\Machine Learning Module Project\S3453618__Sharma_krishna__Machine_Learning_Dataset_Original.csv'
 df = pd.read_csv(file_path)
 
 # 1.2 Clean column names: remove leading/trailing spaces, replace spaces with underscores, remove non-alphanumeric characters
