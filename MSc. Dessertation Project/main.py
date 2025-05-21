@@ -111,3 +111,16 @@ query = "What are treatments for diarrhea?"
 retrieved = retrieve(query)
 rag_response = generate_response(query, retrieved)
 print("RAG Response:\n", rag_response)
+
+
+# %%
+# Without RAG (Baseline using BioBERT for classification/QA)
+from transformers import pipeline
+
+qa_pipeline = pipeline("question-answering", model="dmis-lab/biobert-base-cased-v1.1", tokenizer="dmis-lab/biobert-base-cased-v1.1")
+
+# Use one full document as input context
+context = preprocessed_df['content'].iloc[0]
+bert_response = qa_pipeline(question=query, context=context)
+
+print("Direct BERT Response:\n", bert_response['answer'])
